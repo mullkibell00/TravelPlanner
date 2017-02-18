@@ -7,11 +7,17 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
+import com.example.rosem.TravelPlanner.plan.Plan;
+import com.example.rosem.TravelPlanner.R;
+import com.example.rosem.TravelPlanner.course.Course;
 import com.example.rosem.TravelPlanner.fragment.FavoriteFragment;
 import com.example.rosem.TravelPlanner.fragment.ManageFragment;
 import com.example.rosem.TravelPlanner.fragment.SettingFragment;
 import com.example.rosem.TravelPlanner.fragment.ShareFragment;
-import com.example.rosem.TravelPlanner.R;
+
+import org.json.JSONArray;
+
+import io.realm.Realm;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,6 +32,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //for debugging
+        createInitialFavorite();
 
         toolbar = (Toolbar)findViewById(R.id.toolbar);//내가 만든 툴바를 가져오기
         setSupportActionBar(toolbar);//내가 만든 툴바를 액션바로 셋
@@ -87,5 +96,72 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    //for debugging
+    private void createInitialFavorite()
+    {
+        Realm realm = Realm.getDefaultInstance();
+
+        Plan plan = new Plan();
+        JSONArray day1 = new JSONArray();
+
+        Course c =new Course();
+        c.setName("London Eye");
+        c.setTime("10:00~10:15");
+        c.setCostTime("15min");
+        c.setCostMoney("10pounds");
+        c.setAddr("London");
+
+        day1.put(c);
+
+        Course c2 = new Course();
+
+        c2.setName("London Bridge");
+        c2.setTime("10:35~11:00");
+        c2.setCostTime("20min");
+        c2.setCostMoney("5pounds");
+        c2.setAddr("London");
+
+        day1.put(c2);
+
+        plan.addDay(day1);
+
+        JSONArray day2 = new JSONArray();
+
+        Course c3 = new Course();
+
+        c3.setName("London Tower");
+        c3.setTime("10:10~10:15");
+        c3.setCostTime("10min");
+        c3.setCostMoney("15pounds");
+        c3.setAddr("London");
+
+        day2.put(c3);
+
+        Course c4 = new Course();
+
+        c3.setName("Great Britain Museum");
+        c3.setTime("10:45~13:00");
+        c3.setCostTime("30min");
+        c3.setCostMoney("20pounds");
+        c3.setAddr("London");
+
+        day2.put(c4);
+
+        plan.addDay(day2);
+
+        plan.setPlanName("favorite");
+        plan.setFavorite(true);
+        plan.setPlanFromPlanArray();
+
+        realm.beginTransaction();
+        realm.createObject(Plan.class,plan);
+        realm.commitTransaction();
+
+        if(realm!=null)
+        {
+            realm.close();
+        }
     }
 }

@@ -4,6 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import io.realm.RealmObject;
+import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
 
 /**
@@ -18,6 +19,7 @@ public class Plan extends RealmObject {
     @PrimaryKey
     String planName;
 
+    @Ignore
     JSONArray planArray;
 
     public boolean isFavorite() {

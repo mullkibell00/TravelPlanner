@@ -11,12 +11,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.rosem.TravelPlanner.DayPlanShow.DayPlanAdapter;
+import com.example.rosem.TravelPlanner.plan.PlanAdapter;
+import com.example.rosem.TravelPlanner.plan.Plan;
 import com.example.rosem.TravelPlanner.R;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import io.realm.Realm;
+
+import static io.realm.Realm.getDefaultInstance;
 
 /**
  * Created by rosem on 2017-01-04.
@@ -24,10 +25,11 @@ import org.json.JSONObject;
 public class FavoriteFragment extends Fragment {
     TabLayout tabs;
     ViewPager pager;
-    DayPlanAdapter mAdapter;
+    PlanAdapter mAdapter;
     //sharedPref에서 JSON을 가져올 JSON
-    JSONObject course;
+    Plan plan;
     FragmentManager fm;
+    Realm db;
 
     public FavoriteFragment()
     {
@@ -51,6 +53,8 @@ public class FavoriteFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        db = getDefaultInstance();
+        plan = db.where(Plan.class).equalTo("isFavorite",true).findFirst();
     }
 
     @Nullable
@@ -59,70 +63,10 @@ public class FavoriteFragment extends Fragment {
 
         ViewGroup view = (ViewGroup)inflater.inflate(R.layout.favorite_fragment,container,false);
 
-        //start
-
-        course = new JSONObject();
-
-        try
-        {
-
-            JSONArray jArr1 = new JSONArray();
-            JSONObject temp = new JSONObject();
-            temp.put("name","London Eye");
-            temp.put("time","10:00~10:15");
-            temp.put("addr","London");
-            temp.put("cost_time","15min");
-            temp.put("cost_money","10pounds");
-
-            jArr1.put(temp);
-
-            JSONObject temp1 = new JSONObject();
-            temp1.put("name","London Bridge");
-            temp1.put("time","10:35~11:00");
-            temp1.put("addr","London");
-            temp1.put("cost_time","20min");
-            temp1.put("cost_money","5pounds");
-
-            jArr1.put(temp1);
-
-            course.put("Day1",jArr1);
-
-            JSONArray jArr2 = new JSONArray();
-            JSONObject temp2 = new JSONObject();
-            temp2.put("name","London Tower");
-            temp2.put("time","10:10~10:15");
-            temp2.put("addr","London");
-            temp2.put("cost_time","10min");
-            temp2.put("cost_money","15pounds");
-
-            jArr2.put(temp2);
-
-            JSONObject temp3 = new JSONObject();
-            temp3.put("name","Great Britain Museum");
-            temp3.put("time","10:45~13:00");
-            temp3.put("addr","London");
-            temp3.put("cost_time","30min");
-            temp3.put("cost_money","20pounds");
-
-            jArr2.put(temp3);
-
-            course.put("Day2",jArr2);
-
-            Log.v("Main","result\n"+course);
-
-
-        }
-        catch (JSONException e) {
-            e.printStackTrace();
-        }
-        //end
-
-
-
         tabs=(TabLayout)view.findViewById(R.id.tabs);
         pager = (ViewPager)view.findViewById(R.id.pager);
-        mAdapter = new DayPlanAdapter(getChildFragmentManager());
-        mAdapter.setCourse(course);
+        mAdapter = new PlanAdapter(getChildFragmentManager());
+        mAdapter.setCourse(plan);
         pager.setAdapter(mAdapter);
 
         tabs.setupWithViewPager(pager);
@@ -137,5 +81,14 @@ public class FavoriteFragment extends Fragment {
         Log.v("Favorite::","destroy view");
        // mAdapter.destroyAll();
         super.onDestroyView();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(db!=null)
+        {
+            db.close();
+        }
     }
 }
