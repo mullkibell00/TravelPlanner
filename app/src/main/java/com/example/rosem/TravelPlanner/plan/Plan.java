@@ -18,12 +18,12 @@ public class Plan extends RealmObject {
 
     boolean isFavorite;
 
+    @Ignore
+    JSONArray planArray;
+
     @Required
     @PrimaryKey
     String planName;
-
-    @Ignore
-    JSONArray planArray;
 
     public Plan()
     {
