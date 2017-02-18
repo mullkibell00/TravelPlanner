@@ -18,10 +18,10 @@ public class Plan extends RealmObject {
 
     @Required
     @PrimaryKey
-    String name;
+    String planName;
 
     int numOfDays=0;
-    String planString;
+    String plan;
 
     boolean isFavorite;
 
@@ -30,12 +30,12 @@ public class Plan extends RealmObject {
         planArray = new JSONArray();
     }
 
-    public String getName() {
-        return name;
+    public String getPlanName() {
+        return planName;
     }
 
-    public void setName(String planName) {
-        this.name = planName;
+    public void setPlanName(String planName) {
+        this.planName = planName;
     }
 
     public int getNumOfDays() {
@@ -46,12 +46,12 @@ public class Plan extends RealmObject {
         this.numOfDays = numOfDays;
     }
 
-    public String getPlanString() {
+    public String getPlan() {
         return planArray.toString();
     }
 
-    public void setPlanString(String plan) {
-        this.planString = plan;
+    public void setPlan(String plan) {
+        this.plan = plan;
         try {
             planArray = new JSONArray(plan);
             numOfDays = planArray.length();
@@ -104,6 +104,6 @@ public class Plan extends RealmObject {
 
     public void setPlanFromPlanArray()
     {
-        planString = planArray.toString();
+        plan = planArray.toString();
     }
 }
