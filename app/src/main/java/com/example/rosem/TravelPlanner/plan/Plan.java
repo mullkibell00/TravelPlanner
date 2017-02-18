@@ -25,6 +25,11 @@ public class Plan extends RealmObject {
     @Ignore
     JSONArray planArray;
 
+    public Plan()
+    {
+        planArray = new JSONArray();
+    }
+
     public boolean isFavorite() {
         return isFavorite;
     }
