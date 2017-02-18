@@ -1,4 +1,4 @@
-package com.example.rosem.TravelPlanner.DayPlanShow;
+package com.example.rosem.TravelPlanner.plan;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -22,22 +22,22 @@ import com.example.rosem.TravelPlanner.course.CourseListAdapter;
  * Created by rosem on 2017-01-30.
  */
 
-public class DayPlanListFragment extends Fragment {
+public class PlanListFragment extends Fragment {
 
     JSONArray contents;
     ListView list;
     CourseListAdapter mAdapter;
 
-    public DayPlanListFragment()
+    public PlanListFragment()
     {
 
     }
 
-    public static DayPlanListFragment newInstance(JSONArray day) {
+    public static PlanListFragment newInstance(JSONArray day) {
 
         Bundle args = new Bundle();
 
-        DayPlanListFragment fragment = new DayPlanListFragment();
+        PlanListFragment fragment = new PlanListFragment();
         Log.v("DPLFragment::","newInstance");
         Log.v("DPLFragment::","day\n"+day.toString());
 

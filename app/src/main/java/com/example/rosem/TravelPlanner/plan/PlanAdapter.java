@@ -1,11 +1,9 @@
-package com.example.rosem.TravelPlanner.DayPlanShow;
+package com.example.rosem.TravelPlanner.plan;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.util.Log;
-
-import com.example.rosem.TravelPlanner.PlanListShow.Plan;
 
 import org.json.JSONArray;
 
@@ -16,10 +14,10 @@ import java.util.List;
  * Created by rosem on 2017-01-30.
  */
 
-public class DayPlanAdapter extends FragmentPagerAdapter {
+public class PlanAdapter extends FragmentPagerAdapter {
     private final List<Fragment> mFragments = new ArrayList<>();
     private final List<String> mFragmentTitles = new ArrayList<>();
-    public DayPlanAdapter(FragmentManager fm)
+    public PlanAdapter(FragmentManager fm)
     {
         super(fm);
     }
@@ -47,7 +45,7 @@ public class DayPlanAdapter extends FragmentPagerAdapter {
             String title = "Day"+Integer.toString(curDay);
 
             JSONArray day = plan.getDay(i);
-            mFragments.add(DayPlanListFragment.newInstance(day));
+            mFragments.add(PlanListFragment.newInstance(day));
             mFragmentTitles.add(title);
             Log.v("Adapter",title+"\n"+day);
             Log.v("Adapter::","mFragment size::"+mFragments.size());

@@ -1,4 +1,4 @@
-package com.example.rosem.TravelPlanner.PlanListShow;
+package com.example.rosem.TravelPlanner.plan;
 
 import org.json.JSONArray;
 import org.json.JSONException;
