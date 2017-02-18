@@ -8,7 +8,6 @@ import android.util.Log;
 import com.example.rosem.TravelPlanner.PlanListShow.Plan;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,21 +41,16 @@ public class DayPlanAdapter extends FragmentPagerAdapter {
 
     public void setCourse(Plan plan)
     {
-        for(int i = 0; i<course.length();i++)
+        for(int i = 0; i<plan.getNumOfDays();i++)
         {
             int curDay = i+1;
             String title = "Day"+Integer.toString(curDay);
-            try
-            {
-                JSONArray day = course.getJSONArray(title);
-                mFragments.add(DayPlanListFragment.newInstance(day));
-                mFragmentTitles.add(title);
-                Log.v("Adapter",title+"\n"+day);
-                Log.v("Adapter::","mFragment size::"+mFragments.size());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
 
+            JSONArray day = plan.getDay(i);
+            mFragments.add(DayPlanListFragment.newInstance(day));
+            mFragmentTitles.add(title);
+            Log.v("Adapter",title+"\n"+day);
+            Log.v("Adapter::","mFragment size::"+mFragments.size());
         }
     }
 
