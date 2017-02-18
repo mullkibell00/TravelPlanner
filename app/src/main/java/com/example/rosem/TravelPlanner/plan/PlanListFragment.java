@@ -10,13 +10,11 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.example.rosem.TravelPlanner.R;
+import com.example.rosem.TravelPlanner.course.Course;
+import com.example.rosem.TravelPlanner.course.CourseListAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.example.rosem.TravelPlanner.course.Course;
-import com.example.rosem.TravelPlanner.course.CourseListAdapter;
 
 /**
  * Created by rosem on 2017-01-30.
@@ -81,21 +79,9 @@ public class PlanListFragment extends Fragment {
         //list에서 저장된 걸 가져오는 부분
         for(int i = 0; i<contents.length();i++)
         {
-            try
-            {
-                JSONObject obj = contents.getJSONObject(i);
-                Course c = new Course();
-                c.setName(obj.getString("name"));
-                c.setAddr(obj.getString("addr"));
-                c.setTime(obj.getString("time"));
-                c.setCostTime(obj.getString("cost_time"));
-                c.setCostMoney(obj.getString("cost_money"));
+            Course c = Course.getCourseFromDay(i,contents);
 
-                mAdapter.addCourse(c);
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            mAdapter.addCourse(c);
         }
 
         list.setAdapter(mAdapter);
