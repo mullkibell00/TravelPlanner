@@ -14,10 +14,20 @@ import io.realm.annotations.PrimaryKey;
 public class Plan extends RealmObject {
     int numOfDays;
     String plan;
+
+    boolean isFavorite;
     @PrimaryKey
     String planName;
 
     JSONArray planArray;
+
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
+    }
 
     public String getPlanName() {
         return planName;
