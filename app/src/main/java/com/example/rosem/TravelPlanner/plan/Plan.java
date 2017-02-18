@@ -6,6 +6,7 @@ import org.json.JSONException;
 import io.realm.RealmObject;
 import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
+import io.realm.annotations.Required;
 
 /**
  * Created by rosem on 2017-02-18.
@@ -15,7 +16,10 @@ public class Plan extends RealmObject {
     int numOfDays=0;
     String plan;
 
+    @Required
     boolean isFavorite;
+
+    @Required
     @PrimaryKey
     String planName;
 
