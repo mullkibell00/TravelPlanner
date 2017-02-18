@@ -1,4 +1,4 @@
-package com.example.rosem.TravelPlanner.Fragment;
+package com.example.rosem.TravelPlanner.fragment;
 
 /**
  * Created by rosem on 2017-01-09.

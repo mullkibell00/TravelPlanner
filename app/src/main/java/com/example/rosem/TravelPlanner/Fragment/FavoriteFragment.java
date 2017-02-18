@@ -1,4 +1,4 @@
-package com.example.rosem.TravelPlanner.Fragment;
+package com.example.rosem.TravelPlanner.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

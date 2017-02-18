@@ -1,4 +1,4 @@
-package com.example.rosem.TravelPlanner.Activity;
+package com.example.rosem.TravelPlanner.activity;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -7,10 +7,10 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
-import com.example.rosem.TravelPlanner.Fragment.FavoriteFragment;
-import com.example.rosem.TravelPlanner.Fragment.ManageFragment;
-import com.example.rosem.TravelPlanner.Fragment.SettingFragment;
-import com.example.rosem.TravelPlanner.Fragment.ShareFragment;
+import com.example.rosem.TravelPlanner.fragment.FavoriteFragment;
+import com.example.rosem.TravelPlanner.fragment.ManageFragment;
+import com.example.rosem.TravelPlanner.fragment.SettingFragment;
+import com.example.rosem.TravelPlanner.fragment.ShareFragment;
 import com.example.rosem.TravelPlanner.R;
 
 public class MainActivity extends AppCompatActivity {
