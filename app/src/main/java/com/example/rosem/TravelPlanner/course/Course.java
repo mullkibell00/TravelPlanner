@@ -1,10 +1,12 @@
 package com.example.rosem.TravelPlanner.course;
 
+import io.realm.RealmObject;
+
 /**
  * Created by rosem on 2017-01-30.
  */
 
-public class Course {
+public class Course extends RealmObject{
     private String mName;
     private String mAddr;
     private String mTime;
