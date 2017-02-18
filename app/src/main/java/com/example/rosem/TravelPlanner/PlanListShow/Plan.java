@@ -11,7 +11,7 @@ import io.realm.annotations.PrimaryKey;
  */
 
 public class Plan extends RealmObject {
-    int numOfDays;
+    int numOfDays=0;
     String plan;
 
     boolean isFavorite;
@@ -52,6 +52,7 @@ public class Plan extends RealmObject {
         this.plan = plan;
         try {
             planArray = new JSONArray(plan);
+            numOfDays = planArray.length();
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -77,15 +78,22 @@ public class Plan extends RealmObject {
     public void setPlanArray(JSONArray arr)
     {
         planArray = arr;
+        numOfDays = planArray.length();
     }
 
     public void addDay(JSONArray courses)
     {
         planArray.put(courses);
+        numOfDays++;
     }
 
     @Override
     public String toString() {
         return planArray.toString();
+    }
+
+    public void setPlanFromPlanArray()
+    {
+        plan = planArray.toString();
     }
 }
