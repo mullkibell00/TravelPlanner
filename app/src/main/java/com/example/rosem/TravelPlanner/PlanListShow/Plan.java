@@ -61,4 +61,20 @@ public class Plan extends RealmObject {
         }
         return day;
     }
+
+    public  JSONArray getPlanArray()
+    {
+        return planArray;
+    }
+
+    public void setPlanArray(JSONArray arr)
+    {
+        planArray = arr;
+        plan = planArray.toString();
+    }
+
+    public void addDay(JSONArray courses)
+    {
+        planArray.put(courses);
+    }
 }
