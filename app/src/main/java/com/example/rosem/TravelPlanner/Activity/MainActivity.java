@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
 
         plan.addDay(day2);
 
-        plan.setPlanName("favorite");
+        plan.setName("favorite");
         plan.setFavorite(true);
         plan.setPlanFromPlanArray();
 

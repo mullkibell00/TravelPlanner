@@ -13,21 +13,29 @@ import io.realm.annotations.Required;
  */
 
 public class Plan extends RealmObject {
-    int numOfDays=0;
-    String planString;
-
-    boolean isFavorite;
-
     @Ignore
     JSONArray planArray;
 
     @Required
     @PrimaryKey
-    String planName;
+    String name;
+
+    int numOfDays=0;
+    String planString;
+
+    boolean isFavorite;
 
     public Plan()
     {
         planArray = new JSONArray();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String planName) {
+        this.name = planName;
     }
 
     public int getNumOfDays() {
@@ -58,14 +66,6 @@ public class Plan extends RealmObject {
 
     public void setFavorite(boolean favorite) {
         isFavorite = favorite;
-    }
-
-    public String getPlanName() {
-        return planName;
-    }
-
-    public void setPlanName(String planName) {
-        this.planName = planName;
     }
 
     public JSONArray getDay(int i)
