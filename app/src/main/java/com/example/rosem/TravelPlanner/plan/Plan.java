@@ -14,7 +14,7 @@ import io.realm.annotations.Required;
 
 public class Plan extends RealmObject {
     int numOfDays=0;
-    String plan;
+    String planString;
 
     boolean isFavorite;
 
@@ -28,6 +28,28 @@ public class Plan extends RealmObject {
     public Plan()
     {
         planArray = new JSONArray();
+    }
+
+    public int getNumOfDays() {
+        return numOfDays;
+    }
+
+    public void setNumOfDays(int numOfDays) {
+        this.numOfDays = numOfDays;
+    }
+
+    public String getPlanString() {
+        return planArray.toString();
+    }
+
+    public void setPlanString(String plan) {
+        this.planString = plan;
+        try {
+            planArray = new JSONArray(plan);
+            numOfDays = planArray.length();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     public boolean isFavorite() {
@@ -44,28 +66,6 @@ public class Plan extends RealmObject {
 
     public void setPlanName(String planName) {
         this.planName = planName;
-    }
-
-    public int getNumOfDays() {
-        return numOfDays;
-    }
-
-    public void setNumOfDays(int numOfDays) {
-        this.numOfDays = numOfDays;
-    }
-
-    public String getPlan() {
-        return planArray.toString();
-    }
-
-    public void setPlan(String plan) {
-        this.plan = plan;
-        try {
-            planArray = new JSONArray(plan);
-            numOfDays = planArray.length();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
     }
 
     public JSONArray getDay(int i)
@@ -104,6 +104,6 @@ public class Plan extends RealmObject {
 
     public void setPlanFromPlanArray()
     {
-        plan = planArray.toString();
+        planString = planArray.toString();
     }
 }
