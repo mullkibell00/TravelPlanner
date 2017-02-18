@@ -2,7 +2,6 @@ package com.example.rosem.TravelPlanner.PlanListShow;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -46,14 +45,13 @@ public class Plan extends RealmObject {
     }
 
     public String getPlan() {
-        return plan;
+        return planArray.toString();
     }
 
     public void setPlan(String plan) {
         this.plan = plan;
         try {
-            JSONObject obj = new JSONObject(plan);
-            planArray = obj.getJSONArray("plan");
+            planArray = new JSONArray(plan);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -64,7 +62,6 @@ public class Plan extends RealmObject {
         JSONArray day;
         try {
             day = planArray.getJSONArray(i);
-
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
@@ -80,11 +77,15 @@ public class Plan extends RealmObject {
     public void setPlanArray(JSONArray arr)
     {
         planArray = arr;
-        plan = planArray.toString();
     }
 
     public void addDay(JSONArray courses)
     {
         planArray.put(courses);
+    }
+
+    @Override
+    public String toString() {
+        return planArray.toString();
     }
 }

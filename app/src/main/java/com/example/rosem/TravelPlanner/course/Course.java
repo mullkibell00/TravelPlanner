@@ -1,5 +1,10 @@
 package com.example.rosem.TravelPlanner.course;
 
+import com.google.gson.GsonBuilder;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import io.realm.RealmObject;
 
 /**
@@ -59,4 +64,18 @@ public class Course extends RealmObject{
         mCostMoney = money;
     }
 
+    @Override
+    public String toString() {
+        return new GsonBuilder().create().toJson(this,Course.class);
+    }
+
+    public static Course getCourseFromDay(int i, JSONArray day)
+    {
+        try {
+            return (Course)day.get(i);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }
