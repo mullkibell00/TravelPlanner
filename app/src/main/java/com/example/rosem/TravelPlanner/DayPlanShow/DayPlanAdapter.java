@@ -5,9 +5,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.util.Log;
 
+import com.example.rosem.TravelPlanner.PlanListShow.Plan;
+
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +40,7 @@ public class DayPlanAdapter extends FragmentPagerAdapter {
         return mFragments.size();
     }
 
-    public void setCourse(JSONObject course)
+    public void setCourse(Plan plan)
     {
         for(int i = 0; i<course.length();i++)
         {
