@@ -4,6 +4,7 @@ import com.google.gson.GsonBuilder;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import io.realm.RealmObject;
 
@@ -72,7 +73,32 @@ public class Course extends RealmObject{
     public static Course getCourseFromDay(int i, JSONArray day)
     {
         try {
-            return (Course)day.get(i);
+            JSONObject courseJson = new JSONObject(day.getString(i));
+
+            Course c = new Course();
+            if(courseJson.has("mName"))
+            {
+                c.setName(courseJson.getString("mName"));
+            }
+            if(courseJson.has("mAddr"))
+            {
+                c.setAddr(courseJson.getString("mAddr"));
+            }
+            if(courseJson.has("mCostMoney"))
+            {
+                c.setCostMoney(courseJson.getString("mCostMoney"));
+            }
+            if(courseJson.has("mCostTime"))
+            {
+                c.setCostTime(courseJson.getString("mCostTime"));
+            }
+            if(courseJson.has("mTime"))
+            {
+                c.setTime(courseJson.getString("mTime"));
+            }
+
+            return c;
+
         } catch (JSONException e) {
             e.printStackTrace();
             return null;

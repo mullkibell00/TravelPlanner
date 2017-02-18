@@ -106,4 +106,14 @@ public class Plan extends RealmObject {
     {
         plan = planArray.toString();
     }
+    public boolean setPlanArrayFromPlan()
+    {
+        try {
+            planArray = new JSONArray(plan);
+            return true;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

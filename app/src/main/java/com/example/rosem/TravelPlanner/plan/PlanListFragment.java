@@ -37,10 +37,14 @@ public class PlanListFragment extends Fragment {
 
         PlanListFragment fragment = new PlanListFragment();
         Log.v("DPLFragment::","newInstance");
-        Log.v("DPLFragment::","day\n"+day.toString());
+        if(day!=null)
+        {
+            Log.v("DPLFragment::","day\n"+day.toString());
 
-        //argument 가져오기
-        args.putString("contents",day.toString());
+            //argument 가져오기
+            args.putString("contents",day.toString());
+        }
+
         fragment.setArguments(args);
         return fragment;
     }
@@ -55,7 +59,14 @@ public class PlanListFragment extends Fragment {
             try
             {
                 Log.v("Fragment","here");
-                contents = new JSONArray(getArguments().getString("contents"));
+                if(getArguments().getString("contents")!=null)
+                {
+                    contents = new JSONArray(getArguments().getString("contents"));
+                }
+                else
+                {
+                    contents = new JSONArray();
+                }
                 Log.v("Fragment","contents\n"+contents);
             } catch (JSONException e) {
                 e.printStackTrace();

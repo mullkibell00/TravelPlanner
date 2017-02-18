@@ -11,13 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.rosem.TravelPlanner.plan.PlanAdapter;
-import com.example.rosem.TravelPlanner.plan.Plan;
 import com.example.rosem.TravelPlanner.R;
+import com.example.rosem.TravelPlanner.plan.Plan;
+import com.example.rosem.TravelPlanner.plan.PlanAdapter;
 
 import io.realm.Realm;
-
-import static io.realm.Realm.getDefaultInstance;
+import io.realm.RealmResults;
 
 /**
  * Created by rosem on 2017-01-04.
@@ -53,8 +52,15 @@ public class FavoriteFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        db = getDefaultInstance();
-        plan = db.where(Plan.class).equalTo("isFavorite",true).findFirst();
+        db = Realm.getDefaultInstance();
+        RealmResults <Plan> results = db.where(Plan.class).equalTo("isFavorite",true).findAll();
+        Log.v("FavoriteFrag:::","resultSize="+results.size());
+        plan = results.first();
+        if(plan.setPlanArrayFromPlan())
+        {
+            Log.v("FavoriteFrag:::","plan\n"+plan.toString());
+        }
+
     }
 
     @Nullable

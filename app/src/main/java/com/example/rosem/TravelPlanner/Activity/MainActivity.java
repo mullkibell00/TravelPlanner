@@ -6,18 +6,20 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 
-import com.example.rosem.TravelPlanner.plan.Plan;
 import com.example.rosem.TravelPlanner.R;
 import com.example.rosem.TravelPlanner.course.Course;
 import com.example.rosem.TravelPlanner.fragment.FavoriteFragment;
 import com.example.rosem.TravelPlanner.fragment.ManageFragment;
 import com.example.rosem.TravelPlanner.fragment.SettingFragment;
 import com.example.rosem.TravelPlanner.fragment.ShareFragment;
+import com.example.rosem.TravelPlanner.plan.Plan;
 
 import org.json.JSONArray;
 
 import io.realm.Realm;
+import io.realm.RealmResults;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -141,23 +143,33 @@ public class MainActivity extends AppCompatActivity {
 
         Course c4 = new Course();
 
-        c3.setName("Great Britain Museum");
-        c3.setTime("10:45~13:00");
-        c3.setCostTime("30min");
-        c3.setCostMoney("20pounds");
-        c3.setAddr("London");
+        c4.setName("Great Britain Museum");
+        c4.setTime("10:45~13:00");
+        c4.setCostTime("30min");
+        c4.setCostMoney("20pounds");
+        c4.setAddr("London");
 
         day2.put(c4);
 
         plan.addDay(day2);
 
-        plan.setName("favorite");
+        plan.setPlanName("favorite");
         plan.setFavorite(true);
         plan.setPlanFromPlanArray();
+        Log.v("Main:::","plan\n"+plan.toString());
 
         realm.beginTransaction();
-        realm.createObject(Plan.class,plan);
+        //만약 코드에서 생성한 객체를 집어넣으려면 copyTo를!
+        realm.copyToRealmOrUpdate(plan);
         realm.commitTransaction();
+
+        RealmResults<Plan> results = realm.where(Plan.class).equalTo("isFavorite",true).findAll();
+        Log.v("Main:::","resultSize="+results.size());
+        Log.v("Main:::","plan\n"+(results.first()).getPlan());
+
+        RealmResults<Plan> test =realm.where(Plan.class).findAll();
+        Log.v("Main:::","resultSize="+test.size());
+        Log.v("Main:::","plan\n"+(test.first()).getPlan());
 
         if(realm!=null)
         {
