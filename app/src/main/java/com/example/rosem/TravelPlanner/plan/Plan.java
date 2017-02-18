@@ -16,7 +16,6 @@ public class Plan extends RealmObject {
     int numOfDays=0;
     String plan;
 
-    @Required
     boolean isFavorite;
 
     @Required
