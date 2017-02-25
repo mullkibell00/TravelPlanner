@@ -1,6 +1,7 @@
 package com.example.rosem.TravelPlanner.course;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -41,6 +42,25 @@ public class CourseView extends RelativeLayout {
 
     }
 
+    public CourseView(Context context)
+    {
+        super(context);
+        LayoutInflater inflater =(LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflater.inflate(R.layout.course_item,this,true);
+
+        mName = (TextView)findViewById(R.id.name);
+
+        mAddr = (TextView)findViewById(R.id.addr);
+
+        mTime = (TextView)findViewById(R.id.time);
+
+        mCostTime = (TextView)findViewById(R.id.cost_time);
+
+        mCostMoney = (TextView)findViewById(R.id.cost_money);
+
+    }
+
+
     public void setText(String key, String data)
     {
         if(key.equals("name"))
@@ -63,5 +83,23 @@ public class CourseView extends RelativeLayout {
         {
             mCostMoney.setText(data);
         }
+    }
+
+    public void setCourse(Course c)
+    {
+        mName.setText(c.getName());
+        mAddr.setText(c.getAddr());
+        mTime.setText(c.getTime());
+        mCostTime.setText(c.getCostTime());
+        mCostMoney.setText(c.getCostMoney());
+    }
+
+    public void setTypeface(Typeface fontType)
+    {
+        mName.setTypeface(fontType);
+        mAddr.setTypeface(fontType);
+        mTime.setTypeface(fontType);
+        mCostMoney.setTypeface(fontType);
+        mCostTime.setTypeface(fontType);
     }
 }

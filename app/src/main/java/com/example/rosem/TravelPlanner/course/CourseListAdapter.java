@@ -11,8 +11,6 @@ import com.example.rosem.TravelPlanner.R;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.R.attr.type;
-
 /**
  * Created by rosem on 2017-01-30.
  */
@@ -28,39 +26,40 @@ public class CourseListAdapter extends RecyclerView.Adapter<CourseListAdapter.Vi
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        CourseView courseView;
-        if(view ==null)
-        {
-            courseView = new CourseView(mContext, mItems.get(i));
-        }
-        else
-        {
-            courseView = (CourseView) view;
-        }
+    public CourseListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        courseView.setText("name",mItems.get(i).getName());
-        courseView.setText("addr",mItems.get(i).getAddr());
-        courseView.setText("time",mItems.get(i).getTime());
-        courseView.setText("costTime",mItems.get(i).getCostTime());
-        courseView.setText("costMoney",mItems.get(i).getCostMoney());
+        CourseView course = new CourseView(mContext);
 
-        return courseView;
+        ViewHolder viewHolder = new ViewHolder(course);
+
+        return viewHolder;
     }
 
     @Override
-    public int getCount() {
+    public void onBindViewHolder(CourseListAdapter.ViewHolder holder, int position) {
+        holder.course.setCourse(mItems.get(position));
+        holder.course.setTypeface(fontType);
+    }
+
+    @Override
+    public int getItemCount() {
         return mItems.size();
     }
 
-    @Override
-    public Course getItem(int i) {
-        return mItems.get(i);
+    public class ViewHolder extends RecyclerView.ViewHolder
+    {
+        public CourseView course;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            course = (CourseView)itemView;
+            //itemView.setOnClickListener(this);
+        }
     }
 
-    @Override
-    public long getItemId(int i) {
-        return i;
+    public int getPosition(Course contents)
+    {
+        return mItems.indexOf(contents);
     }
 
     public void addCourse(Course course)

@@ -3,12 +3,14 @@ package com.example.rosem.TravelPlanner.plan;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
 import com.example.rosem.TravelPlanner.R;
 import com.example.rosem.TravelPlanner.course.Course;
@@ -97,6 +99,14 @@ public class PlanListFragment extends Fragment {
         }
 
         list.setAdapter(mAdapter);
+
+        RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL,false);
+       list.setLayoutManager(manager);
+
+        //set divider
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL);
+        dividerItemDecoration.setDrawable(ContextCompat.getDrawable(getContext(),R.drawable.list_line_divider));
+        list.addItemDecoration(dividerItemDecoration);
 
         return temp;
     }
