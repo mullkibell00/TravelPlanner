@@ -2,14 +2,17 @@ package com.example.rosem.TravelPlanner.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
 import com.example.rosem.TravelPlanner.R;
+import com.example.rosem.TravelPlanner.adapter.ManageListAdapter;
 import com.example.rosem.TravelPlanner.plan.Plan;
 
 import java.util.ArrayList;
@@ -59,8 +62,22 @@ public class ManageFragment extends android.support.v4.app.Fragment{
         ViewGroup view = (ViewGroup)inflater.inflate(R.layout.manage_fragment,container,false);
 
         list = (RecyclerView) view.findViewById(R.id.list_plans);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),R.layout.plan_name_list,planList);
-        //list.setAdapter(adapter);
+        ManageListAdapter.PlanLongClickListener planClickListener = new ManageListAdapter.PlanLongClickListener() {
+            @Override
+            public void planLongClicked(View view, int position) {
+
+            }
+        };
+        ManageListAdapter adapter = new ManageListAdapter(getContext(),planList,planClickListener);
+        list.setAdapter(adapter);
+
+        RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL,false);
+        list.setLayoutManager(manager);
+
+        //set divider
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL);
+        dividerItemDecoration.setDrawable(ContextCompat.getDrawable(getContext(),R.drawable.list_line_divider));
+        list.addItemDecoration(dividerItemDecoration);
 
         addButton = (ImageView)view.findViewById(R.id.manage_add_btn);
         addButton.setOnClickListener(new View.OnClickListener() {

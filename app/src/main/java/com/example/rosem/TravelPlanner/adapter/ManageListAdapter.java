@@ -1,10 +1,14 @@
 package com.example.rosem.TravelPlanner.adapter;
 
-import android.graphics.Typeface;
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckedTextView;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.example.rosem.TravelPlanner.R;
 
 import java.util.ArrayList;
 
@@ -14,20 +18,29 @@ import java.util.ArrayList;
 
 public class ManageListAdapter extends RecyclerView.Adapter<ManageListAdapter.ViewHolder> {
 
-    private Typeface fontType;
     private ArrayList<String> planList;
-    public ManageListAdapter() {
+    private Context mContext;
+    private static PlanLongClickListener mListener;
+
+    public ManageListAdapter(Context context, ArrayList<String>planList, PlanLongClickListener listener) {
         super();
+        mContext = context;
+        this.planList = planList;
+        this.mListener = listener;
     }
 
     @Override
     public ManageListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return null;
+
+        View listItem = LayoutInflater.from(parent.getContext()).inflate(R.layout.plan_name_list,parent,false);
+        ViewHolder viewHolder = new ViewHolder(listItem);
+
+        return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(ManageListAdapter.ViewHolder holder, int position) {
-
+        holder.planName.setText(planList.get(position));
     }
 
     @Override
@@ -37,22 +50,32 @@ public class ManageListAdapter extends RecyclerView.Adapter<ManageListAdapter.Vi
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener
     {
-        public CheckedTextView textView;
+        public TextView planName;
+        public ImageView upIcon;
+        public ImageView downIcon;
+        public ImageView deleteIcon;
 
         public ViewHolder(View itemView) {
             super(itemView);
             //textView = (CheckedTextView)itemView.findViewById(R.id.country_list_item);
+            planName = (TextView)itemView.findViewById(R.id.plan_name);
+            upIcon = (ImageView)itemView.findViewById(R.id.plan_name_list_up);
+            downIcon = (ImageView)itemView.findViewById(R.id.plan_name_list_down);
+
             itemView.setOnLongClickListener(this);
         }
 
         @Override
         public boolean onLongClick(View view) {
-            //listner.
+            mListener.planLongClicked(view, getLayoutPosition());
             return true;
         }
+
     }
 
-
+    public interface PlanLongClickListener{
+        public void planLongClicked(View view, int position);
+    }
 
 
 }

@@ -70,7 +70,9 @@ public class MainActivity extends AppCompatActivity {
         //아이콘 색 선정
         int iconColor = ContextCompat.getColor(this, R.color.colorPrimary);
         PorterDuff.Mode iconMode = PorterDuff.Mode.SRC_IN;
+        //tab load
         TabLayout tabs = (TabLayout)findViewById(R.id.tabs);
+        //set tab drawables
         Drawable iconStar = ContextCompat.getDrawable(getApplicationContext(), star);
         iconStar.setColorFilter(iconColor, iconMode);
         Drawable iconRoute = ContextCompat.getDrawable(getApplicationContext(), route);
@@ -79,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
         iconShare.setColorFilter(iconColor, iconMode);
         Drawable iconSettings = ContextCompat.getDrawable(getApplicationContext(),R.mipmap.settings);
         iconSettings.setColorFilter(iconColor, iconMode);
+        //set tab icons
         tabs.addTab(tabs.newTab().setIcon(iconStar));
         tabs.addTab(tabs.newTab().setIcon(iconRoute));
         tabs.addTab(tabs.newTab().setIcon(iconShare));
