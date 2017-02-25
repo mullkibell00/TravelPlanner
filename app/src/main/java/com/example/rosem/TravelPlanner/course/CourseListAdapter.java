@@ -1,23 +1,30 @@
 package com.example.rosem.TravelPlanner.course;
 
 import android.content.Context;
+import android.graphics.Typeface;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+
+import com.example.rosem.TravelPlanner.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.R.attr.type;
+
 /**
  * Created by rosem on 2017-01-30.
  */
-public class CourseListAdapter extends BaseAdapter {
+public class CourseListAdapter extends RecyclerView.Adapter<CourseListAdapter.ViewHolder> {
     private Context mContext;
     private List<Course> mItems = new ArrayList<Course>();
+    private Typeface fontType;
 
     public CourseListAdapter(Context context)
     {
         mContext = context;
+        fontType = Typeface.createFromAsset(context.getAssets(),context.getString(R.string.font_name));
     }
 
     @Override

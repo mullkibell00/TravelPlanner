@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.example.rosem.TravelPlanner.R;
@@ -23,6 +24,8 @@ public class ManageFragment extends android.support.v4.app.Fragment{
     ListView list;
     ArrayList<String> planList;
     Realm db;
+    ImageView addButton;
+
     public ManageFragment()
     {
 
@@ -58,6 +61,14 @@ public class ManageFragment extends android.support.v4.app.Fragment{
         list = (ListView)view.findViewById(R.id.list_plans);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),R.layout.plan_name_list,planList);
         list.setAdapter(adapter);
+
+        addButton = (ImageView)view.findViewById(R.id.manage_add_btn);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //popup new activity
+            }
+        });
 
         return  view;
     }

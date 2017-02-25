@@ -16,8 +16,10 @@
         android:id="@+id/time"
         android:layout_alignBaseline="@+id/name"
         android:layout_alignBottom="@+id/name"
-        android:layout_toEndOf="@+id/name"
-        android:layout_marginStart="30dp" />
+        android:layout_toRightOf="@+id/name"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="30dp"
+        />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

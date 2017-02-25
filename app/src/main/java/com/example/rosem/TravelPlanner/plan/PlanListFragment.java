@@ -3,6 +3,7 @@ package com.example.rosem.TravelPlanner.plan;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +24,7 @@ import org.json.JSONException;
 public class PlanListFragment extends Fragment {
 
     JSONArray contents;
-    ListView list;
+    RecyclerView list;
     CourseListAdapter mAdapter;
 
     public PlanListFragment()
@@ -83,7 +84,7 @@ public class PlanListFragment extends Fragment {
 
         ViewGroup temp = (ViewGroup)inflater.inflate(R.layout.course_list,container,false);
 
-        list = (ListView)temp.findViewById(R.id.days);
+        list = (RecyclerView)temp.findViewById(R.id.days);
         mAdapter = new CourseListAdapter(getContext());
 
 

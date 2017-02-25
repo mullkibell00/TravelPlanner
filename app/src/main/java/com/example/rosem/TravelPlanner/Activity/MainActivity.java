@@ -62,10 +62,10 @@ public class MainActivity extends AppCompatActivity {
 
         //탭들 생성
         TabLayout tabs = (TabLayout)findViewById(R.id.tabs);
-        tabs.addTab(tabs.newTab().setIcon(R.drawable.star));
-        tabs.addTab(tabs.newTab().setIcon(R.drawable.route));
-        tabs.addTab(tabs.newTab().setIcon(R.drawable.share));
-        tabs.addTab(tabs.newTab().setIcon(R.drawable.settings));
+        tabs.addTab(tabs.newTab().setIcon(R.mipmap.star));
+        tabs.addTab(tabs.newTab().setIcon(R.mipmap.route));
+        tabs.addTab(tabs.newTab().setIcon(R.mipmap.share));
+        tabs.addTab(tabs.newTab().setIcon(R.mipmap.settings));
 
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
