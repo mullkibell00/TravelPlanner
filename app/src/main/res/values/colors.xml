@@ -7,4 +7,5 @@
     <color name="colorFontGray">#889a9a</color>
     <color name="colorLine">#4d84a1</color>
     <color name="colorWhite">#ffffff</color>
+    <color name="colorButton">#4d84a1</color>
 </resources>

@@ -2,13 +2,11 @@ package com.example.rosem.TravelPlanner.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.example.rosem.TravelPlanner.R;
+import com.example.rosem.TravelPlanner.view.PlanNameView;
 
 import java.util.ArrayList;
 
@@ -20,62 +18,93 @@ public class ManageListAdapter extends RecyclerView.Adapter<ManageListAdapter.Vi
 
     private ArrayList<String> planList;
     private Context mContext;
-    private static PlanLongClickListener mListener;
+    private boolean visible;
+    private PlanLongClickListener mListener;
 
     public ManageListAdapter(Context context, ArrayList<String>planList, PlanLongClickListener listener) {
         super();
         mContext = context;
         this.planList = planList;
-        this.mListener = listener;
+        mListener = listener;
     }
 
     @Override
     public ManageListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        View listItem = LayoutInflater.from(parent.getContext()).inflate(R.layout.plan_name_list,parent,false);
-        ViewHolder viewHolder = new ViewHolder(listItem);
+        PlanNameView name = new PlanNameView(mContext);
+
+        ViewHolder viewHolder = new ViewHolder(name);
 
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(ManageListAdapter.ViewHolder holder, int position) {
-        holder.planName.setText(planList.get(position));
+        holder.nameView.setPlanName(planList.get(position));
+        holder.nameView.setUpIcon(R.mipmap.up);
+        holder.nameView.setDownIcon(R.mipmap.down);
+        holder.nameView.setDeleteIcon(R.mipmap.delete);
+        if(visible)
+        {
+            holder.nameView.setVisible();
+        }
+        else
+        {
+            holder.nameView.setInvisible();
+        }
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return planList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener
+    public class ViewHolder extends RecyclerView.ViewHolder
     {
-        public TextView planName;
-        public ImageView upIcon;
-        public ImageView downIcon;
-        public ImageView deleteIcon;
+        public PlanNameView nameView;
 
         public ViewHolder(View itemView) {
             super(itemView);
             //textView = (CheckedTextView)itemView.findViewById(R.id.country_list_item);
-            planName = (TextView)itemView.findViewById(R.id.plan_name);
-            upIcon = (ImageView)itemView.findViewById(R.id.plan_name_list_up);
-            downIcon = (ImageView)itemView.findViewById(R.id.plan_name_list_down);
+            nameView = (PlanNameView)itemView;
 
-            itemView.setOnLongClickListener(this);
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    return mListener.planLongClickListener();
+                }
+            });
         }
 
-        @Override
-        public boolean onLongClick(View view) {
-            mListener.planLongClicked(view, getLayoutPosition());
-            return true;
-        }
 
     }
 
-    public interface PlanLongClickListener{
-        public void planLongClicked(View view, int position);
+    public void toggleVisibility()
+    {
+        visible = !visible;
+        notifyDataSetChanged();
     }
 
+    public void setVisible()
+    {
+        visible=true;
+        notifyDataSetChanged();
+    }
+
+    public void setInvisible()
+    {
+        visible = false;
+        notifyDataSetChanged();
+    }
+
+    public boolean getVisibility()
+    {
+        return visible;
+    }
+
+    public interface PlanLongClickListener
+    {
+        public boolean planLongClickListener();
+    }
 
 }

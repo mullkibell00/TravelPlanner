@@ -34,7 +34,7 @@ public class PlanNameView extends RelativeLayout {
         inflater.inflate(R.layout.plan_name_list,this,true);
 
         this.context = context;
-        iconColor = ContextCompat.getColor(context,R.color.colorPrimary);
+        iconColor = ContextCompat.getColor(context,R.color.colorButton);
         iconMode = PorterDuff.Mode.SRC_IN;
 
         fontType = Typeface.createFromAsset(context.getAssets(),context.getString(R.string.font_name));
@@ -47,6 +47,10 @@ public class PlanNameView extends RelativeLayout {
         downIcon = (ImageView)findViewById(R.id.plan_name_list_down);
 
         deleteIcon = (ImageView)findViewById(R.id.plan_name_delete);
+
+        upIcon.setVisibility(INVISIBLE);
+        downIcon.setVisibility(INVISIBLE);
+        deleteIcon.setVisibility(INVISIBLE);
     }
 
     public void setTypeface(Typeface fontType)
@@ -99,5 +103,34 @@ public class PlanNameView extends RelativeLayout {
 
     public void setPlanName(String name) {
         planName.setText(name);
+    }
+
+    public void toggleVisibility()
+    {
+        if(upIcon.getVisibility()==VISIBLE)
+        {
+            upIcon.setVisibility(INVISIBLE);
+            downIcon.setVisibility(INVISIBLE);
+            deleteIcon.setVisibility(INVISIBLE);
+        }
+        else
+        {
+            upIcon.setVisibility(VISIBLE);
+            downIcon.setVisibility(VISIBLE);
+            deleteIcon.setVisibility(VISIBLE);
+        }
+    }
+
+    public void setVisible()
+    {
+        upIcon.setVisibility(VISIBLE);
+        downIcon.setVisibility(VISIBLE);
+        deleteIcon.setVisibility(VISIBLE);
+    }
+    public void setInvisible()
+    {
+        upIcon.setVisibility(INVISIBLE);
+        downIcon.setVisibility(INVISIBLE);
+        deleteIcon.setVisibility(INVISIBLE);
     }
 }
