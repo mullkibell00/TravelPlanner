@@ -8,4 +8,5 @@
     <color name="colorLine">#4d84a1</color>
     <color name="colorWhite">#ffffff</color>
     <color name="colorButton">#4d84a1</color>
+    <color name="colorLightButton">#8fd3e0</color>
 </resources>

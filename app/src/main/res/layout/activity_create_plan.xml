@@ -40,13 +40,13 @@
         android:paddingRight="20dp"
         android:layout_marginBottom="20dp"
         >
-        <ImageView
+        <Button
             android:layout_width="61dp"
             android:layout_height="61dp"
             android:id="@+id/create_plan_prev"
             android:layout_alignParentLeft="true"
             />
-        <ImageView
+        <Button
             android:layout_alignParentRight="true"
             android:layout_width="61dp"
             android:layout_height="61dp"

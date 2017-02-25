@@ -9,6 +9,10 @@
         android:supportsRtl="true"
         android:name=".application.TravelPlanner"
         android:theme="@style/AppTheme">
+        <meta-data
+            android:name="com.google.android.geo.AIzaSyAVP_0vf3IB8IVH3G7Ga38eH8KIeWhhw1E"
+            android:value="AIzaSyAVP_0vf3IB8IVH3G7Ga38eH8KIeWhhw1E"
+            ></meta-data>
         <activity android:name="com.example.rosem.TravelPlanner.activity.MainActivity"
             >
             <intent-filter>

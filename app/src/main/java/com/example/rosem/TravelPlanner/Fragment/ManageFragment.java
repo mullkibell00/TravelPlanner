@@ -77,7 +77,7 @@ public class ManageFragment extends android.support.v4.app.Fragment{
             public boolean planLongClickListener() {
                 mAdapter.setVisible();
                 Drawable iconOk = ContextCompat.getDrawable(getContext(),R.mipmap.ok);
-                iconOk.setColorFilter(ContextCompat.getColor(getContext(),R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+                iconOk.setColorFilter(ContextCompat.getColor(getContext(),R.color.colorLightButton), PorterDuff.Mode.SRC_IN);
                 addButton.setImageDrawable(iconOk);
                 editMode=true;
                 return false;
@@ -96,7 +96,7 @@ public class ManageFragment extends android.support.v4.app.Fragment{
 
         addButton = (ImageView)view.findViewById(R.id.manage_add_btn);
         Drawable iconAdd = ContextCompat.getDrawable(getContext(),R.mipmap.add);
-        iconAdd.setColorFilter(ContextCompat.getColor(getContext(),R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+        iconAdd.setColorFilter(ContextCompat.getColor(getContext(),R.color.colorLightButton), PorterDuff.Mode.SRC_IN);
         addButton.setImageDrawable(iconAdd);
 
         addButton.setOnClickListener(new View.OnClickListener() {
@@ -112,7 +112,7 @@ public class ManageFragment extends android.support.v4.app.Fragment{
                 else
                 {
                     Drawable iconAdd = ContextCompat.getDrawable(getContext(),R.mipmap.add);
-                    iconAdd.setColorFilter(ContextCompat.getColor(getContext(),R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+                    iconAdd.setColorFilter(ContextCompat.getColor(getContext(),R.color.colorLightButton), PorterDuff.Mode.SRC_IN);
                     addButton.setImageDrawable(iconAdd);
                     editMode=false;
                     mAdapter.setInvisible();
@@ -127,7 +127,7 @@ public class ManageFragment extends android.support.v4.app.Fragment{
                 if(editMode==true&&keyCode == KeyEvent.KEYCODE_BACK)
                 {
                     Drawable iconAdd = ContextCompat.getDrawable(getContext(),R.mipmap.add);
-                    iconAdd.setColorFilter(ContextCompat.getColor(getContext(),R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+                    iconAdd.setColorFilter(ContextCompat.getColor(getContext(),R.color.colorLightButton), PorterDuff.Mode.SRC_IN);
                     addButton.setImageDrawable(iconAdd);
                     editMode=false;
                     mAdapter.setInvisible();
