@@ -14,10 +14,14 @@ import android.widget.TextView;
 
 import com.example.rosem.TravelPlanner.R;
 import com.example.rosem.TravelPlanner.object.Place;
+import com.example.rosem.TravelPlanner.plan.Plan;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
+
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 import static com.example.rosem.TravelPlanner.R.mipmap.next;
 
@@ -34,6 +38,7 @@ public class CreatePlanActivity extends AppCompatActivity {
     FrameLayout container;
     int iconColor;
     PorterDuff.Mode iconMode;
+    Realm db;
 
     Schedule schedule = new Schedule();
 
@@ -63,13 +68,30 @@ public class CreatePlanActivity extends AppCompatActivity {
         nextButton.setBackground(nextImg);
         prevButton.setBackground(prevImg);
 
-
-
+        db = Realm.getDefaultInstance();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
+        if(db!=null)
+        {
+            db.close();
+        }
+    }
+
+    public boolean checkPlanName(String string)
+    {
+        RealmResults<Plan> results = db.where(Plan.class).equalTo("planName",string).findAll();
+        if(results.size()>0)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
     }
 
     public Calendar getArrived() {
