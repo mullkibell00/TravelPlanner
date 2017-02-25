@@ -13,8 +13,11 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.example.rosem.TravelPlanner.R;
+import com.example.rosem.TravelPlanner.object.Place;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 
 import static com.example.rosem.TravelPlanner.R.mipmap.next;
 
@@ -31,6 +34,8 @@ public class CreatePlanActivity extends AppCompatActivity {
     FrameLayout container;
     int iconColor;
     PorterDuff.Mode iconMode;
+
+    Schedule schedule = new Schedule();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,16 +72,108 @@ public class CreatePlanActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    private class Schedule
+    public Calendar getArrived() {
+        return schedule.arrived;
+    }
+
+    public void setArrived(Calendar arrived) {
+        schedule.arrived = arrived;
+    }
+
+    public Locale getCountry() {
+        return schedule.country;
+    }
+
+    public void setCountry(Locale country) {
+        schedule.country = country;
+    }
+
+    public Calendar getDepature() {
+        return schedule.depature;
+    }
+
+    public void setDepature(Calendar depature) {
+        schedule.depature = depature;
+    }
+
+    public Place getHotel() {
+        return schedule.hotel;
+    }
+
+    public void setHotel(Place hotel) {
+        schedule.hotel = hotel;
+    }
+
+    public boolean isHotelReserved() {
+        return schedule.isHotelReserved;
+    }
+
+    public void setHotelReserved(boolean hotelReserved) {
+        schedule.isHotelReserved = hotelReserved;
+    }
+
+    public int getNumOfDays() {
+        return schedule.numOfDays;
+    }
+
+    public void setNumOfDays(int numOfDays) {
+        schedule.numOfDays = numOfDays;
+    }
+
+    public ArrayList<Place> getPlaceList() {
+        return schedule.placeList;
+    }
+
+    public void setPlaceList(ArrayList<Place> placeList) {
+        schedule.placeList = placeList;
+    }
+
+    public String getPlanName() {
+        return schedule.planName;
+    }
+
+    public void setPlanName(String planName) {
+        schedule.planName = planName;
+    }
+
+    public Calendar getTourEnd() {
+        return schedule.tourEnd;
+    }
+
+    public void setTourEnd(Calendar tourEnd) {
+        schedule.tourEnd = tourEnd;
+    }
+
+    public Calendar getTourStart() {
+        return schedule.tourStart;
+    }
+
+    public void setTourStart(Calendar tourStart) {
+        schedule.tourStart = tourStart;
+    }
+
+    public void addPlace(Place p)
     {
-        private String planName;
-        private int numOfDays;
-        private Calendar depature;
-        private Calendar arrived;
-        private boolean isHotelReserved;
-        private String hotel;
-        private String country;
-        private Calendar tourStart;
-        private Calendar tourEnd;
+        schedule.placeList.add(p);
+    }
+
+    public int getScheduleSize()
+    {
+        return schedule.placeList.size();
+    }
+
+
+     private class Schedule
+    {
+        public String planName;
+        public int numOfDays = 0;
+        public Calendar depature;
+        public Calendar arrived;
+        public boolean isHotelReserved;
+        public Place hotel;
+        public Locale country;
+        public Calendar tourStart;
+        public Calendar tourEnd;
+        public ArrayList<Place> placeList = new ArrayList<Place>();
     }
 }

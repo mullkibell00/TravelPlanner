@@ -17,6 +17,11 @@ public class Place {
     private Calendar visitEnd;//방문 종료 시간
     private Calendar spendTime;//소요예정시간
 
+    public Place()
+    {
+
+    }
+
     public String getAddress() {
         return address;
     }
