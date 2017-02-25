@@ -1,5 +1,6 @@
 package com.example.rosem.TravelPlanner.fragment;
 
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.example.rosem.TravelPlanner.R;
+import com.example.rosem.TravelPlanner.activity.CreatePlanActivity;
 import com.example.rosem.TravelPlanner.adapter.ManageListAdapter;
 import com.example.rosem.TravelPlanner.plan.Plan;
 
@@ -33,6 +35,8 @@ public class ManageFragment extends android.support.v4.app.Fragment{
     Realm db;
     ImageView addButton;
     private boolean editMode;
+
+    private final int CREATE_PLAN = 12093;
 
     public ManageFragment()
     {
@@ -101,6 +105,9 @@ public class ManageFragment extends android.support.v4.app.Fragment{
                 if(editMode==false)
                 {
                     //popup new activity
+                    Intent intent= new Intent(getContext(), CreatePlanActivity.class);
+                    startActivityForResult(intent,CREATE_PLAN);
+
                 }
                 else
                 {

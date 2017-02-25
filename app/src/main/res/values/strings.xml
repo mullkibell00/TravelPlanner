@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">TravelPlanner</string>
     <string name="font_name">IropkeBatangM.ttf</string>
+    <string name="create_plan_title">플랜 작성</string>
 </resources>

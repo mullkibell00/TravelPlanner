@@ -1,6 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <android.support.v7.widget.Toolbar
+        android:layout_height="56dp"
+        android:layout_width="match_parent"
+        android:background="@color/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark"
+        android:gravity = "center_vertical"
+        android:elevation="1dp"
+        android:id="@+id/create_plan_toolbar"
+        android:layout_alignParentTop="true"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:id="@+id/create_plan_title"
+            android:layout_marginLeft="23dp"
+            android:layout_centerVertical="true"
+            android:textSize="22sp"
+            android:textColor="@color/colorWhite"
+            android:text="@string/create_plan_title"
+            android:textStyle="bold"
+            />
 
-</LinearLayout>
+    </android.support.v7.widget.Toolbar>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/create_plan_toolbar"
+        android:id="@+id/container">
+    </FrameLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="61dp"
+        android:layout_alignParentBottom="true"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:layout_marginBottom="20dp"
+        >
+        <ImageView
+            android:layout_width="61dp"
+            android:layout_height="61dp"
+            android:id="@+id/create_plan_prev"
+            android:layout_alignParentLeft="true"
+            />
+        <ImageView
+            android:layout_alignParentRight="true"
+            android:layout_width="61dp"
+            android:layout_height="61dp"
+            android:id="@+id/create_plan_next"
+            />
+    </RelativeLayout>
+</RelativeLayout>
