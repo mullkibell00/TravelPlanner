@@ -1,5 +1,6 @@
 package com.example.rosem.TravelPlanner.activity;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -7,6 +8,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.example.rosem.TravelPlanner.R;
 import com.example.rosem.TravelPlanner.course.Course;
@@ -29,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     ManageFragment manage;
     ShareFragment share;
     SettingFragment setting;
-
+    Typeface fontType;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,10 +40,16 @@ public class MainActivity extends AppCompatActivity {
         //for debugging
         createInitialFavorite();
 
+        fontType = Typeface.createFromAsset(getAssets(),getString(R.string.font_name));
+
         toolbar = (Toolbar)findViewById(R.id.toolbar);//내가 만든 툴바를 가져오기
         setSupportActionBar(toolbar);//내가 만든 툴바를 액션바로 셋
         ActionBar actionBar = getSupportActionBar();//셋해둔 액션바를 진짜 액션바로 넘기기
         actionBar.setDisplayShowTitleEnabled(false);//기본 액션바 끄는 거
+        //setting font
+        TextView appTitle = (TextView)toolbar.findViewById(R.id.title_bar_title);
+        appTitle.setTypeface(fontType);
+
 
         //fragment 객체를 만들기
         favorite = FavoriteFragment.newInstance(getSupportFragmentManager());
