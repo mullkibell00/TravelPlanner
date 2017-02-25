@@ -9,6 +9,12 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
     <ImageView
-        android:layout_width="50dp"
-        android:layout_height="50dp" />
+        android:id="@+id/manage_add_btn"
+        android:layout_width="61dp"
+        android:layout_height="61dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="20dp"
+        android:src="@mipmap/add"
+        />
 </RelativeLayout>

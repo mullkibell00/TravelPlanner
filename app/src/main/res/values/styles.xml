@@ -11,7 +11,7 @@
     <style name="AppTheme.HomeScreen" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">#8fd3e0</item>
         <item name="colorPrimaryDark">#8fd3e0</item>
-        <item name="colorAccent">#004689</item>
+        <item name="colorAccent">#4d84a1</item>
 
     </style>
 
