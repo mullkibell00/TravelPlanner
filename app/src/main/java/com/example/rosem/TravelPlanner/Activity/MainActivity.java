@@ -1,9 +1,12 @@
 package com.example.rosem.TravelPlanner.activity;
 
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -22,6 +25,9 @@ import org.json.JSONArray;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
+
+import static com.example.rosem.TravelPlanner.R.mipmap.route;
+import static com.example.rosem.TravelPlanner.R.mipmap.star;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -61,11 +67,22 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.container,favorite).commit();//main tap
 
         //탭들 생성
+        //아이콘 색 선정
+        int iconColor = ContextCompat.getColor(this, R.color.colorPrimary);
+        PorterDuff.Mode iconMode = PorterDuff.Mode.SRC_IN;
         TabLayout tabs = (TabLayout)findViewById(R.id.tabs);
-        tabs.addTab(tabs.newTab().setIcon(R.mipmap.star));
-        tabs.addTab(tabs.newTab().setIcon(R.mipmap.route));
-        tabs.addTab(tabs.newTab().setIcon(R.mipmap.share));
-        tabs.addTab(tabs.newTab().setIcon(R.mipmap.settings));
+        Drawable iconStar = ContextCompat.getDrawable(getApplicationContext(), star);
+        iconStar.setColorFilter(iconColor, iconMode);
+        Drawable iconRoute = ContextCompat.getDrawable(getApplicationContext(), route);
+        iconRoute.setColorFilter(iconColor, iconMode);
+        Drawable iconShare = ContextCompat.getDrawable(getApplicationContext(),R.mipmap.share);
+        iconShare.setColorFilter(iconColor, iconMode);
+        Drawable iconSettings = ContextCompat.getDrawable(getApplicationContext(),R.mipmap.settings);
+        iconSettings.setColorFilter(iconColor, iconMode);
+        tabs.addTab(tabs.newTab().setIcon(iconStar));
+        tabs.addTab(tabs.newTab().setIcon(iconRoute));
+        tabs.addTab(tabs.newTab().setIcon(iconShare));
+        tabs.addTab(tabs.newTab().setIcon(iconSettings));
 
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override

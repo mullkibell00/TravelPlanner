@@ -10,7 +10,6 @@
         android:name=".application.TravelPlanner"
         android:theme="@style/AppTheme">
         <activity android:name="com.example.rosem.TravelPlanner.activity.MainActivity"
-            android:theme="@style/AppTheme.HomeScreen"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
