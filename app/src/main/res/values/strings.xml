@@ -1,5 +1,10 @@
 <resources>
     <string name="app_name">TravelPlanner</string>
     <string name="font_name">IropkeBatangM.ttf</string>
+    <!--about create plan -->
     <string name="create_plan_title">플랜 작성</string>
+    <!--create plan - input plan name-->
+    <string name="txt_plan_name">플랜 이름</string>
+    <string name="txt_input_plan_name">플랜 이름을 입력해주세요.</string>
+    <string name="txt_input_plan_name_explain">* 플랜 이름은 중복될 수 없습니다.</string>
 </resources>

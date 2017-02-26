@@ -4,9 +4,12 @@
     <color name="colorPrimaryDark">#8fd3e0</color>
     <color name="colorAccent">#4d84a1</color>
     <color name="colorFont">#223b75</color>
-    <color name="colorFontGray">#889a9a</color>
+    <color name="colorFontLightGrey">#c8ced0</color>
+    <color name="colorFontGrey">#889a9a</color>
     <color name="colorLine">#4d84a1</color>
     <color name="colorWhite">#ffffff</color>
     <color name="colorButton">#4d84a1</color>
     <color name="colorLightButton">#8fd3e0</color>
+    <color name="colorFontDark">#3d4c5b</color>
+    <color name="colorDark">#3d4c5b</color>
 </resources>
