@@ -5,14 +5,18 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.example.rosem.TravelPlanner.R;
+import com.example.rosem.TravelPlanner.fragment.InputTitleFragment;
 import com.example.rosem.TravelPlanner.object.Place;
 import com.example.rosem.TravelPlanner.plan.Plan;
 
@@ -35,12 +39,18 @@ public class CreatePlanActivity extends AppCompatActivity {
     TextView title;
     Button nextButton;
     Button prevButton;
-    FrameLayout container;
+    private FrameLayout container;
     int iconColor;
     PorterDuff.Mode iconMode;
     Realm db;
 
     Schedule schedule = new Schedule();
+
+    private int STEP_NUM;
+    Fragment [] stepFragments;
+    private int currentStep = 0;
+    private static final int NEXT_STEP = 112;
+    private static final int PREV_STEP = 113;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,6 +64,7 @@ public class CreatePlanActivity extends AppCompatActivity {
 
         iconColor = ContextCompat.getColor(this,R.color.colorLightButton);
         iconMode = PorterDuff.Mode.SRC_IN;
+        STEP_NUM = this.getResources().getInteger(R.integer.create_plan_steps);
 
         container = (FrameLayout)findViewById(R.id.container);
 
@@ -69,6 +80,11 @@ public class CreatePlanActivity extends AppCompatActivity {
         prevButton.setBackground(prevImg);
 
         db = Realm.getDefaultInstance();
+
+        stepFragments = new Fragment[STEP_NUM];
+        stepFragments[0] = InputTitleFragment.newInstance();
+
+        changeStep(getSupportFragmentManager(),currentStep);
     }
 
     @Override
@@ -94,6 +110,58 @@ public class CreatePlanActivity extends AppCompatActivity {
         }
     }
 
+    public void changeStep(FragmentManager fm, int order)
+    {
+        Fragment selected = null;
+
+        //checking order
+        if(order==currentStep)
+        {
+            //do nothing
+        }
+        else
+        {
+            if(order==NEXT_STEP)
+            {
+                currentStep++;
+            }
+            else
+            {
+                currentStep--;
+            }
+        }
+
+        //disable button / able button
+        if(currentStep==0)
+        {
+            prevButton.setVisibility(View.INVISIBLE);
+        }
+        else
+        {
+            prevButton.setVisibility(View.VISIBLE);
+        }
+
+        fm.beginTransaction().replace(R.id.container,stepFragments[currentStep]).commit();
+    }
+
+    public void moveNext()
+    {
+        changeStep(getSupportFragmentManager(),NEXT_STEP);
+    }
+    public void movePrev()
+    {
+        changeStep(getSupportFragmentManager(),PREV_STEP);
+    }
+
+
+    public Typeface getFontType()
+    {
+        return fontType;
+    }
+
+
+
+    //about schedule class
     public Calendar getArrived() {
         return schedule.arrived;
     }
@@ -183,6 +251,8 @@ public class CreatePlanActivity extends AppCompatActivity {
     {
         return schedule.placeList.size();
     }
+
+
 
 
      private class Schedule

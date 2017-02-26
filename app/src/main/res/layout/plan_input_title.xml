@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:orientation="vertical"
+    android:id="@+id/plan_screen_input_title"
     >
 
     <LinearLayout
@@ -19,6 +20,7 @@
             android:textColor="@color/colorFontDark"
             android:text="@string/txt_plan_name"
             android:layout_marginRight="23dp"
+            android:id="@+id/plan_txt_plan_name"
             />
         <EditText
             android:layout_width="match_parent"
@@ -26,7 +28,10 @@
             android:textSize="17sp"
             android:textColor="@color/colorFontDark"
             android:textColorHint="@color/colorFontGrey"
+            android:inputType="text"
+            android:imeOptions="actionDone"
             android:hint="@string/txt_input_plan_name"
+            android:id="@+id/plan_txt_input_plan_name"
             />
     </LinearLayout>
     <TextView
@@ -36,6 +41,7 @@
         android:textColor="@color/colorFontGrey"
         android:textSize="14sp"
         android:text="@string/txt_input_plan_name_explain"
+        android:id="@+id/plan_txt_plan_name_explain"
         />
 
 

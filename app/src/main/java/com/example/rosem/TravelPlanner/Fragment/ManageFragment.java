@@ -43,7 +43,7 @@ public class ManageFragment extends android.support.v4.app.Fragment{
 
     }
 
-    public ManageFragment newInstance()
+    public static ManageFragment newInstance()
     {
         ManageFragment fragment = new ManageFragment();
 
