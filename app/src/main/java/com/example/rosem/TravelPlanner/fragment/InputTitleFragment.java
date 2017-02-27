@@ -53,6 +53,12 @@ public class InputTitleFragment extends Fragment {
         TextView inputNameEx = (TextView)view.findViewById(R.id.plan_txt_plan_name_explain);
         planNameView.setTypeface(fonType); inputNameEx.setTypeface(fonType); inputPlanName.setTypeface(fonType);
 
+        String prevPlanName = ((CreatePlanActivity)getActivity()).getPlanName();
+        if(prevPlanName!=null)
+        {
+            inputPlanName.setText(prevPlanName);
+        }
+
         LinearLayout screen = (LinearLayout)view.findViewById(R.id.plan_screen_input_title);
         screen.setOnTouchListener(new View.OnTouchListener() {
             @Override
