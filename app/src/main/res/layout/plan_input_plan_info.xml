@@ -1,5 +1,159 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:fillViewport="true"
+    >
+    <LinearLayout
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        >
+        <!--about selecting country-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="23dp"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="20dp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="17sp"
+                android:textColor="@color/colorFontDark"
+                android:text="@string/txt_traveling_country"
+                android:layout_marginRight="20dp"
+                android:id="@+id/plan_info_txt_travel_country"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="41dp"
+                android:background="@color/colorPrimary"
+                android:text="@string/txt_select_traveling_country"
+                android:textSize="15sp"
+                android:textColor="@color/colorWhite"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:id="@+id/plan_info_txt_selected_country"
+                />
+        </LinearLayout>
+        <!--text view about arrival time-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="23dp"
+            android:orientation="horizontal"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:id="@+id/plan_info_country_name1"
+                android:textColor="@color/colorAccent"
+                android:textSize="17sp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/plan_info_txt_arrival_time"
+                android:textSize="17sp"
+                android:textColor="@color/colorFontDark"
+                android:text="@string/txt_input_arrival_time"
+                />
+        </LinearLayout>
 
-</RelativeLayout>
+        <!--date picker and time picker of arrival time-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="23dp"
+            >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="41dp"
+                android:textSize="15dp"
+                android:textColor="@color/colorWhite"
+                android:textStyle="bold"
+                android:text="@string/txt_select_traveling_date"
+                android:background="@color/colorPrimary"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:id="@+id/plan_info_txt_select_arrival_date"
+                android:layout_marginRight="10dp"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="41dp"
+                android:textSize="15dp"
+                android:textColor="@color/colorWhite"
+                android:textStyle="bold"
+                android:text="@string/txt_select_traveling_time"
+                android:background="@color/colorPrimary"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:id="@+id/plan_info_txt_select_arrival_time"
+                />
+
+        </LinearLayout>
+
+        <!--text view about departure time-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="23dp"
+            android:orientation="horizontal"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:id="@+id/plan_info_country_name2"
+                android:textColor="@color/colorAccent"
+                android:textSize="17sp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/plan_info_txt_departure_time"
+                android:textSize="17sp"
+                android:textColor="@color/colorFontDark"
+                android:text="@string/txt_input_departure_time"
+                />
+        </LinearLayout>
+
+        <!--date picker and time picker of departure time-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="23dp"
+            >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="41dp"
+                android:textSize="15dp"
+                android:textColor="@color/colorWhite"
+                android:textStyle="bold"
+                android:text="@string/txt_select_traveling_date"
+                android:background="@color/colorPrimary"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:id="@+id/plan_info_txt_select_departure_date"
+                android:layout_marginRight="10dp"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="41dp"
+                android:textSize="15dp"
+                android:textColor="@color/colorWhite"
+                android:textStyle="bold"
+                android:text="@string/txt_select_traveling_time"
+                android:background="@color/colorPrimary"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:id="@+id/plan_info_txt_select_departure_time"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

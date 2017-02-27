@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.rosem.TravelPlanner.R;
 import com.example.rosem.TravelPlanner.activity.CreatePlanActivity;
@@ -16,6 +17,15 @@ import com.example.rosem.TravelPlanner.activity.CreatePlanActivity;
  */
 
 public class InputPlanInfoFragment extends Fragment {
+
+    TextView txtArrival;
+    TextView txtDeparture;
+    TextView txtTravelingCountry;
+    TextView selectedCountry;
+    TextView selectedArrivalDate;
+    TextView selectedArrivalTime;
+    TextView selectedDepartDate;
+    TextView selectedDepartTime;
 
     public static InputPlanInfoFragment newInstance()
     {
@@ -32,6 +42,8 @@ public class InputPlanInfoFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup view = (ViewGroup)inflater.inflate(R.layout.plan_input_plan_info,container,false);
+
+        settingTextView(view);
 
 
         Button prevButton = (Button)getActivity().findViewById(R.id.create_plan_prev);
@@ -56,6 +68,11 @@ public class InputPlanInfoFragment extends Fragment {
     }
 
     public void saveData()
+    {
+
+    }
+
+    public void settingTextView(ViewGroup view)
     {
 
     }

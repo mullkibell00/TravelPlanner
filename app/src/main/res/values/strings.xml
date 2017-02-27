@@ -8,4 +8,12 @@
     <string name="txt_input_plan_name">플랜 이름을 입력해주세요.</string>
     <string name="txt_input_plan_name_explain">* 플랜 이름은 중복될 수 없습니다.</string>
     <string name="txt_duplicate_plan_name">이미 같은 이름의 플랜이 있습니다.</string>
+
+    <!--create plan - input plan info-->
+    <string name ="txt_traveling_country">여행할 나라</string>
+    <string name="txt_select_traveling_country">여행할 나라 선택</string>
+    <string name="txt_input_arrival_time">에 도착하는 시간</string>
+    <string name="txt_input_departure_time">에서 출발하는 시간</string>
+    <string name="txt_select_traveling_date">날짜 선택</string>
+    <string name="txt_select_traveling_time">시간 선택</string>
 </resources>
