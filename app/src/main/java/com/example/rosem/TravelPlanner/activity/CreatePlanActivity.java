@@ -28,7 +28,6 @@ import com.google.android.gms.location.places.Places;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Locale;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -214,11 +213,11 @@ public class CreatePlanActivity extends AppCompatActivity {
         schedule.arrived = arrived;
     }
 
-    public Locale getCountry() {
+    public String getCountry() {
         return schedule.country;
     }
 
-    public void setCountry(Locale country) {
+    public void setCountry(String country) {
         schedule.country = country;
     }
 
@@ -307,7 +306,7 @@ public class CreatePlanActivity extends AppCompatActivity {
         public Calendar arrived;
         public boolean isHotelReserved;
         public Place hotel;
-        public Locale country;
+        public String country;
         public Calendar tourStart;
         public Calendar tourEnd;
         public ArrayList<Place> placeList = new ArrayList<Place>();

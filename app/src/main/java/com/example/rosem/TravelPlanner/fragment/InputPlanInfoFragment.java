@@ -71,6 +71,9 @@ public class InputPlanInfoFragment extends Fragment {
 
     //current
     int curYear, curMonth, curDay, curHour,curMinute;
+    Calendar selectedArrival;
+    Calendar selectedDepart;
+    int travelingPeriod;
 
     public static InputPlanInfoFragment newInstance()
     {
@@ -83,10 +86,15 @@ public class InputPlanInfoFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         fontType = ((CreatePlanActivity)getActivity()).getFontType();
+        selectedArrival = Calendar.getInstance();
+        selectedDepart = Calendar.getInstance();
+
         arrivalDateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                texts[mSelectedArrivalDate].setText(year+"년 "+month+"월 "+day+"일");
+                texts[mSelectedArrivalDate].setText(year+"년 "+(month+1)+"월 "+day+"일");
+                selectedArrival.set(Calendar.YEAR,year); selectedArrival.set(Calendar.MONTH,month);
+                selectedArrival.set(Calendar.DAY_OF_MONTH,day);
             }
         };
         arrivalTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
@@ -95,12 +103,16 @@ public class InputPlanInfoFragment extends Fragment {
                 texts[mSelectedArrivalTime].setBackgroundColor(Color.TRANSPARENT);
                 texts[mSelectedArrivalTime].setTextColor(ContextCompat.getColor(getContext(),R.color.colorAccent));
                 texts[mSelectedArrivalTime].setText(hour+"시 "+minute+"분");
+                selectedArrival.set(Calendar.HOUR_OF_DAY,hour);
+                selectedArrival.set(Calendar.MINUTE,minute);
             }
         };
         departDateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                texts[mSelectedDepartDate].setText(year+"년 "+month+"월 "+day+"일");
+                texts[mSelectedDepartDate].setText(year+"년 "+(month+1)+"월 "+day+"일");
+                selectedDepart.set(Calendar.YEAR,year); selectedDepart.set(Calendar.MONTH,month);
+                selectedDepart.set(Calendar.DAY_OF_MONTH,day);
             }
         };
         departTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
@@ -109,6 +121,8 @@ public class InputPlanInfoFragment extends Fragment {
                 texts[mSelectedDepartTime].setBackgroundColor(Color.TRANSPARENT);
                 texts[mSelectedDepartTime].setTextColor(ContextCompat.getColor(getContext(),R.color.colorAccent));
                 texts[mSelectedDepartTime].setText(hour+"시 "+minute+"분");
+                selectedDepart.set(Calendar.HOUR_OF_DAY,hour);
+                selectedDepart.set(Calendar.MINUTE,minute);
             }
         };
 
@@ -118,6 +132,9 @@ public class InputPlanInfoFragment extends Fragment {
         curDay = curCalendar.get(Calendar.DATE);
         curHour = curCalendar.get(Calendar.HOUR_OF_DAY);
         curMinute = curCalendar.get(Calendar.MINUTE);
+        selectedArrival.set(Calendar.YEAR,curYear); selectedArrival.set(Calendar.MONTH,curMonth);
+        selectedArrival.set(Calendar.DAY_OF_MONTH,curDay); selectedArrival.set(Calendar.HOUR_OF_DAY,curHour);
+        selectedArrival.set(Calendar.MINUTE,curMinute);
     }
 
     @Nullable
@@ -141,7 +158,7 @@ public class InputPlanInfoFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 saveData();
-                ((CreatePlanActivity)getActivity()).moveNext();
+                //((CreatePlanActivity)getActivity()).moveNext();
             }
         });
 
@@ -151,7 +168,30 @@ public class InputPlanInfoFragment extends Fragment {
 
     public void saveData()
     {
+        //numofDays, arrival,departure,country
+        ((CreatePlanActivity)getActivity()).setArrived(selectedArrival);
+        ((CreatePlanActivity)getActivity()).setDepature(selectedDepart);
+        ((CreatePlanActivity)getActivity()).setCountry(texts[mSelectedCountry].getText().toString());
 
+        int travelingPeriod = 0;
+        if(selectedArrival.get(Calendar.MONTH)==selectedDepart.get(Calendar.MONTH))
+        {
+            travelingPeriod = selectedDepart.get(Calendar.DAY_OF_MONTH)-selectedArrival.get(Calendar.DAY_OF_MONTH)+1;
+        }
+        else
+        {
+            travelingPeriod = selectedArrival.getActualMaximum(Calendar.DAY_OF_MONTH)-selectedArrival.get(Calendar.DAY_OF_MONTH)+1;
+            Calendar temp = Calendar.getInstance();
+            for(int i = selectedArrival.get(Calendar.MONTH)+1;i<selectedDepart.get(Calendar.MONTH);i++)
+            {
+                temp.set(Calendar.MONTH,i);
+                travelingPeriod+=temp.getActualMaximum(Calendar.DAY_OF_MONTH);
+            }
+            travelingPeriod+=selectedDepart.get(Calendar.DAY_OF_MONTH);
+        }
+        Log.v("PlanInfo:::","travelingPeriod : "+travelingPeriod);
+        ((CreatePlanActivity)getActivity()).setNumOfDays(travelingPeriod);
+        Log.v("PlanInfo:::","check saved data\nselectedCountry="+((CreatePlanActivity)getActivity()).getCountry());
     }
 
     public void settingTextView(ViewGroup view)
@@ -210,15 +250,53 @@ public class InputPlanInfoFragment extends Fragment {
         texts[mSelectedDepartDate].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new DatePickerDialog(getContext(),departDateSetListener,curYear,curMonth,curDay).show();
+                new DatePickerDialog(getContext(),departDateSetListener,
+                        selectedArrival.get(Calendar.YEAR),
+                        selectedArrival.get(Calendar.MONTH),selectedArrival.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
         texts[mSelectedDepartTime].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new TimePickerDialog(getContext(),departTimeSetListener,curHour,curDay,false).show();
+                new TimePickerDialog(getContext(),departTimeSetListener,
+                        selectedArrival.get(Calendar.HOUR_OF_DAY),
+                        selectedArrival.get(Calendar.MINUTE),false).show();
             }
         });
+
+        //load if there is
+        String country = null;
+        if((country = ((CreatePlanActivity)getActivity()).getCountry())!=null)
+        {
+            for(int i = mSelectedCountry;i<mSelectedCountryShowDepart;i++)
+            {
+                texts[i].setText(country);
+            }
+            texts[mSelectedCountry].setBackgroundColor(Color.TRANSPARENT);
+            texts[mSelectedCountry].setTextColor(ContextCompat.getColor(getContext(),R.color.colorAccent));
+        }
+        Calendar arrival = null;
+        if((arrival = ((CreatePlanActivity)getActivity()).getArrived())!=null)
+        {
+            texts[mSelectedArrivalDate].setText(arrival.get(Calendar.YEAR)+"년 "
+                    +(arrival.get(Calendar.MONTH)+1)+"월 "+arrival.get(Calendar.DAY_OF_MONTH)+"일");
+            texts[mSelectedArrivalTime].setBackgroundColor(Color.TRANSPARENT);
+            texts[mSelectedArrivalTime].setTextColor(ContextCompat.getColor(getContext(),R.color.colorAccent));
+            texts[mSelectedArrivalTime]
+                    .setText(arrival.get(Calendar.HOUR_OF_DAY)+"시 "
+                            +arrival.get(Calendar.MINUTE)+"분");
+        }
+        Calendar depart = null;
+        if((depart=((CreatePlanActivity)getActivity()).getDepature())!=null)
+        {
+            texts[mSelectedDepartDate].setText(depart.get(Calendar.YEAR)+"년 "
+                    +(depart.get(Calendar.MONTH)+1)+"월 "+depart.get(Calendar.DAY_OF_MONTH)+"일");
+            texts[mSelectedDepartTime].setBackgroundColor(Color.TRANSPARENT);
+            texts[mSelectedDepartTime].setTextColor(ContextCompat.getColor(getContext(),R.color.colorAccent));
+            texts[mSelectedDepartTime]
+                    .setText(depart.get(Calendar.HOUR_OF_DAY)+"시 "
+                            +depart.get(Calendar.MINUTE)+"분");
+        }
     }
 
     @Override
