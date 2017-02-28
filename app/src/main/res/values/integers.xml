@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <integer name="create_plan_steps">5</integer>
+    <integer name="create_plan_steps">3</integer>
 </resources>
