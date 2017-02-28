@@ -158,7 +158,7 @@ public class InputPlanInfoFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 saveData();
-                //((CreatePlanActivity)getActivity()).moveNext();
+                ((CreatePlanActivity)getActivity()).moveNext();
             }
         });
 
