@@ -4,6 +4,7 @@ import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -64,6 +65,9 @@ public class CreatePlanActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_plan);
 
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
         fontType = Typeface.createFromAsset(getAssets(),getString(R.string.font_name));
         Toolbar titleBar = (Toolbar)findViewById(R.id.create_plan_toolbar);
         title = (TextView)titleBar.findViewById(R.id.create_plan_title);
@@ -123,6 +127,18 @@ public class CreatePlanActivity extends AppCompatActivity {
         {
             db.close();
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    protected void onStop() {
+        mGoogleApiClient.disconnect();
+        super.onStop();
     }
 
     public boolean checkPlanName(String string)

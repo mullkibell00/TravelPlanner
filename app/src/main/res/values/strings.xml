@@ -1,6 +1,11 @@
 <resources>
     <string name="app_name">TravelPlanner</string>
     <string name="font_name">IropkeBatangM.ttf</string>
+    <string name="google_api_key">AIzaSyAVP_0vf3IB8IVH3G7Ga38eH8KIeWhhw1E</string>
+    <string name="google_http_api_key">AIzaSyBrc43xV_1kSDrzfX-Nl8_Um3wnZpYjOow</string>
+
+    <!--google related-->
+    <string name="google_geocoding_base">https://maps.googleapis.com/maps/api/geocode/json?place_id=</string>
     <!--about create plan -->
     <string name="create_plan_title">플랜 작성</string>
     <!--create plan - input plan name-->

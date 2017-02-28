@@ -41,7 +41,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="23dp"
+            android:gravity="center_vertical"
+            android:paddingTop="23dp"
+            android:paddingBottom="23dp"
             android:orientation="horizontal"
             >
             <TextView
@@ -51,6 +53,7 @@
                 android:id="@+id/plan_info_country_name1"
                 android:textColor="@color/colorAccent"
                 android:textSize="17sp"
+                android:text="@string/txt_traveling_country"
                 />
             <TextView
                 android:layout_width="wrap_content"
@@ -100,7 +103,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="23dp"
+            android:gravity="center_vertical"
+            android:paddingTop="23dp"
+            android:paddingBottom="23dp"
             android:orientation="horizontal"
             >
             <TextView
@@ -110,6 +115,7 @@
                 android:id="@+id/plan_info_country_name2"
                 android:textColor="@color/colorAccent"
                 android:textSize="17sp"
+                android:text="@string/txt_traveling_country"
                 />
             <TextView
                 android:layout_width="wrap_content"
