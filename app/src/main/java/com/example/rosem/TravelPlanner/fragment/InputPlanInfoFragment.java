@@ -3,13 +3,11 @@ package com.example.rosem.TravelPlanner.fragment;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -100,8 +98,9 @@ public class InputPlanInfoFragment extends Fragment {
         arrivalTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-                texts[mSelectedArrivalTime].setBackgroundColor(Color.TRANSPARENT);
-                texts[mSelectedArrivalTime].setTextColor(ContextCompat.getColor(getContext(),R.color.colorAccent));
+                //texts[mSelectedArrivalTime].setBackgroundColor(Color.TRANSPARENT);
+                //texts[mSelectedArrivalTime].setTextColor(ContextCompat.getColor(getContext(),R.color.colorAccent));
+                texts[mSelectedArrivalTime].setSelected(true);
                 texts[mSelectedArrivalTime].setText(hour+"시 "+minute+"분");
                 selectedArrival.set(Calendar.HOUR_OF_DAY,hour);
                 selectedArrival.set(Calendar.MINUTE,minute);
@@ -118,8 +117,9 @@ public class InputPlanInfoFragment extends Fragment {
         departTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-                texts[mSelectedDepartTime].setBackgroundColor(Color.TRANSPARENT);
-                texts[mSelectedDepartTime].setTextColor(ContextCompat.getColor(getContext(),R.color.colorAccent));
+                //texts[mSelectedDepartTime].setBackgroundColor(Color.TRANSPARENT);
+                //texts[mSelectedDepartTime].setTextColor(ContextCompat.getColor(getContext(),R.color.colorAccent));
+                texts[mSelectedDepartTime].setSelected(true);
                 texts[mSelectedDepartTime].setText(hour+"시 "+minute+"분");
                 selectedDepart.set(Calendar.HOUR_OF_DAY,hour);
                 selectedDepart.set(Calendar.MINUTE,minute);
@@ -272,16 +272,14 @@ public class InputPlanInfoFragment extends Fragment {
             {
                 texts[i].setText(country);
             }
-            texts[mSelectedCountry].setBackgroundColor(Color.TRANSPARENT);
-            texts[mSelectedCountry].setTextColor(ContextCompat.getColor(getContext(),R.color.colorAccent));
+            texts[mSelectedCountry].setSelected(true);
         }
         Calendar arrival = null;
         if((arrival = ((CreatePlanActivity)getActivity()).getArrived())!=null)
         {
             texts[mSelectedArrivalDate].setText(arrival.get(Calendar.YEAR)+"년 "
                     +(arrival.get(Calendar.MONTH)+1)+"월 "+arrival.get(Calendar.DAY_OF_MONTH)+"일");
-            texts[mSelectedArrivalTime].setBackgroundColor(Color.TRANSPARENT);
-            texts[mSelectedArrivalTime].setTextColor(ContextCompat.getColor(getContext(),R.color.colorAccent));
+            texts[mSelectedArrivalTime].setSelected(true);
             texts[mSelectedArrivalTime]
                     .setText(arrival.get(Calendar.HOUR_OF_DAY)+"시 "
                             +arrival.get(Calendar.MINUTE)+"분");
@@ -291,8 +289,7 @@ public class InputPlanInfoFragment extends Fragment {
         {
             texts[mSelectedDepartDate].setText(depart.get(Calendar.YEAR)+"년 "
                     +(depart.get(Calendar.MONTH)+1)+"월 "+depart.get(Calendar.DAY_OF_MONTH)+"일");
-            texts[mSelectedDepartTime].setBackgroundColor(Color.TRANSPARENT);
-            texts[mSelectedDepartTime].setTextColor(ContextCompat.getColor(getContext(),R.color.colorAccent));
+            texts[mSelectedDepartTime].setSelected(true);
             texts[mSelectedDepartTime]
                     .setText(depart.get(Calendar.HOUR_OF_DAY)+"시 "
                             +depart.get(Calendar.MINUTE)+"분");
@@ -384,8 +381,9 @@ public class InputPlanInfoFragment extends Fragment {
                     {
                         texts[i].setText(country);
                     }
-                    texts[mSelectedCountry].setBackgroundColor(Color.TRANSPARENT);
-                    texts[mSelectedCountry].setTextColor(ContextCompat.getColor(getContext(),R.color.colorAccent));
+                    texts[mSelectedCountry].setSelected(true);
+                    //texts[mSelectedCountry].setBackgroundColor(Color.TRANSPARENT);
+                    //texts[mSelectedCountry].setTextColor(ContextCompat.getColor(getContext(),R.color.colorAccent));
                 }
 
             } catch (IOException e) {

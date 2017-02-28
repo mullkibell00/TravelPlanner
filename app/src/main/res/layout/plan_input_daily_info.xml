@@ -45,6 +45,8 @@
                 android:textStyle="bold"
                 android:text="@string/txt_select_traveling_time"
                 android:textIsSelectable="true"
+                android:focusableInTouchMode="false"
+                android:focusable="false"
                 />
         </LinearLayout>
     </LinearLayout>

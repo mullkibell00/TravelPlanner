@@ -28,13 +28,16 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="41dp"
-                android:background="@color/colorPrimary"
+                android:background="@drawable/selectable_textview_background"
                 android:text="@string/txt_select_traveling_country"
                 android:textSize="15sp"
-                android:textColor="@color/colorWhite"
+                android:textColor="@color/selectable_textview_font"
                 android:textStyle="bold"
                 android:gravity="center"
                 android:id="@+id/plan_info_txt_selected_country"
+                android:textIsSelectable="true"
+                android:focusableInTouchMode="false"
+                android:focusable="false"
                 />
         </LinearLayout>
         <!--text view about arrival time-->
@@ -88,13 +91,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="41dp"
                 android:textSize="15dp"
-                android:textColor="@color/colorWhite"
+                android:textColor="@color/selectable_textview_font"
                 android:textStyle="bold"
                 android:text="@string/txt_select_traveling_time"
-                android:background="@color/colorPrimary"
+                android:background="@drawable/selectable_textview_background"
                 android:gravity="center"
                 android:layout_weight="1"
                 android:id="@+id/plan_info_txt_select_arrival_time"
+                android:textIsSelectable="true"
+                android:focusableInTouchMode="false"
+                android:focusable="false"
                 />
 
         </LinearLayout>
@@ -150,13 +156,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="41dp"
                 android:textSize="15dp"
-                android:textColor="@color/colorWhite"
+                android:textColor="@color/selectable_textview_font"
                 android:textStyle="bold"
                 android:text="@string/txt_select_traveling_time"
-                android:background="@color/colorPrimary"
+                android:background="@drawable/selectable_textview_background"
                 android:gravity="center"
                 android:layout_weight="1"
                 android:id="@+id/plan_info_txt_select_departure_time"
+                android:textIsSelectable="true"
+                android:focusableInTouchMode="false"
+                android:focusable="false"
                 />
 
         </LinearLayout>
