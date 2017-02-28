@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.rosem.TravelPlanner.R;
+
 /**
  * Created by rosem on 2017-02-28.
  */
@@ -27,6 +29,10 @@ public class InputDailyInfoFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
+        //return super.onCreateView(inflater, container, savedInstanceState);
+        ViewGroup view = (ViewGroup)inflater.inflate(R.layout.plan_input_daily_info,container,false);
+
+
+        return view;
     }
 }
