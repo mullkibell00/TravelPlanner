@@ -1,13 +1,16 @@
 package com.example.rosem.TravelPlanner.fragment;
 
+import android.content.Intent;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewStub;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -15,6 +18,23 @@ import android.widget.TextView;
 
 import com.example.rosem.TravelPlanner.R;
 import com.example.rosem.TravelPlanner.activity.CreatePlanActivity;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 /**
  * Created by rosem on 2017-02-28.
@@ -27,20 +47,21 @@ public class InputHotelInfoFragment extends Fragment {
     private final int mTextLodgingPlus = 1;
     private final int mTextLodgingYes = 2;
     private final int mTextLodgingNo = 3;
+    private final int mTextLodgingAdd = 4;
 
-    private final int mHotelInfoTextNum = 4;
+    private final int mHotelInfoTextNum = 5;
 
     TextView [] texts = new TextView[mHotelInfoTextNum];
     Typeface fontType;
 
     boolean isHotelReserved = false;
-    boolean additionalQuestion = false;//value of addition question
 
-    View selectedContainer;
-    ViewStub lodgingStub;
-    CheckBox lodgingPlus;
     CheckBox lodgingYes;
     CheckBox lodgingNo;
+
+    RecyclerView mSelectedHotels;
+
+    private final int PLACE_PICK_REQUEST = 1213;
 
     public static InputHotelInfoFragment newInstance()
     {
@@ -64,14 +85,10 @@ public class InputHotelInfoFragment extends Fragment {
 
         settingTextView(view);
 
-        //stub
-        lodgingStub = (ViewStub)view.findViewById(R.id.daily_info_lodging_stub);
-
         //setting checkbox
-        lodgingYes = (CheckBox)view.findViewById(R.id.daily_info_check_yes);
-        lodgingNo = (CheckBox)view.findViewById(R.id.daily_info_check_no);
-        lodgingPlus = (CheckBox)view.findViewById(R.id.daily_info_check_lodging_plus);
-        setPlusVisible(View.INVISIBLE,isHotelReserved);
+        lodgingYes = (CheckBox)view.findViewById(R.id.hotel_info_check_yes);
+        lodgingNo = (CheckBox)view.findViewById(R.id.hotel_info_check_no);
+        setPlusVisible(View.INVISIBLE);
 
         //setting checkbox onCheckListener
         lodgingYes.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -81,15 +98,16 @@ public class InputHotelInfoFragment extends Fragment {
                 if(yes)
                 {
                     isHotelReserved = yes;
-                    setPlusVisible(View.VISIBLE,isHotelReserved);
-                    texts[mTextLodgingPlus].setText(getString(R.string.txt_lodging_multiple_selection));
+                    setAddVisible(View.VISIBLE);
+                    setPlusVisible(View.INVISIBLE);
                     lodgingNo.setChecked(false);
                 }
                 else
                 {
                     if(!(lodgingNo.isChecked()))
                     {
-                        setPlusVisible(View.INVISIBLE,isHotelReserved);
+                        setPlusVisible(View.INVISIBLE);
+                        setAddVisible(View.INVISIBLE);
                     }
                 }
             }
@@ -101,40 +119,24 @@ public class InputHotelInfoFragment extends Fragment {
                 if(no)
                 {
                     isHotelReserved = !(no);
-                    setPlusVisible(View.VISIBLE,isHotelReserved);
-                    texts[mTextLodgingPlus].setText(getString(R.string.txt_lodging_recommendation));
+                    setPlusVisible(View.VISIBLE);
+                    setAddVisible(View.INVISIBLE);
                     lodgingYes.setChecked(false);
                 }
                 else
                 {
                     if(!(lodgingYes.isChecked()))
                     {
-                        setPlusVisible(View.INVISIBLE,isHotelReserved);
+                        setPlusVisible(View.INVISIBLE);
+                        setAddVisible(View.INVISIBLE);
                     }
                 }
             }
         });
 
-        lodgingPlus.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
-                if(checked)
-                {
-                    if(isHotelReserved)
-                    {
-                        //inflate view stub
-                    }
-                    else
-                    {
-                        //inflate view stub
-                    }
-                }
-                else
-                {
-                    //view stub invisible
-                }
-            }
-        });
+        //set recyclerView
+        mSelectedHotels = (RecyclerView)view.findViewById(R.id.hotel_info_selected_hotels);
+        setAddVisible(View.INVISIBLE);
 
         Button prevButton = (Button)getActivity().findViewById(R.id.create_plan_prev);
         Button nextButton = (Button)getActivity().findViewById(R.id.create_plan_next);
@@ -156,14 +158,15 @@ public class InputHotelInfoFragment extends Fragment {
         return view;
     }
 
-    private void setPlusVisible(int visibility, boolean hotel)
+    private void setPlusVisible(int visibility)
     {
         texts[mTextLodgingPlus].setVisibility(visibility);
-        lodgingPlus.setVisibility(visibility);
-        if(visibility==View.VISIBLE && !(hotel))
-        {
-            lodgingPlus.setVisibility(View.INVISIBLE);
-        }
+    }
+
+    private void setAddVisible(int visibility)
+    {
+        texts[mTextLodgingAdd].setVisibility(visibility);
+        mSelectedHotels.setVisibility(visibility);
     }
 
     private void settingTextView(ViewGroup view)
@@ -173,11 +176,33 @@ public class InputHotelInfoFragment extends Fragment {
         texts[mTextLodgingPlus] = (TextView)view.findViewById(R.id.hotel_info_txt_lodging_plus);
         texts[mTextLodgingYes] = (TextView)view.findViewById(R.id.hotel_info_txt_lodging_yes);
         texts[mTextLodgingNo] = (TextView)view.findViewById(R.id.hotel_info_txt_lodging_no);
+        texts[mTextLodgingAdd] = (TextView)view.findViewById(R.id.hotel_info_add_lodging);
 
         for(int i =0; i<mHotelInfoTextNum;i++)
         {
             texts[i].setTypeface(fontType);
         }
+
+        texts[mTextLodgingAdd].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+
+                    Intent intent = builder.build(getActivity());
+                    startActivityForResult(intent,PLACE_PICK_REQUEST);
+                }
+                catch (GooglePlayServicesRepairableException e)
+                {
+                    e.printStackTrace();
+                }
+                catch (GooglePlayServicesNotAvailableException e)
+                {
+                    e.printStackTrace();
+                }
+
+            }
+        });
 
 
         //if there is data -> load
@@ -186,5 +211,88 @@ public class InputHotelInfoFragment extends Fragment {
     private void saveData()
     {
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==PLACE_PICK_REQUEST)
+        {
+            if(resultCode == getActivity().RESULT_OK)
+            {
+                Place selectedPlace = PlacePicker.getPlace(getContext(),data);
+                SendRequest request = new SendRequest(selectedPlace.getId());
+                request.postData(null);
+            }
+        }
+    }
+
+    private class SendRequest extends AsyncTask<String,String,String> {
+        String urlString = getString(R.string.google_geocoding_base);
+
+        public SendRequest(String placeId) {
+            urlString += placeId;
+            urlString += "&language=ko&key=";
+            urlString += getString(R.string.google_http_api_key);
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            postData(urlString);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            //super.onPostExecute(s);
+            Log.v("Main::", "start send");
+        }
+
+        public void postData(String str) {
+            InputStream inputStream = null;
+            BufferedReader rd = null;
+            StringBuilder response = new StringBuilder();
+
+            HttpClient httpClient = new DefaultHttpClient();
+
+            HttpPost httpPost = new HttpPost(urlString);
+
+            try {
+                //서버로 전송 & 받아오기
+                HttpResponse httpResponse = httpClient.execute(httpPost);
+                Log.v("******server", "send msg successed");
+
+                inputStream = httpResponse.getEntity().getContent();
+                rd = new BufferedReader(new InputStreamReader(inputStream));
+                String line;
+                while ((line = rd.readLine()) != null) {
+                    response.append(line);
+                }
+                Log.v("PlanInfo::bring success", "result:" + response.toString());
+                String country = null;
+                //parsing
+                try {
+                    JSONObject responseObj = new JSONObject(response.toString());
+                    JSONArray result = responseObj.getJSONArray("results");
+                    JSONObject firstObj = result.getJSONObject(0);
+                    JSONArray addrComponent = firstObj.getJSONArray("address_components");
+                    for (int i = 0; i < addrComponent.length(); i++) {
+                        JSONObject addr = addrComponent.getJSONObject(i);
+                        JSONArray types = addr.getJSONArray("types");
+                        if (types.getString(0).equals("country")) {
+                            country = addr.getString("long_name");
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                //code add to recyclerview
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.v("******server", "send msg failed");
+            }
+        }
     }
 }

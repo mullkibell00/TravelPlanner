@@ -24,14 +24,15 @@
     <string name="txt_input_departure_time">에서 출발하는 시간</string>
     <string name="txt_select_traveling_date">날짜 선택</string>
     <string name="txt_select_traveling_time">시간 선택</string>
-
-    <!--create plan - input daily info-->
     <string name="txt_tour_time_explain">하루 일정의 시작 및 종료 시간을 정합니다.</string>
-    <string name="txt_lodging_explain">예약한 숙박 시설이 있습니까?</string>
     <string name="txt_tour_start_time">시작 시간</string>
     <string name="txt_tour_end_time">종료 시간</string>
+
+    <!--create plan - input hotel info-->
+    <string name="txt_lodging_explain">예약한 숙박 시설이 있습니까?</string>
     <string name="txt_lodging_yes">있습니다</string>
     <string name="txt_lodging_no">없습니다</string>
     <string name="txt_lodging_multiple_selection">두 개 이상의 숙박 시설을 예약했습니다</string>
     <string name="txt_lodging_recommendation">숙박 시설 추천 기능을 이용합니다.</string>
+    <string name="txt_lodging_add">예약한 숙박 시설 추가</string>
 </resources>
