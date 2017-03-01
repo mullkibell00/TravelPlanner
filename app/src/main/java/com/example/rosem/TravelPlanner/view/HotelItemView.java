@@ -18,7 +18,7 @@ import java.util.Calendar;
  * Created by rosem on 2017-03-01.
  */
 
-public class HotelSelectionView extends LinearLayout {
+public class HotelItemView extends LinearLayout {
 
     TextView mTextHotelName;
     TextView mTextCheckIn;
@@ -30,7 +30,7 @@ public class HotelSelectionView extends LinearLayout {
     private DatePickerDialog.OnDateSetListener checkInSetListener;
     private DatePickerDialog.OnDateSetListener checkOutSetListener;
 
-    public HotelSelectionView(Context context) {
+    public HotelItemView(Context context) {
         super(context);
         mContext = context;
         mCheckIn = Calendar.getInstance();
