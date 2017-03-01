@@ -4,6 +4,9 @@
     <string name="google_api_key">AIzaSyAVP_0vf3IB8IVH3G7Ga38eH8KIeWhhw1E</string>
     <string name="google_http_api_key">AIzaSyBrc43xV_1kSDrzfX-Nl8_Um3wnZpYjOow</string>
 
+    <string name="txt_yes">예</string>
+    <string name="txt_no">아니오</string>
+
     <!--google related-->
     <string name="google_geocoding_base">https://maps.googleapis.com/maps/api/geocode/json?place_id=</string>
     <!--about create plan -->
@@ -23,7 +26,10 @@
     <string name="txt_select_traveling_time">시간 선택</string>
 
     <!--create plan - input daily info-->
-    <string name="txt_tour_time_explain">* 하루 일정의 시작 및 종료 시간을 정합니다.</string>
+    <string name="txt_tour_time_explain">하루 일정의 시작 및 종료 시간을 정합니다.</string>
+    <string name="txt_lodging_explain">예약한 숙박 시설이 있습니까?</string>
     <string name="txt_tour_start_time">시작 시간</string>
     <string name="txt_tour_end_time">종료 시간</string>
+    <string name="txt_lodging_yes">있습니다</string>
+    <string name="txt_lodging_no">없습니다</string>
 </resources>

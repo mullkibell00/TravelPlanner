@@ -19,21 +19,55 @@
             android:text="@string/txt_tour_time_explain"
             android:textSize="15sp"
             android:layout_marginBottom="20dp"
+            android:layout_marginTop="50dp"
             android:id="@+id/daily_info_explain"
             />
         <!--daily tour start-->
         <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+            android:layout_marginBottom="20dp"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorFontDark"
+            android:textSize="17sp"
+            android:text="@string/txt_tour_start_time"
+            android:layout_marginRight="20dp"
+            android:id="@+id/daily_info_txt_tour_start"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="41dp"
+            android:gravity="center"
+            android:background="@drawable/selectable_textview_background"
+            android:textColor="@color/selectable_textview_font"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:text="@string/txt_select_traveling_time"
+            android:textIsSelectable="true"
+            android:focusableInTouchMode="false"
+            android:focusable="false"
+            android:id="@+id/daily_info_selected_tour_start"
+            />
+    </LinearLayout>
+        <!--daily tour end-->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:layout_marginBottom="20dp"
             >
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorFontDark"
                 android:textSize="17sp"
-                android:text="@string/txt_tour_start_time"
+                android:text="@string/txt_tour_end_time"
                 android:layout_marginRight="20dp"
+                android:id="@+id/daily_info_txt_tour_end"
                 />
             <TextView
                 android:layout_width="match_parent"
@@ -47,7 +81,74 @@
                 android:textIsSelectable="true"
                 android:focusableInTouchMode="false"
                 android:focusable="false"
+                android:id="@+id/daily_info_selected_tour_end"
                 />
         </LinearLayout>
+        <!--explanation about lodging-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorFontGrey"
+            android:text="@string/txt_lodging_explain"
+            android:textSize="15sp"
+            android:layout_marginBottom="20dp"
+            android:id="@+id/daily_info_lodging_explain"/>
+        <!--checkbox-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:paddingLeft="23dp"
+            android:orientation="horizontal"
+            >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="25dp"
+                    android:text="@string/txt_lodging_yes"
+                    android:layout_marginRight="20dp"
+                    android:textSize="15sp"
+                    android:textColor="@color/colorFontDark"
+                    android:textStyle="bold"
+                    />
+                <CheckBox
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:button="@drawable/checkbox"
+                    android:checked="true"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:layout_weight="1">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="25dp"
+                    android:text="@string/txt_lodging_no"
+                    android:layout_marginRight="20dp"
+                    android:textSize="15sp"
+                    android:textColor="@color/colorFontDark"
+                    android:textStyle="bold"
+                    />
+                <CheckBox
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:button="@drawable/checkbox"
+                    android:checked="true"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+        <ViewStub
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
     </LinearLayout>
 </ScrollView>
