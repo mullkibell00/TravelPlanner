@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    >
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/hotel_item_name"
+        android:gravity="center_vertical"
+        android:textSize="15sp"
+        android:textColor="@color/colorAccent"
+        android:textStyle="bold"
+        android:layout_marginRight="10dp"
+        />
+    <TextView
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="31dp"
+        android:gravity="center"
+        android:id="@+id/hotel_item_checkin"
+        android:background="@drawable/selectable_textview_background"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:textColor="@color/selectable_textview_font"
+        android:text="@string/view_hotel_checkin"
+        android:layout_marginRight="10dp"
+        android:textIsSelectable="true"
+        android:focusableInTouchMode="false"
+        android:focusable="false"
+        />
+    <TextView
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="31dp"
+        android:gravity="center"
+        android:id="@+id/hotel_item_checkout"
+        android:background="@drawable/selectable_textview_background"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:textColor="@color/selectable_textview_font"
+        android:text="@string/view_hotel_checkout"
+        android:layout_marginRight="10dp"
+        android:textIsSelectable="true"
+        android:focusableInTouchMode="false"
+        android:focusable="false"
+        />
+
+</LinearLayout>

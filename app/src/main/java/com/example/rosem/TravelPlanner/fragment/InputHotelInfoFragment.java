@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.example.rosem.TravelPlanner.R;
 import com.example.rosem.TravelPlanner.activity.CreatePlanActivity;
+import com.example.rosem.TravelPlanner.object.Site;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
@@ -35,6 +36,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 /**
  * Created by rosem on 2017-02-28.
@@ -59,7 +61,8 @@ public class InputHotelInfoFragment extends Fragment {
     CheckBox lodgingYes;
     CheckBox lodgingNo;
 
-    RecyclerView mSelectedHotels;
+    RecyclerView selectedHotelView;
+    ArrayList<Site> mSelectedHotels;
 
     private final int PLACE_PICK_REQUEST = 1213;
 
@@ -135,7 +138,8 @@ public class InputHotelInfoFragment extends Fragment {
         });
 
         //set recyclerView
-        mSelectedHotels = (RecyclerView)view.findViewById(R.id.hotel_info_selected_hotels);
+        selectedHotelView = (RecyclerView)view.findViewById(R.id.hotel_info_selected_hotels);
+        mSelectedHotels = new ArrayList<Site>();
         setAddVisible(View.INVISIBLE);
 
         Button prevButton = (Button)getActivity().findViewById(R.id.create_plan_prev);
@@ -166,7 +170,7 @@ public class InputHotelInfoFragment extends Fragment {
     private void setAddVisible(int visibility)
     {
         texts[mTextLodgingAdd].setVisibility(visibility);
-        mSelectedHotels.setVisibility(visibility);
+        selectedHotelView.setVisibility(visibility);
     }
 
     private void settingTextView(ViewGroup view)
@@ -221,6 +225,14 @@ public class InputHotelInfoFragment extends Fragment {
             if(resultCode == getActivity().RESULT_OK)
             {
                 Place selectedPlace = PlacePicker.getPlace(getContext(),data);
+                Site hotel = new Site();
+                hotel.setPlaceId(selectedPlace.getId());
+                hotel.setAddress(selectedPlace.getAddress().toString());
+                hotel.setLat(selectedPlace.getLatLng().latitude);
+                hotel.setLng(selectedPlace.getLatLng().longitude);
+                hotel.setPlaceName(selectedPlace.getName().toString());
+                hotel.setPlaceType(selectedPlace.getPlaceTypes().get(0));
+                mSelectedHotels.add(hotel);
                 SendRequest request = new SendRequest(selectedPlace.getId());
                 request.postData(null);
             }

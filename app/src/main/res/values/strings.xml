@@ -9,6 +9,10 @@
 
     <!--google related-->
     <string name="google_geocoding_base">https://maps.googleapis.com/maps/api/geocode/json?place_id=</string>
+
+    <!--about views-->
+    <string name="view_hotel_checkin">체크인</string>
+    <string name="view_hotel_checkout">체크아웃</string>
     <!--about create plan -->
     <string name="create_plan_title">플랜 작성</string>
     <!--create plan - input plan name-->
