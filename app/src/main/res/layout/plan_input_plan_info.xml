@@ -7,14 +7,16 @@
         android:layout_width="match_parent" android:layout_height="match_parent"
         android:orientation="vertical"
         android:gravity="center"
+        android:paddingLeft="23dp"
+        android:paddingRight="23dp"
         >
         <!--about selecting country-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="23dp"
+            android:paddingTop="23dp"
+            android:paddingBottom="23dp"
             android:gravity="center_vertical"
-            android:layout_marginBottom="20dp"
             >
             <TextView
                 android:layout_width="wrap_content"
@@ -40,19 +42,23 @@
                 android:focusable="false"
                 />
         </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="@drawable/list_line_divider"
+            android:backgroundTint="@color/colorFontLightGrey"
+            ></View>
         <!--text view about arrival time-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:paddingTop="23dp"
-            android:paddingBottom="23dp"
             android:orientation="horizontal"
             >
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
                 android:id="@+id/plan_info_country_name1"
                 android:textColor="@color/colorAccent"
                 android:textSize="17sp"
@@ -72,7 +78,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="23dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
             >
             <TextView
                 android:layout_width="match_parent"
@@ -110,14 +117,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:paddingTop="23dp"
-            android:paddingBottom="23dp"
             android:orientation="horizontal"
             >
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
                 android:id="@+id/plan_info_country_name2"
                 android:textColor="@color/colorAccent"
                 android:textSize="17sp"
@@ -137,7 +141,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="23dp"
+            android:paddingTop="16dp"
             >
             <TextView
                 android:layout_width="match_parent"
@@ -169,6 +173,93 @@
                 />
 
         </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="@drawable/list_line_divider"
+            android:backgroundTint="@color/colorFontLightGrey"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="23dp"
+            ></View>
+        <!--explanation-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorFontGrey"
+            android:text="@string/txt_tour_time_explain"
+            android:textSize="15sp"
+            android:paddingBottom="10dp"
+            android:id="@+id/plan_info_explain"
+            />
+        <!--daily tour start-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="23dp"
+            android:paddingRight="23dp"
+            android:layout_marginBottom="20dp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorFontDark"
+                android:textSize="17sp"
+                android:text="@string/txt_tour_start_time"
+                android:layout_marginRight="20dp"
+                android:id="@+id/plan_info_txt_tour_start"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="41dp"
+                android:gravity="center"
+                android:background="@drawable/selectable_textview_background"
+                android:textColor="@color/selectable_textview_font"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:text="@string/txt_select_traveling_time"
+                android:textIsSelectable="true"
+                android:focusableInTouchMode="false"
+                android:focusable="false"
+                android:id="@+id/plan_info_selected_tour_start"
+                />
+        </LinearLayout>
+        <!--daily tour end-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="23dp"
+            android:paddingRight="23dp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorFontDark"
+                android:textSize="17sp"
+                android:text="@string/txt_tour_end_time"
+                android:layout_marginRight="20dp"
+                android:id="@+id/plan_info_txt_tour_end"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="41dp"
+                android:gravity="center"
+                android:background="@drawable/selectable_textview_background"
+                android:textColor="@color/selectable_textview_font"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:text="@string/txt_select_traveling_time"
+                android:textIsSelectable="true"
+                android:focusableInTouchMode="false"
+                android:focusable="false"
+                android:id="@+id/plan_info_selected_tour_end"
+                />
+        </LinearLayout>
+        <!--space for button-->
+        <android.support.v4.widget.Space
+            android:layout_width="match_parent"
+            android:layout_height="81dp" />
 
     </LinearLayout>
 </ScrollView>
