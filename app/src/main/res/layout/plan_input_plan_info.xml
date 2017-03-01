@@ -178,7 +178,7 @@
             android:layout_height="2px"
             android:background="@drawable/list_line_divider"
             android:backgroundTint="@color/colorFontLightGrey"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="23dp"
             android:layout_marginBottom="23dp"
             ></View>
         <!--explanation-->
@@ -188,7 +188,7 @@
             android:textColor="@color/colorFontGrey"
             android:text="@string/txt_tour_time_explain"
             android:textSize="15sp"
-            android:paddingBottom="10dp"
+            android:paddingBottom="23dp"
             android:id="@+id/plan_info_explain"
             />
         <!--daily tour start-->
