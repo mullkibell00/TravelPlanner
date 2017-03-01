@@ -61,7 +61,6 @@ public class InputPlanInfoFragment extends Fragment {
     private final int PLACE_PICK_REQUEST = 1213;
 
     TextView[] texts = new TextView[planInfoTextNum];
-
     private DatePickerDialog.OnDateSetListener arrivalDateSetListener;
     private DatePickerDialog.OnDateSetListener departDateSetListener;
     private TimePickerDialog.OnTimeSetListener arrivalTimeSetListener;
@@ -173,7 +172,7 @@ public class InputPlanInfoFragment extends Fragment {
         ((CreatePlanActivity)getActivity()).setDepature(selectedDepart);
         ((CreatePlanActivity)getActivity()).setCountry(texts[mSelectedCountry].getText().toString());
 
-        int travelingPeriod = 0;
+        travelingPeriod = 0;
         if(selectedArrival.get(Calendar.MONTH)==selectedDepart.get(Calendar.MONTH))
         {
             travelingPeriod = selectedDepart.get(Calendar.DAY_OF_MONTH)-selectedArrival.get(Calendar.DAY_OF_MONTH)+1;
@@ -244,7 +243,7 @@ public class InputPlanInfoFragment extends Fragment {
         texts[mSelectedArrivalTime].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new TimePickerDialog(getContext(),arrivalTimeSetListener,curHour,curDay,false).show();
+                new TimePickerDialog(getContext(),arrivalTimeSetListener,curHour,curMinute,false).show();
             }
         });
         texts[mSelectedDepartDate].setOnClickListener(new View.OnClickListener() {

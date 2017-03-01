@@ -97,7 +97,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="10dp"
             android:paddingLeft="23dp"
             android:orientation="horizontal"
             >
@@ -114,15 +114,22 @@
                     android:text="@string/txt_lodging_yes"
                     android:layout_marginRight="20dp"
                     android:textSize="15sp"
-                    android:textColor="@color/colorFontDark"
+                    android:textColor="@color/checkbox_font"
                     android:textStyle="bold"
+                    android:id="@+id/daily_info_txt_lodging_yes"
+                    android:textIsSelectable="true"
+                    android:focusableInTouchMode="false"
+                    android:focusable="false"
                     />
                 <CheckBox
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:button="@drawable/checkbox"
-                    android:checked="true"
-                    />
+                    android:button="@null"
+                    android:background="@drawable/checkbox"
+                    android:backgroundTint="@color/colorAccent"
+                    android:backgroundTintMode="src_in"
+                    android:id="@+id/daily_info_check_yes"
+                    android:checked="false" />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -135,20 +142,61 @@
                     android:text="@string/txt_lodging_no"
                     android:layout_marginRight="20dp"
                     android:textSize="15sp"
-                    android:textColor="@color/colorFontDark"
+                    android:textColor="@color/checkbox_font"
                     android:textStyle="bold"
+                    android:id="@+id/daily_info_txt_lodging_no"
+                    android:textIsSelectable="true"
+                    android:focusableInTouchMode="false"
+                    android:focusable="false"
                     />
                 <CheckBox
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:button="@drawable/checkbox"
-                    android:checked="true"
+                    android:button="@null"
+                    android:background="@drawable/checkbox"
+                    android:backgroundTint="@color/colorAccent"
+                    android:backgroundTintMode="src_in"
+                    android:id="@+id/daily_info_check_no"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+        <!--supportive question-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:textColor="@color/colorFontGrey"
+                android:text="@string/txt_lodging_multiple_selection"
+                android:id="@+id/daily_info_txt_lodging_plus"
+                />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                >
+                <CheckBox
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:button="@null"
+                    android:background="@drawable/checkbox"
+                    android:backgroundTint="@color/colorAccent"
+                    android:backgroundTintMode="src_in"
+                    android:id="@+id/daily_info_check_lodging_plus"
                     />
             </LinearLayout>
         </LinearLayout>
         <ViewStub
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:isScrollContainer="false"
+            android:id="@+id/daily_info_lodging_stub"
+            android:inflatedId="@+id/daily_info_lodging_container"
             />
     </LinearLayout>
 </ScrollView>
