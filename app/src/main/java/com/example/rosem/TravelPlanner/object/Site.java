@@ -6,7 +6,7 @@ import java.util.Calendar;
  * Created by rosem on 2017-02-25.
  */
 
-public class Place {
+public class Site {
     private String placeId;
     private String placeName;
     private int placeType;
@@ -17,7 +17,7 @@ public class Place {
     private Calendar visitEnd;//방문 종료 시간
     private Calendar spendTime;//소요예정시간
 
-    public Place()
+    public Site()
     {
 
     }

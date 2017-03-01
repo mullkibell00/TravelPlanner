@@ -20,7 +20,7 @@ import com.example.rosem.TravelPlanner.R;
 import com.example.rosem.TravelPlanner.fragment.InputHotelInfoFragment;
 import com.example.rosem.TravelPlanner.fragment.InputPlanInfoFragment;
 import com.example.rosem.TravelPlanner.fragment.InputTitleFragment;
-import com.example.rosem.TravelPlanner.object.Place;
+import com.example.rosem.TravelPlanner.object.Site;
 import com.example.rosem.TravelPlanner.plan.Plan;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -224,11 +224,11 @@ public class CreatePlanActivity extends AppCompatActivity {
         schedule.depature = depature;
     }
 
-    public Place getHotel() {
+    public Site getHotel() {
         return schedule.hotel;
     }
 
-    public void setHotel(Place hotel) {
+    public void setHotel(Site hotel) {
         schedule.hotel = hotel;
     }
 
@@ -248,12 +248,12 @@ public class CreatePlanActivity extends AppCompatActivity {
         schedule.numOfDays = numOfDays;
     }
 
-    public ArrayList<Place> getPlaceList() {
-        return schedule.placeList;
+    public ArrayList<Site> getSiteList() {
+        return schedule.siteList;
     }
 
-    public void setPlaceList(ArrayList<Place> placeList) {
-        schedule.placeList = placeList;
+    public void setSiteList(ArrayList<Site> siteList) {
+        schedule.siteList = siteList;
     }
 
     public String getPlanName() {
@@ -280,14 +280,14 @@ public class CreatePlanActivity extends AppCompatActivity {
         schedule.tourStart = tourStart;
     }
 
-    public void addPlace(Place p)
+    public void addSite(Site p)
     {
-        schedule.placeList.add(p);
+        schedule.siteList.add(p);
     }
 
     public int getScheduleSize()
     {
-        return schedule.placeList.size();
+        return schedule.siteList.size();
     }
 
 
@@ -300,10 +300,10 @@ public class CreatePlanActivity extends AppCompatActivity {
         public Calendar depature;
         public Calendar arrived;
         public boolean isHotelReserved;
-        public Place hotel;
+        public Site hotel;
         public String country;
         public Calendar tourStart;
         public Calendar tourEnd;
-        public ArrayList<Place> placeList = new ArrayList<Place>();
+        public ArrayList<Site> siteList = new ArrayList<Site>();
     }
 }
