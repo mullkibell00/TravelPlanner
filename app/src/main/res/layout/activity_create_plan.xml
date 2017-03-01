@@ -45,12 +45,18 @@
             android:layout_height="61dp"
             android:id="@+id/create_plan_prev"
             android:layout_alignParentLeft="true"
+            android:background="@mipmap/prev"
+            android:backgroundTint="@color/colorPrimary"
+            android:backgroundTintMode="src_in"
             />
         <Button
             android:layout_alignParentRight="true"
             android:layout_width="61dp"
             android:layout_height="61dp"
             android:id="@+id/create_plan_next"
+            android:background="@mipmap/next"
+            android:backgroundTint="@color/colorPrimary"
+            android:backgroundTintMode="src_in"
             />
     </RelativeLayout>
 </RelativeLayout>

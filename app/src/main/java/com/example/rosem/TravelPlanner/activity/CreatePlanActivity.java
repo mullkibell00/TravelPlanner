@@ -2,7 +2,6 @@ package com.example.rosem.TravelPlanner.activity;
 
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
@@ -32,8 +31,6 @@ import java.util.Calendar;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
-
-import static com.example.rosem.TravelPlanner.R.mipmap.next;
 
 /**
  * Created by rosem on 2017-02-25.
@@ -81,14 +78,6 @@ public class CreatePlanActivity extends AppCompatActivity {
 
         nextButton = (Button)findViewById(R.id.create_plan_next);
         prevButton = (Button)findViewById(R.id.create_plan_prev);
-
-        //setting icon
-        Drawable nextImg = ContextCompat.getDrawable(this, next);
-        nextImg.setColorFilter(iconColor,iconMode);
-        Drawable prevImg = ContextCompat.getDrawable(this, R.mipmap.prev);
-        prevImg.setColorFilter(iconColor,iconMode);
-        nextButton.setBackground(nextImg);
-        prevButton.setBackground(prevImg);
 
         db = Realm.getDefaultInstance();
 
