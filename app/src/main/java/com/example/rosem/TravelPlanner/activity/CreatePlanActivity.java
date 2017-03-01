@@ -17,7 +17,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.example.rosem.TravelPlanner.R;
-import com.example.rosem.TravelPlanner.fragment.InputDailyInfoFragment;
+import com.example.rosem.TravelPlanner.fragment.InputHotelInfoFragment;
 import com.example.rosem.TravelPlanner.fragment.InputPlanInfoFragment;
 import com.example.rosem.TravelPlanner.fragment.InputTitleFragment;
 import com.example.rosem.TravelPlanner.object.Place;
@@ -104,7 +104,7 @@ public class CreatePlanActivity extends AppCompatActivity {
         stepFragments = new Fragment[STEP_NUM];
         stepFragments[0] = InputTitleFragment.newInstance();
         stepFragments[1] = InputPlanInfoFragment.newInstance();
-        stepFragments[2] = InputDailyInfoFragment.newInstance();
+        stepFragments[2] = InputHotelInfoFragment.newInstance();
 
         changeStep(getSupportFragmentManager(),currentStep);
     }

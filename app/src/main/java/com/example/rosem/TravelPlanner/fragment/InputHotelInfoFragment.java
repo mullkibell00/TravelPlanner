@@ -20,7 +20,7 @@ import com.example.rosem.TravelPlanner.activity.CreatePlanActivity;
  * Created by rosem on 2017-02-28.
  */
 
-public class InputDailyInfoFragment extends Fragment {
+public class InputHotelInfoFragment extends Fragment {
 
 
     private final int mTextLodging = 0;
@@ -28,9 +28,9 @@ public class InputDailyInfoFragment extends Fragment {
     private final int mTextLodgingYes = 2;
     private final int mTextLodgingNo = 3;
 
-    private final int mDailyInfoTextNum = 4;
+    private final int mHotelInfoTextNum = 4;
 
-    TextView [] texts = new TextView[mDailyInfoTextNum];
+    TextView [] texts = new TextView[mHotelInfoTextNum];
     Typeface fontType;
 
     boolean isHotelReserved = false;
@@ -42,9 +42,9 @@ public class InputDailyInfoFragment extends Fragment {
     CheckBox lodgingYes;
     CheckBox lodgingNo;
 
-    public static InputDailyInfoFragment newInstance()
+    public static InputHotelInfoFragment newInstance()
     {
-        InputDailyInfoFragment fragment = new InputDailyInfoFragment();
+        InputHotelInfoFragment fragment = new InputHotelInfoFragment();
         return fragment;
     }
 
@@ -60,7 +60,7 @@ public class InputDailyInfoFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         //return super.onCreateView(inflater, container, savedInstanceState);
-        ViewGroup view = (ViewGroup)inflater.inflate(R.layout.plan_input_daily_info,container,false);
+        ViewGroup view = (ViewGroup)inflater.inflate(R.layout.plan_input_hotel_info,container,false);
 
         settingTextView(view);
 
@@ -71,7 +71,7 @@ public class InputDailyInfoFragment extends Fragment {
         lodgingYes = (CheckBox)view.findViewById(R.id.daily_info_check_yes);
         lodgingNo = (CheckBox)view.findViewById(R.id.daily_info_check_no);
         lodgingPlus = (CheckBox)view.findViewById(R.id.daily_info_check_lodging_plus);
-        setPlusVisible(View.INVISIBLE);
+        setPlusVisible(View.INVISIBLE,isHotelReserved);
 
         //setting checkbox onCheckListener
         lodgingYes.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -81,7 +81,7 @@ public class InputDailyInfoFragment extends Fragment {
                 if(yes)
                 {
                     isHotelReserved = yes;
-                    setPlusVisible(View.VISIBLE);
+                    setPlusVisible(View.VISIBLE,isHotelReserved);
                     texts[mTextLodgingPlus].setText(getString(R.string.txt_lodging_multiple_selection));
                     lodgingNo.setChecked(false);
                 }
@@ -89,7 +89,7 @@ public class InputDailyInfoFragment extends Fragment {
                 {
                     if(!(lodgingNo.isChecked()))
                     {
-                        setPlusVisible(View.INVISIBLE);
+                        setPlusVisible(View.INVISIBLE,isHotelReserved);
                     }
                 }
             }
@@ -101,7 +101,7 @@ public class InputDailyInfoFragment extends Fragment {
                 if(no)
                 {
                     isHotelReserved = !(no);
-                    setPlusVisible(View.VISIBLE);
+                    setPlusVisible(View.VISIBLE,isHotelReserved);
                     texts[mTextLodgingPlus].setText(getString(R.string.txt_lodging_recommendation));
                     lodgingYes.setChecked(false);
                 }
@@ -109,7 +109,7 @@ public class InputDailyInfoFragment extends Fragment {
                 {
                     if(!(lodgingYes.isChecked()))
                     {
-                        setPlusVisible(View.INVISIBLE);
+                        setPlusVisible(View.INVISIBLE,isHotelReserved);
                     }
                 }
             }
@@ -156,21 +156,25 @@ public class InputDailyInfoFragment extends Fragment {
         return view;
     }
 
-    private void setPlusVisible(int visibility)
+    private void setPlusVisible(int visibility, boolean hotel)
     {
         texts[mTextLodgingPlus].setVisibility(visibility);
         lodgingPlus.setVisibility(visibility);
+        if(visibility==View.VISIBLE && !(hotel))
+        {
+            lodgingPlus.setVisibility(View.INVISIBLE);
+        }
     }
 
     private void settingTextView(ViewGroup view)
     {
 
-        texts[mTextLodging] = (TextView)view.findViewById(R.id.daily_info_lodging_explain);
-        texts[mTextLodgingPlus] = (TextView)view.findViewById(R.id.daily_info_txt_lodging_plus);
-        texts[mTextLodgingYes] = (TextView)view.findViewById(R.id.daily_info_txt_lodging_yes);
-        texts[mTextLodgingNo] = (TextView)view.findViewById(R.id.daily_info_txt_lodging_no);
+        texts[mTextLodging] = (TextView)view.findViewById(R.id.hotel_info_lodging_explain);
+        texts[mTextLodgingPlus] = (TextView)view.findViewById(R.id.hotel_info_txt_lodging_plus);
+        texts[mTextLodgingYes] = (TextView)view.findViewById(R.id.hotel_info_txt_lodging_yes);
+        texts[mTextLodgingNo] = (TextView)view.findViewById(R.id.hotel_info_txt_lodging_no);
 
-        for(int i =0; i<mDailyInfoTextNum;i++)
+        for(int i =0; i<mHotelInfoTextNum;i++)
         {
             texts[i].setTypeface(fontType);
         }
