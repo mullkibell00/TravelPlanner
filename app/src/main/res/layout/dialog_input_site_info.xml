@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp"
+    >
+    <!--daily tour start-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="23dp"
+        android:paddingRight="23dp"
+        android:layout_marginBottom="20dp"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorFontDark"
+            android:textSize="17sp"
+            android:text="@string/txt_tour_start_time"
+            android:layout_marginRight="20dp"
+            android:id="@+id/dialog_site_txt_visit_start"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="41dp"
+            android:gravity="center"
+            android:background="@drawable/selectable_textview_background"
+            android:textColor="@color/selectable_textview_font"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:text="@string/txt_select_traveling_time"
+            android:textIsSelectable="true"
+            android:focusableInTouchMode="false"
+            android:focusable="false"
+            android:id="@+id/dialog_site_selected_visit_start"
+            />
+    </LinearLayout>
+    <!--daily tour end-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="23dp"
+        android:paddingRight="23dp"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorFontDark"
+            android:textSize="17sp"
+            android:text="@string/txt_tour_end_time"
+            android:layout_marginRight="20dp"
+            android:id="@+id/dialog_site_txt_visit_end"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="41dp"
+            android:gravity="center"
+            android:background="@drawable/selectable_textview_background"
+            android:textColor="@color/selectable_textview_font"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:text="@string/txt_select_traveling_time"
+            android:textIsSelectable="true"
+            android:focusableInTouchMode="false"
+            android:focusable="false"
+            android:id="@+id/dialog_site_selected_visit_end"
+            />
+    </LinearLayout>
+
+</LinearLayout>

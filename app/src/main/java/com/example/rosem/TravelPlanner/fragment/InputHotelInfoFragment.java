@@ -247,6 +247,7 @@ public class InputHotelInfoFragment extends Fragment {
         ((CreatePlanActivity)getActivity()).setCheckInList(mAdapter.getCheckInList());
         ((CreatePlanActivity)getActivity()).setCheckOutList(mAdapter.getCheckOutList());
         ((CreatePlanActivity)getActivity()).setHotel(mAdapter.getHotelList());
+        ((CreatePlanActivity)getActivity()).setHotelReserved(isHotelReserved);
     }
 
     @Override
@@ -257,13 +258,7 @@ public class InputHotelInfoFragment extends Fragment {
             if(resultCode == getActivity().RESULT_OK)
             {
                 Place selectedPlace = PlacePicker.getPlace(getContext(),data);
-                Site hotel = new Site();
-                hotel.setPlaceId(selectedPlace.getId());
-                hotel.setAddress(selectedPlace.getAddress().toString());
-                hotel.setLat(selectedPlace.getLatLng().latitude);
-                hotel.setLng(selectedPlace.getLatLng().longitude);
-                hotel.setPlaceName(selectedPlace.getName().toString());
-                hotel.setPlaceType(selectedPlace.getPlaceTypes().get(0));
+                Site hotel = ((CreatePlanActivity)getActivity()).setSiteFromPlace(selectedPlace);
                 mSelectedHotels.add(hotel);
 
                 mAdapter.addHotel(hotel);

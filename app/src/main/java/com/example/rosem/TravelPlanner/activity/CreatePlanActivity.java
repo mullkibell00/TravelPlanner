@@ -25,6 +25,7 @@ import com.example.rosem.TravelPlanner.object.Site;
 import com.example.rosem.TravelPlanner.plan.Plan;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.Places;
 
 import java.util.ArrayList;
@@ -323,5 +324,18 @@ public class CreatePlanActivity extends AppCompatActivity {
         public Calendar tourStart;
         public Calendar tourEnd;
         public ArrayList<Site> siteList = new ArrayList<Site>();
+    }
+    public Site setSiteFromPlace(Place place)
+    {
+        Site site = new Site();
+
+        site.setLat(place.getLatLng().latitude);
+        site.setPlaceName(place.getName().toString());
+        site.setPlaceType(place.getPlaceTypes().get(0));
+        site.setAddress(place.getAddress().toString());
+        site.setLng(place.getLatLng().longitude);
+        site.setPlaceId(place.getId());
+
+        return site;
     }
 }

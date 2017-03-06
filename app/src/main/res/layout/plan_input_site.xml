@@ -1,20 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:paddingTop="15dp"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    >
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="5px"
+        android:background="@drawable/list_line_divider"
+        android:backgroundTint="@color/colorPrimary"
+        android:backgroundTintMode="src_in"
+        android:layout_marginBottom="5dp"
+        android:layout_alignParentTop="true"
+        android:id="@+id/plan_site_upper_divider"
+        ></ImageView>
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/plan_site_list"
-        android:layout_margin="20dp"
+        android:layout_above="@+id/plan_site_lower_divider"
+        android:layout_below="@+id/plan_site_upper_divider"
         ></android.support.v7.widget.RecyclerView>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="5px"
+        android:background="@drawable/list_line_divider"
+        android:backgroundTint="@color/colorPrimary"
+        android:backgroundTintMode="src_in"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="15dp"
+        android:layout_above="@+id/plan_site_text_layout"
+        android:id="@+id/plan_site_lower_divider"
+        ></ImageView>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="61dp"
         android:layout_marginBottom="20dp"
         android:layout_alignParentBottom="true"
-        android:paddingLeft="101dp"
-        android:paddingRight="101dp"
+        android:paddingLeft="81dp"
+        android:paddingRight="81dp"
         android:gravity="center"
+        android:id="@+id/plan_site_text_layout"
         >
         <TextView
             android:layout_width="match_parent"

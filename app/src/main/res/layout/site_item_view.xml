@@ -39,7 +39,7 @@
         android:layout_height="41dp"
         android:layout_toLeftOf="@+id/site_item_delete"
         android:layout_marginRight="10dp"
-        android:background="@mipmap/edit"
+        android:background="@mipmap/clock"
         android:backgroundTint="@color/colorButton"
         android:backgroundTintMode="src_in"
         android:layout_centerVertical="true"
@@ -48,7 +48,7 @@
     <ImageView
         android:layout_width="41dp"
         android:layout_height="41dp"
-        android:layout_toLeftOf="@id/site_item_ok"
+        android:layout_toLeftOf="@+id/site_item_ok"
         android:layout_marginRight="10dp"
         android:background="@mipmap/trash_bin"
         android:backgroundTint="@color/colorButton"

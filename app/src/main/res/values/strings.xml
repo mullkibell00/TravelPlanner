@@ -42,4 +42,7 @@
 
     <!--create plan - input site-->
     <string name="txt_add_site">방문지 추가</string>
+    <string name="title_input_site_dialog">방문지 방문 시간대 설정</string>
+    <string name="site_dialog_positive">설정</string>
+    <string name="site_dialog_negative">취소</string>
 </resources>

@@ -2,6 +2,7 @@ package com.example.rosem.TravelPlanner.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -74,6 +75,29 @@ public class SiteListAdapter extends RecyclerView.Adapter<SiteListAdapter.ViewHo
         return siteList.indexOf(site);
     }
 
+    public void addSite(Site site)
+    {
+        siteList.add(site);
+        notifyDataSetChanged();
+    }
+
+    public void setVisitStart(int idx, Calendar start)
+    {
+        siteList.get(idx).setVisitStart(start);
+        Log.v("SiteAdapter::","siteList visitStart="+siteList.get(idx).getVisitStart().get(Calendar.HOUR_OF_DAY));
+    }
+
+    public void setVisitEnd(int idx, Calendar end)
+    {
+        siteList.get(idx).setVisitEnd(end);
+        Log.v("SiteAdapter::","siteList visitStart="+siteList.get(idx).getVisitEnd().get(Calendar.HOUR_OF_DAY));
+    }
+
+    public Site getSite(int idx)
+    {
+        return siteList.get(idx);
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder
     {
         public SiteItemView siteView;
@@ -116,6 +140,7 @@ public class SiteListAdapter extends RecyclerView.Adapter<SiteListAdapter.ViewHo
                     if(deleteButton.getVisibility()==View.VISIBLE)
                     {
                         int pos = siteList.indexOf(siteView.getSite());
+                        siteView.setButtonVisibility(View.INVISIBLE);
                         siteList.remove(pos);
                         notifyDataSetChanged();
                     }
@@ -127,7 +152,7 @@ public class SiteListAdapter extends RecyclerView.Adapter<SiteListAdapter.ViewHo
                 public void onClick(View view) {
                     if(editButton.getVisibility()==View.VISIBLE && showDialog!=null)
                     {
-                        showDialog.showDialog();
+                        showDialog.showDialog(siteList.indexOf(siteView.getSite()));
                     }
                 }
             });
@@ -139,6 +164,6 @@ public class SiteListAdapter extends RecyclerView.Adapter<SiteListAdapter.ViewHo
         public Calendar visitStart = Calendar.getInstance();
         public Calendar visitEnd = Calendar.getInstance();
 
-        public void showDialog();
+        public void showDialog(int idx);
     }
 }

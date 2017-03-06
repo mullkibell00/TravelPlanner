@@ -13,6 +13,7 @@ public class Site {
     private String address;
     private double lat;
     private double lng;
+    private String locality;
     private Calendar visitStart;//방문 시작 시간
     private Calendar visitEnd;//방문 종료 시간
     private Calendar spendTime;//소요예정시간
@@ -92,5 +93,13 @@ public class Site {
 
     public void setVisitStart(Calendar visitStart) {
         this.visitStart = visitStart;
+    }
+
+    public String getLocality() {
+        return locality;
+    }
+
+    public void setLocality(String locality) {
+        this.locality = locality;
     }
 }
