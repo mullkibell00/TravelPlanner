@@ -6,6 +6,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +21,7 @@ import android.widget.TextView;
 
 import com.example.rosem.TravelPlanner.R;
 import com.example.rosem.TravelPlanner.activity.CreatePlanActivity;
+import com.example.rosem.TravelPlanner.adapter.HotelListAdapter;
 import com.example.rosem.TravelPlanner.object.Site;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -62,6 +66,7 @@ public class InputHotelInfoFragment extends Fragment {
     CheckBox lodgingNo;
 
     RecyclerView selectedHotelView;
+    HotelListAdapter mAdapter;
     ArrayList<Site> mSelectedHotels;
 
     private final int PLACE_PICK_REQUEST = 1213;
@@ -139,6 +144,19 @@ public class InputHotelInfoFragment extends Fragment {
 
         //set recyclerView
         selectedHotelView = (RecyclerView)view.findViewById(R.id.hotel_info_selected_hotels);
+        mAdapter = new HotelListAdapter(getContext(),null,null,null);
+        selectedHotelView .setAdapter(mAdapter);
+
+        RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL,false);
+        //manager.generateLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT));
+        //manager.setAutoMeasureEnabled(false);
+        selectedHotelView .setLayoutManager(manager);
+
+        //set divider
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL);
+        dividerItemDecoration.setDrawable(ContextCompat.getDrawable(getContext(),R.drawable.list_line_divider));
+        selectedHotelView .addItemDecoration(dividerItemDecoration);
+
         mSelectedHotels = new ArrayList<Site>();
         setAddVisible(View.INVISIBLE);
 
@@ -233,8 +251,11 @@ public class InputHotelInfoFragment extends Fragment {
                 hotel.setPlaceName(selectedPlace.getName().toString());
                 hotel.setPlaceType(selectedPlace.getPlaceTypes().get(0));
                 mSelectedHotels.add(hotel);
-                SendRequest request = new SendRequest(selectedPlace.getId());
-                request.postData(null);
+
+                mAdapter.addHotel(hotel);
+
+                //SendRequest request = new SendRequest(selectedPlace.getId());
+                //request.postData(null);
             }
         }
     }

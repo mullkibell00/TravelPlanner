@@ -1,11 +1,8 @@
 package com.example.rosem.TravelPlanner.view;
 
-import android.app.DatePickerDialog;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -27,8 +24,8 @@ public class HotelItemView extends LinearLayout {
     Calendar mCheckIn;
     Calendar mCheckOut;
     Context mContext;
-    private DatePickerDialog.OnDateSetListener checkInSetListener;
-    private DatePickerDialog.OnDateSetListener checkOutSetListener;
+    //private DatePickerDialog.OnDateSetListener checkInSetListener;
+    //private DatePickerDialog.OnDateSetListener checkOutSetListener;
 
     public HotelItemView(Context context) {
         super(context);
@@ -43,7 +40,7 @@ public class HotelItemView extends LinearLayout {
         mTextHotelName = (TextView)findViewById(R.id.hotel_item_name); mTextHotelName.setTypeface(fontType);
         mTextCheckIn = (TextView)findViewById(R.id.hotel_item_checkin); mTextCheckIn.setTypeface(fontType);
         mTextCheckOut = (TextView)findViewById(R.id.hotel_item_checkout); mTextCheckOut.setTypeface(fontType);
-
+/*
         checkInSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
@@ -82,6 +79,7 @@ public class HotelItemView extends LinearLayout {
                         mCheckOut.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
+*/
     }
 
     public void setHotel(Site hotel)
@@ -92,6 +90,10 @@ public class HotelItemView extends LinearLayout {
     public Site getHotel()
     {
         return mHotel;
+    }
+    public String getHotelName()
+    {
+        return mHotel.getPlaceName();
     }
     public void setCheckIn(Calendar checkIn)
     {
@@ -115,4 +117,5 @@ public class HotelItemView extends LinearLayout {
         mTextCheckOut.setText(mCheckOut.get(Calendar.YEAR)+"년 "
                 +(mCheckOut.get(Calendar.MONTH)+1)+"월 "+mCheckOut.get(Calendar.DAY_OF_MONTH)+"일");
     }
+
 }
