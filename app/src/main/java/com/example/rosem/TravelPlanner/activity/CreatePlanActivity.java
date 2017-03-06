@@ -224,11 +224,11 @@ public class CreatePlanActivity extends AppCompatActivity {
         schedule.depature = depature;
     }
 
-    public Site getHotel() {
+    public ArrayList<Site> getHotel() {
         return schedule.hotel;
     }
 
-    public void setHotel(Site hotel) {
+    public void setHotel(ArrayList<Site> hotel) {
         schedule.hotel = hotel;
     }
 
@@ -291,16 +291,32 @@ public class CreatePlanActivity extends AppCompatActivity {
     }
 
 
+    public ArrayList<Calendar> getCheckInList() {
+        return schedule.checkInList;
+    }
 
+    public void setCheckInList(ArrayList<Calendar> checkInList) {
+        schedule.checkInList = checkInList;
+    }
 
-     private class Schedule
+    public ArrayList<Calendar> getCheckOutList() {
+        return schedule.checkOutList;
+    }
+
+    public void setCheckOutList(ArrayList<Calendar> checkOutList) {
+        schedule.checkOutList = checkOutList;
+    }
+
+    private class Schedule
     {
         public String planName;
         public int numOfDays = 0;
         public Calendar depature;
         public Calendar arrived;
         public boolean isHotelReserved;
-        public Site hotel;
+        public ArrayList<Calendar> checkInList = null;
+        public ArrayList<Calendar> checkOutList = null;
+        public ArrayList<Site> hotel = null;
         public String country;
         public Calendar tourStart;
         public Calendar tourEnd;

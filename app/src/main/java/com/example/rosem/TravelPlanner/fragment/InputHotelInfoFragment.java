@@ -41,6 +41,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * Created by rosem on 2017-02-28.
@@ -144,7 +145,19 @@ public class InputHotelInfoFragment extends Fragment {
 
         //set recyclerView
         selectedHotelView = (RecyclerView)view.findViewById(R.id.hotel_info_selected_hotels);
-        mAdapter = new HotelListAdapter(getContext(),null,null,null);
+        mSelectedHotels = ((CreatePlanActivity)getActivity()).getHotel();
+        if(mSelectedHotels==null)
+        {
+            mSelectedHotels = new ArrayList<Site>();
+            mAdapter = new HotelListAdapter(getContext(),null,null,null);
+        }
+        else
+        {
+            ArrayList<Calendar> checkIn = ((CreatePlanActivity)getActivity()).getCheckInList();
+            ArrayList<Calendar> checkOut = ((CreatePlanActivity)getActivity()).getCheckOutList();
+            mAdapter = new HotelListAdapter(getContext(),mSelectedHotels,checkIn,checkOut);
+        }
+
         selectedHotelView .setAdapter(mAdapter);
 
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL,false);
@@ -157,7 +170,6 @@ public class InputHotelInfoFragment extends Fragment {
         dividerItemDecoration.setDrawable(ContextCompat.getDrawable(getContext(),R.drawable.list_line_divider));
         selectedHotelView .addItemDecoration(dividerItemDecoration);
 
-        mSelectedHotels = new ArrayList<Site>();
         setAddVisible(View.INVISIBLE);
 
         Button prevButton = (Button)getActivity().findViewById(R.id.create_plan_prev);
@@ -232,7 +244,9 @@ public class InputHotelInfoFragment extends Fragment {
 
     private void saveData()
     {
-
+        ((CreatePlanActivity)getActivity()).setCheckInList(mAdapter.getCheckInList());
+        ((CreatePlanActivity)getActivity()).setCheckOutList(mAdapter.getCheckOutList());
+        ((CreatePlanActivity)getActivity()).setHotel(mAdapter.getHotelList());
     }
 
     @Override
