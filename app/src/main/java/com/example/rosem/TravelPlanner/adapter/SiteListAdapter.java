@@ -4,10 +4,15 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
+import com.example.rosem.TravelPlanner.R;
 import com.example.rosem.TravelPlanner.object.Site;
+import com.example.rosem.TravelPlanner.view.SiteItemView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * Created by rosem on 2017-03-06.
@@ -17,8 +22,9 @@ public class SiteListAdapter extends RecyclerView.Adapter<SiteListAdapter.ViewHo
 
     ArrayList<Site> siteList = null;
     Context context;
+    ShowDialog showDialog = null;
 
-    public SiteListAdapter(Context ctx, ArrayList<Site> site)
+    public SiteListAdapter(Context ctx, ArrayList<Site> site, ShowDialog showDialog)
     {
         super();
         context = ctx;
@@ -30,30 +36,109 @@ public class SiteListAdapter extends RecyclerView.Adapter<SiteListAdapter.ViewHo
         {
             siteList = site;
         }
+        this.showDialog = showDialog;
     }
 
     @Override
     public SiteListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return null;
+        SiteItemView itemView = new SiteItemView(context);
+
+        RecyclerView.LayoutParams lp = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        itemView.setLayoutParams(lp);
+
+        ViewHolder viewHolder = new ViewHolder(itemView);
+        return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(SiteListAdapter.ViewHolder holder, int position) {
-
+        holder.siteView.setSite(siteList.get(position));
     }
 
+    public ArrayList<Site> getSiteList()
+    {
+        return siteList;
+    }
+
+    public void setSiteList(ArrayList<Site> list)
+    {
+        siteList = list;
+    }
     @Override
     public int getItemCount() {
         return siteList.size();
     }
 
-
+    public int getIndexOf(Site site)
+    {
+        return siteList.indexOf(site);
+    }
 
     public class ViewHolder extends RecyclerView.ViewHolder
     {
+        public SiteItemView siteView;
+        public RelativeLayout viewLayout;
+        public ImageView editButton;
+        public ImageView deleteButton;
+        public ImageView confirmButton;
 
         public ViewHolder(View itemView) {
             super(itemView);
+
+
+            siteView = (SiteItemView)itemView;
+            viewLayout = (RelativeLayout)itemView.findViewById(R.id.site_item_layout);
+            editButton = (ImageView)itemView.findViewById(R.id.site_item_edit);
+            deleteButton = (ImageView)itemView.findViewById(R.id.site_item_delete);
+            confirmButton = (ImageView)itemView.findViewById(R.id.site_item_ok);
+
+            viewLayout.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    siteView.setButtonVisibility(View.VISIBLE);
+                    return false;
+                }
+            });
+
+            confirmButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(confirmButton.getVisibility()==View.VISIBLE)
+                    {
+                        siteView.setButtonVisibility(View.INVISIBLE);
+                    }
+                }
+            });
+
+            deleteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(deleteButton.getVisibility()==View.VISIBLE)
+                    {
+                        int pos = siteList.indexOf(siteView.getSite());
+                        siteList.remove(pos);
+                        notifyDataSetChanged();
+                    }
+                }
+            });
+
+            editButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(editButton.getVisibility()==View.VISIBLE && showDialog!=null)
+                    {
+                        showDialog.showDialog();
+                    }
+                }
+            });
         }
+    }
+
+    public interface ShowDialog
+    {
+        public Calendar visitStart = Calendar.getInstance();
+        public Calendar visitEnd = Calendar.getInstance();
+
+        public void showDialog();
     }
 }

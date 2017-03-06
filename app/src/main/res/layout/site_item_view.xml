@@ -48,11 +48,22 @@
     <ImageView
         android:layout_width="41dp"
         android:layout_height="41dp"
-        android:layout_alignParentRight="true"
+        android:layout_toLeftOf="@id/site_item_ok"
+        android:layout_marginRight="10dp"
         android:background="@mipmap/trash_bin"
         android:backgroundTint="@color/colorButton"
         android:backgroundTintMode="src_in"
         android:layout_centerVertical="true"
         android:id="@+id/site_item_delete"
+        />
+    <ImageView
+        android:layout_width="41dp"
+        android:layout_height="41dp"
+        android:layout_alignParentRight="true"
+        android:background="@mipmap/confirm"
+        android:backgroundTint="@color/colorButton"
+        android:backgroundTintMode="src_in"
+        android:layout_centerVertical="true"
+        android:id="@+id/site_item_ok"
         />
 </RelativeLayout>

@@ -20,6 +20,8 @@ public class SiteItemView extends RelativeLayout {
     TextView mSiteAddr;
     ImageView editButton;
     ImageView deleteButton;
+    ImageView confirmButton;
+
     Site mSite = null;
     RelativeLayout mView;
     Context mContext;
@@ -37,6 +39,7 @@ public class SiteItemView extends RelativeLayout {
         mView = (RelativeLayout)findViewById(R.id.site_item_layout);
         editButton = (ImageView)findViewById(R.id.site_item_edit);
         deleteButton = (ImageView)findViewById(R.id.site_item_delete);
+        confirmButton = (ImageView)findViewById(R.id.site_item_ok);
         setButtonVisibility(View.INVISIBLE);
     }
 
@@ -61,22 +64,19 @@ public class SiteItemView extends RelativeLayout {
         mSiteAddr.setText(site.getAddress());
     }
 
-    public void setOnClickListener(View.OnClickListener listener)
-    {
-        mView.setOnClickListener(listener);
-    }
-
     public void toggleVisibility()
     {
         if(editButton.getVisibility()== View.VISIBLE)
         {
             editButton.setVisibility(View.INVISIBLE);
             deleteButton.setVisibility(View.INVISIBLE);
+            confirmButton.setVisibility(View.INVISIBLE);
         }
         else
         {
             editButton.setVisibility(View.VISIBLE);
-            deleteButton.setVisibility(View.INVISIBLE);
+            deleteButton.setVisibility(View.VISIBLE);
+            confirmButton.setVisibility(View.VISIBLE);
         }
     }
     public int setButtonVisibility(int visibility)
@@ -85,6 +85,7 @@ public class SiteItemView extends RelativeLayout {
 
         editButton.setVisibility(visibility);
         deleteButton.setVisibility(visibility);
+        confirmButton.setVisibility(visibility);
 
         return ret;
     }
