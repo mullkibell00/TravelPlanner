@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.Button;
 import com.example.rosem.TravelPlanner.R;
 import com.example.rosem.TravelPlanner.activity.CreatePlanActivity;
 import com.example.rosem.TravelPlanner.object.Site;
+import com.google.android.gms.location.places.Place;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -28,6 +30,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by rosem on 2017-03-07.
@@ -36,6 +39,9 @@ import java.util.ArrayList;
 public class HotelRecommendFragment extends Fragment {
 
     ProgressDialog progressDialog;
+    ArrayList<Site> recommendedList;
+    RecyclerView hotelListView;
+    LatLng midpoint;
 
     public static HotelRecommendFragment newInstance()
     {
@@ -49,6 +55,18 @@ public class HotelRecommendFragment extends Fragment {
 
         progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage(getString(R.string.recommend_dialog_message));
+
+        ArrayList<Site> sites = ((CreatePlanActivity)getActivity()).getSiteList();
+        for(int i = 0; i < sites.size();i++)
+        {
+            midpoint.lat += sites.get(i).getLat();
+            midpoint.lng += sites.get(i).getLng();
+        }
+        midpoint.lat = midpoint.lat/(sites.size());
+        midpoint.lng = midpoint.lng/(sites.size());
+        HotelRecommend recommendation = new HotelRecommend(midpoint);
+
+        recommendedList = recommendation.getRecommendation();
     }
 
     @Nullable
@@ -56,7 +74,7 @@ public class HotelRecommendFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup view = (ViewGroup)inflater.inflate(R.layout.plan_hotel_recommend,container,false);
 
-
+        hotelListView = (RecyclerView)view.findViewById(R.id.plan_recommended_hotel_list);
 
 
         Button nextButton = (Button)getActivity().findViewById(R.id.create_plan_next);
@@ -171,29 +189,45 @@ public class HotelRecommendFragment extends Fragment {
                                     }
                                 }
                             }
+                            //bring name
+                            if(hotelObj.has("name"))
+                            {
+                                hotel.setPlaceName(hotelObj.getString("name"));
+                            }
+                            //bring place id
+                            if(hotelObj.has("place_id"))
+                            {
+                                hotel.setPlaceId(hotelObj.getString("place_id"));
+                            }
+                            //set type
+                            List<Integer> type = new ArrayList<>();
+                            type.add(Place.TYPE_LODGING);
+                            hotel.setPlaceType(type);
 
+                            //add to hotelList
+                            hotelList.add(hotel);
                         }
                         catch (JSONException e)
                         {
                             e.printStackTrace();
                         }
-                    }
+                    }//end of for( result )
                 } catch (JSONException e) {
                     e.printStackTrace();
-                }
+                }//end of parsing
 
             } catch (IOException e) {
                 e.printStackTrace();
                 Log.v("HotelRecommend", "HotelRecommend=Sending Fail");
-            }
-            return null;
+            }//end of try/catch of sending & receiving data
+            return hotelList;
         }
     }
 
     private class LatLng
     {
-        double lat;
-        double lng;
+        double lat = 0;
+        double lng = 0;
 
         public String toString()
         {
