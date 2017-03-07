@@ -9,6 +9,7 @@
 
     <!--google related-->
     <string name="google_geocoding_base">https://maps.googleapis.com/maps/api/geocode/json?place_id=</string>
+    <string name="google_http_searching_loc">https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=</string>
 
     <!--about views-->
     <string name="view_hotel_checkin">체크인</string>
@@ -45,4 +46,7 @@
     <string name="title_input_site_dialog">방문지 방문 시간대 설정</string>
     <string name="site_dialog_positive">설정</string>
     <string name="site_dialog_negative">취소</string>
+
+    <!--create plan -hotel recommend-->
+    <string name="recommend_dialog_message">추천 호텔 리스트를 가져오는 중입니다.</string>
 </resources>

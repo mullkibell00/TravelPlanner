@@ -1,6 +1,7 @@
 package com.example.rosem.TravelPlanner.object;
 
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * Created by rosem on 2017-02-25.
@@ -9,7 +10,7 @@ import java.util.Calendar;
 public class Site {
     private String placeId;
     private String placeName;
-    private int placeType;
+    private List<Integer> placeType;
     private String address;
     private double lat;
     private double lng;
@@ -63,11 +64,11 @@ public class Site {
         this.placeName = placeName;
     }
 
-    public int getPlaceType() {
+    public List<Integer> getPlaceType() {
         return placeType;
     }
 
-    public void setPlaceType(int placeType) {
+    public void setPlaceType(List<Integer> placeType) {
         this.placeType = placeType;
     }
 

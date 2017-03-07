@@ -7,13 +7,10 @@
     android:paddingRight="20dp"
     android:paddingBottom="81dp"
     >
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="12dp"
-        android:text="hotel_recommend"
-        />
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+        android:layout_height="match_parent"
+        android:id="@+id/plan_recommended_hotel_list"
+        ></android.support.v7.widget.RecyclerView>
 
 </LinearLayout>

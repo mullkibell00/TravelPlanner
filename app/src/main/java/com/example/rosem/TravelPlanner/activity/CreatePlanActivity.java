@@ -352,7 +352,7 @@ public class CreatePlanActivity extends AppCompatActivity {
 
         site.setLat(place.getLatLng().latitude);
         site.setPlaceName(place.getName().toString());
-        site.setPlaceType(place.getPlaceTypes().get(0));
+        site.setPlaceType(place.getPlaceTypes());
         site.setAddress(place.getAddress().toString());
         site.setLng(place.getLatLng().longitude);
         site.setPlaceId(place.getId());
