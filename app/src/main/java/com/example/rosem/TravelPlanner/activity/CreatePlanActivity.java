@@ -185,7 +185,7 @@ public class CreatePlanActivity extends AppCompatActivity {
         }
         else if(currentStep==HOTEL_RECOMMEND)
         {
-            if(!(schedule.isHotelReserved))
+            if(schedule.isHotelReserved)
             {
                 if(order==NEXT_STEP)
                 {
