@@ -43,7 +43,8 @@ import java.util.List;
 public class HotelRecommendFragment extends Fragment {
 
     ProgressDialog progressDialog;
-    ArrayList<Site> recommendedList;
+    ArrayList<Site> recommendedList = null;
+    ArrayList<Site> selectedList = null;
     RecyclerView hotelListView;
     LatLng midpoint;
     RecommendListAdapter mAdapter;
@@ -63,17 +64,23 @@ public class HotelRecommendFragment extends Fragment {
 
         midpoint = new LatLng();
 
-        ArrayList<Site> sites = ((CreatePlanActivity)getActivity()).getSiteList();
-        for(int i = 0; i < sites.size();i++)
-        {
-            midpoint.lat += sites.get(i).getLat();
-            midpoint.lng += sites.get(i).getLng();
-        }
-        midpoint.lat = midpoint.lat/(sites.size());
-        midpoint.lng = midpoint.lng/(sites.size());
-        HotelRecommend recommendation = new HotelRecommend(midpoint);
+        recommendedList = ((CreatePlanActivity)getActivity()).getRecommendHotelList();
+        selectedList = ((CreatePlanActivity)getActivity()).getHotel();
 
-        recommendedList = recommendation.getRecommendation();
+        if(recommendedList==null)
+        {
+            ArrayList<Site> sites = ((CreatePlanActivity)getActivity()).getSiteList();
+            for(int i = 0; i < sites.size();i++)
+            {
+                midpoint.lat += sites.get(i).getLat();
+                midpoint.lng += sites.get(i).getLng();
+            }
+            midpoint.lat = midpoint.lat/(sites.size());
+            midpoint.lng = midpoint.lng/(sites.size());
+            HotelRecommend recommendation = new HotelRecommend(midpoint);
+
+            recommendedList = recommendation.getRecommendation();
+        }
     }
 
     @Nullable
@@ -82,7 +89,7 @@ public class HotelRecommendFragment extends Fragment {
         ViewGroup view = (ViewGroup)inflater.inflate(R.layout.plan_hotel_recommend,container,false);
 
         hotelListView = (RecyclerView)view.findViewById(R.id.plan_recommended_hotel_list);
-        mAdapter = new RecommendListAdapter(getContext(),recommendedList);
+        mAdapter = new RecommendListAdapter(getContext(),recommendedList,selectedList);
         hotelListView.setAdapter(mAdapter);
 
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL,false);
@@ -115,7 +122,8 @@ public class HotelRecommendFragment extends Fragment {
 
     private void saveData()
     {
-
+        ((CreatePlanActivity)getActivity()).setHotel(mAdapter.getSelectedList());
+        ((CreatePlanActivity)getActivity()).setRecommendHotelList(recommendedList);
     }
 
     private class HotelRecommend extends AsyncTask<LatLng,LatLng,LatLng>

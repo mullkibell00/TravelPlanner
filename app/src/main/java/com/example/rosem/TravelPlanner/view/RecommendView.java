@@ -108,6 +108,11 @@ public class RecommendView extends LinearLayout implements OnMapReadyCallback{
         }
     }
 
+    public void setSelectionVisibility(int visibility)
+    {
+        mSelected.setVisibility(visibility);
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;

@@ -23,7 +23,7 @@ public class RecommendListAdapter extends RecyclerView.Adapter<RecommendListAdap
     Context mContext;
     RecommendView.NotifyMapReady notifyMapReady = null;
 
-    public RecommendListAdapter(Context context, ArrayList<Site> list)
+    public RecommendListAdapter(Context context, ArrayList<Site> list, ArrayList<Site> selected)
     {
         mContext = context;
         if(list==null)
@@ -34,7 +34,15 @@ public class RecommendListAdapter extends RecyclerView.Adapter<RecommendListAdap
         {
             mList = list;
         }
-        mSelected = new ArrayList<Site>();
+        if(selected==null)
+        {
+            mSelected = new ArrayList<Site>();
+        }
+        else
+        {
+            mSelected = selected;
+        }
+
         notifyMapReady = new RecommendView.NotifyMapReady() {
             @Override
             public void notifyMapReady() {
@@ -61,6 +69,14 @@ public class RecommendListAdapter extends RecyclerView.Adapter<RecommendListAdap
     @Override
     public void onBindViewHolder(RecommendListAdapter.ViewHolder holder, int position) {
         holder.hotel.setSite(mList.get(position));
+        if(mSelected.contains(mList.get(position)))
+        {
+            holder.hotel.setSelectionVisibility(View.VISIBLE);
+        }
+        else
+        {
+            holder.hotel.setSelectionVisibility(View.INVISIBLE);
+        }
         holder.hotel.mapViewOnResume();
     }
 

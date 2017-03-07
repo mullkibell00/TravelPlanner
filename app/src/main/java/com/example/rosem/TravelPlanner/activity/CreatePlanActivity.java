@@ -331,6 +331,16 @@ public class CreatePlanActivity extends AppCompatActivity {
         schedule.checkOutList = checkOutList;
     }
 
+    public ArrayList<Site> getRecommendHotelList()
+    {
+        return schedule.recommendHotelList;
+    }
+
+    public void setRecommendHotelList(ArrayList<Site> list)
+    {
+        schedule.recommendHotelList =list;
+    }
+
     private class Schedule
     {
         public String planName;
@@ -341,6 +351,7 @@ public class CreatePlanActivity extends AppCompatActivity {
         public ArrayList<Calendar> checkInList = null;
         public ArrayList<Calendar> checkOutList = null;
         public ArrayList<Site> hotel = null;
+        public ArrayList<Site> recommendHotelList = null;
         public String country;
         public Calendar tourStart;
         public Calendar tourEnd;
