@@ -199,6 +199,11 @@ public class HotelRecommendFragment extends Fragment {
                             {
                                 hotel.setPlaceId(hotelObj.getString("place_id"));
                             }
+                            //get temp addr
+                            if(hotelObj.has("vicinity"))
+                            {
+                                hotel.setAddress(hotelObj.getString("vicinity"));
+                            }
                             //set type
                             List<Integer> type = new ArrayList<>();
                             type.add(Place.TYPE_LODGING);
