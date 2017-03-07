@@ -17,10 +17,12 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.example.rosem.TravelPlanner.R;
+import com.example.rosem.TravelPlanner.fragment.HotelRecommendFragment;
 import com.example.rosem.TravelPlanner.fragment.InputHotelInfoFragment;
 import com.example.rosem.TravelPlanner.fragment.InputPlanInfoFragment;
 import com.example.rosem.TravelPlanner.fragment.InputSiteFragment;
 import com.example.rosem.TravelPlanner.fragment.InputTitleFragment;
+import com.example.rosem.TravelPlanner.fragment.SchedulingFragment;
 import com.example.rosem.TravelPlanner.object.Site;
 import com.example.rosem.TravelPlanner.plan.Plan;
 import com.google.android.gms.common.ConnectionResult;
@@ -56,6 +58,7 @@ public class CreatePlanActivity extends AppCompatActivity {
     private int currentStep = 0;
     private static final int NEXT_STEP = 112;
     private static final int PREV_STEP = 113;
+    private int HOTEL_RECOMMEND;
 
     private GoogleApiClient mGoogleApiClient;
 
@@ -75,6 +78,7 @@ public class CreatePlanActivity extends AppCompatActivity {
         iconColor = ContextCompat.getColor(this,R.color.colorLightButton);
         iconMode = PorterDuff.Mode.SRC_IN;
         STEP_NUM = this.getResources().getInteger(R.integer.create_plan_steps);
+        HOTEL_RECOMMEND = getResources().getInteger(R.integer.create_plan_hotel_recommend);
 
         container = (FrameLayout)findViewById(R.id.container);
 
@@ -108,6 +112,8 @@ public class CreatePlanActivity extends AppCompatActivity {
         stepFragments[1] = InputPlanInfoFragment.newInstance();
         stepFragments[2] = InputHotelInfoFragment.newInstance();
         stepFragments[3] = InputSiteFragment.newInstance();
+        stepFragments[4] = HotelRecommendFragment.newInstance();
+        stepFragments[5] = SchedulingFragment.newInstance();
 
         changeStep(getSupportFragmentManager(),currentStep);
     }
@@ -176,6 +182,21 @@ public class CreatePlanActivity extends AppCompatActivity {
         else if(currentStep==STEP_NUM)
         {
             currentStep--;
+        }
+        else if(currentStep==HOTEL_RECOMMEND)
+        {
+            if(!(schedule.isHotelReserved))
+            {
+                if(order==NEXT_STEP)
+                {
+                    moveNext();
+                }
+                else if(order==PREV_STEP)
+                {
+                    movePrev();
+                }
+                return;
+            }
         }
         else
         {

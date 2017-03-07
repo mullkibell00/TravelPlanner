@@ -177,7 +177,7 @@ public class InputSiteFragment extends Fragment {
 
     public void saveData()
     {
-
+        ((CreatePlanActivity)getActivity()).setSiteList(mAdapter.getSiteList());
     }
 
     private class SendRequest extends AsyncTask<String,String,String>
