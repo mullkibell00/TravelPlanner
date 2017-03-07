@@ -79,17 +79,17 @@ public class RecommendView extends LinearLayout implements OnMapReadyCallback{
         }
     }
 
-    public int toggleVisibility()
+    public boolean toggleVisibility()
     {
         if(mSelected.getVisibility()== View.VISIBLE)
         {
             mSelected.setVisibility(View.INVISIBLE);
-            return View.VISIBLE;
+            return false;
         }
         else
         {
             mSelected.setVisibility(View.VISIBLE);
-            return View.INVISIBLE;
+            return true;
         }
     }
 

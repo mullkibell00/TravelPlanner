@@ -4,8 +4,11 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
+import com.example.rosem.TravelPlanner.R;
 import com.example.rosem.TravelPlanner.object.Site;
+import com.example.rosem.TravelPlanner.view.RecommendView;
 
 import java.util.ArrayList;
 
@@ -16,6 +19,7 @@ import java.util.ArrayList;
 public class RecommendListAdapter extends RecyclerView.Adapter<RecommendListAdapter.ViewHolder> {
 
     ArrayList<Site> mList;
+    ArrayList<Site> mSelected;
     Context mContext;
 
     public RecommendListAdapter(Context context, ArrayList<Site> list)
@@ -29,28 +33,70 @@ public class RecommendListAdapter extends RecyclerView.Adapter<RecommendListAdap
         {
             mList = list;
         }
+        mSelected = null;
     }
 
     @Override
     public RecommendListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return null;
+
+        RecommendView itemView = new RecommendView(mContext);
+        itemView.mapViewOnCreate(null);
+
+        RecyclerView.LayoutParams lp = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        itemView.setLayoutParams(lp);
+
+        ViewHolder viewHolder = new ViewHolder(itemView);
+
+        return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(RecommendListAdapter.ViewHolder holder, int position) {
-
+        holder.hotel.setSite(mList.get(position));
+        holder.hotel.mapViewOnResume();
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return mList.size();
+    }
+
+    public ArrayList<Site> getSelectedList()
+    {
+        return mSelected;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder
     {
+        RecommendView hotel;
+        RelativeLayout viewLayout;
 
         public ViewHolder(View itemView) {
             super(itemView);
+
+            hotel = (RecommendView)itemView;
+
+            viewLayout = (RelativeLayout)itemView.findViewById(R.id.recommend_view_layout);
+            viewLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(hotel.toggleVisibility())
+                    {
+                        if(!(mSelected.contains(hotel.getSite())))
+                        {
+                            mSelected.add(hotel.getSite());
+                        }
+                    }
+                    else
+                    {
+                        if(mSelected.contains(hotel.getSite()))
+                        {
+                            mSelected.remove(hotel.getSite());
+                        }
+                    }
+                    notifyDataSetChanged();
+                }
+            });
         }
     }
 }
