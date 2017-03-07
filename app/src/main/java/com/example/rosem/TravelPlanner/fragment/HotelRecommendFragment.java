@@ -5,6 +5,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +17,7 @@ import android.widget.Button;
 
 import com.example.rosem.TravelPlanner.R;
 import com.example.rosem.TravelPlanner.activity.CreatePlanActivity;
+import com.example.rosem.TravelPlanner.adapter.RecommendListAdapter;
 import com.example.rosem.TravelPlanner.object.Site;
 import com.google.android.gms.location.places.Place;
 
@@ -42,6 +46,7 @@ public class HotelRecommendFragment extends Fragment {
     ArrayList<Site> recommendedList;
     RecyclerView hotelListView;
     LatLng midpoint;
+    RecommendListAdapter mAdapter;
 
     public static HotelRecommendFragment newInstance()
     {
@@ -55,6 +60,8 @@ public class HotelRecommendFragment extends Fragment {
 
         progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage(getString(R.string.recommend_dialog_message));
+
+        midpoint = new LatLng();
 
         ArrayList<Site> sites = ((CreatePlanActivity)getActivity()).getSiteList();
         for(int i = 0; i < sites.size();i++)
@@ -75,6 +82,16 @@ public class HotelRecommendFragment extends Fragment {
         ViewGroup view = (ViewGroup)inflater.inflate(R.layout.plan_hotel_recommend,container,false);
 
         hotelListView = (RecyclerView)view.findViewById(R.id.plan_recommended_hotel_list);
+        mAdapter = new RecommendListAdapter(getContext(),recommendedList);
+        hotelListView.setAdapter(mAdapter);
+
+        RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL,false);
+        hotelListView.setLayoutManager(manager);
+
+        //set divider
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL);
+        dividerItemDecoration.setDrawable(ContextCompat.getDrawable(getContext(),R.drawable.list_line_divider));
+        hotelListView.addItemDecoration(dividerItemDecoration);
 
 
         Button nextButton = (Button)getActivity().findViewById(R.id.create_plan_next);

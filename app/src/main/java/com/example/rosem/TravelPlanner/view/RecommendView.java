@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.example.rosem.TravelPlanner.R;
 import com.example.rosem.TravelPlanner.object.Site;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -28,14 +29,18 @@ public class RecommendView extends LinearLayout implements OnMapReadyCallback{
     ImageView mSelected;
     MapView mMapView;
     Context mContext;
+    private int ZOOM_LEVEL;
 
     Site mSite = null;
     GoogleMap mMap;
+    NotifyMapReady notifyMapReady = null;
 
     public RecommendView(Context context) {
         super(context);
 
         mContext = context;
+
+        ZOOM_LEVEL = getResources().getInteger(R.integer.zoom_level);
 
         LayoutInflater inflater =(LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.recommend_view,this,true);
@@ -60,7 +65,17 @@ public class RecommendView extends LinearLayout implements OnMapReadyCallback{
         mSite = site;
         mName.setText(site.getPlaceName());
         mAddr.setText(site.getAddress());
-        mMap.addMarker(new MarkerOptions().position(new LatLng(site.getLat(),site.getLng())));
+        if(mMap!=null)
+        {
+            LatLng location = new LatLng(site.getLat(),site.getLng());
+            mMap.addMarker(new MarkerOptions().position(location));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, ZOOM_LEVEL));
+        }
+    }
+
+    public void setNotifyMapReady(NotifyMapReady mr)
+    {
+        notifyMapReady = mr;
     }
 
     public void mapViewOnCreate(Bundle SaveInstanceState)
@@ -96,5 +111,14 @@ public class RecommendView extends LinearLayout implements OnMapReadyCallback{
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        if(notifyMapReady!=null)
+        {
+            notifyMapReady.notifyMapReady();
+        }
+    }
+
+    public interface NotifyMapReady
+    {
+        public void notifyMapReady();
     }
 }

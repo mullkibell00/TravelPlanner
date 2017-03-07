@@ -21,6 +21,7 @@ public class RecommendListAdapter extends RecyclerView.Adapter<RecommendListAdap
     ArrayList<Site> mList;
     ArrayList<Site> mSelected;
     Context mContext;
+    RecommendView.NotifyMapReady notifyMapReady = null;
 
     public RecommendListAdapter(Context context, ArrayList<Site> list)
     {
@@ -33,13 +34,20 @@ public class RecommendListAdapter extends RecyclerView.Adapter<RecommendListAdap
         {
             mList = list;
         }
-        mSelected = null;
+        mSelected = new ArrayList<Site>();
+        notifyMapReady = new RecommendView.NotifyMapReady() {
+            @Override
+            public void notifyMapReady() {
+                notifyDataSetChanged();
+            }
+        };
     }
 
     @Override
     public RecommendListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         RecommendView itemView = new RecommendView(mContext);
+        itemView.setNotifyMapReady(notifyMapReady);
         itemView.mapViewOnCreate(null);
 
         RecyclerView.LayoutParams lp = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
