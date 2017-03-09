@@ -52,4 +52,12 @@
 
     <!--create plan -hotel recommend-->
     <string name="recommend_dialog_message">추천 호텔 리스트를 가져오는 중입니다.</string>
+
+    <!--create plan - scheduling-->
+    <string name="schedule_progress_title">플랜 진행률</string>
+    <string name="schedule_step_0">거리 정보를 가져오는 중입니다.</string>
+    <string name="schedule_step_1">방문지를 분류 중입니다.</string>
+    <string name="schedule_step_2">방문 순서를 정하는 중입니다.</string>
+    <string name="schedule_step_3">이동 시간과 비용을 구하는 중입니다.</string>
+    <string name="schedule_step_4">일정을 정돈하는 중입니다</string>
 </resources>

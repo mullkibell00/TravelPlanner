@@ -3,4 +3,6 @@
     <integer name="create_plan_steps">6</integer>
     <integer name="create_plan_hotel_recommend">4</integer>
     <integer name="zoom_level">16</integer>
+    <integer name="scheduling_steps">5</integer>
+    <integer name="time_unit">10</integer>
 </resources>

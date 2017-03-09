@@ -8,13 +8,11 @@ import org.json.JSONObject;
 
 import java.util.Calendar;
 
-import io.realm.RealmObject;
-
 /**
  * Created by rosem on 2017-01-30.
  */
 
-public class Course extends RealmObject{
+public class Course {
     private String mName;
     private String mAddr;
     private String mTime;

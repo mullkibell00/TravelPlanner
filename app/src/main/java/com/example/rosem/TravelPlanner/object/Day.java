@@ -11,12 +11,24 @@ import java.util.ArrayList;
 public class Day {
 
     ArrayList<Course> courseList;
+    Site [] timetable = null;
     int totalTimeUnit=0;
     int availableTimeUnit=0;
 
     public Day()
     {
         courseList = new ArrayList<Course>();
+    }
+
+    public Day(int timeU)
+    {
+        courseList = new ArrayList<Course>();
+        availableTimeUnit = timeU;
+        timetable = new Site[availableTimeUnit];
+        for(int i = 0; i<availableTimeUnit;i++)
+        {
+            timetable[i] = new Site();
+        }
     }
 
     public Day(ArrayList<Course> list)
