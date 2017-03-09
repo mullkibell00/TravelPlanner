@@ -60,6 +60,7 @@ public class InputSiteFragment extends Fragment {
     SiteListAdapter mAdapter;
 
     InputInfoDialog siteInfoDialog;
+    InputSpendTimeDialog timeDialog;
 
     private final int PLACE_PICK_REQUEST = 1213;
     private final int SET_PLACE_INFO =1215;
@@ -76,6 +77,7 @@ public class InputSiteFragment extends Fragment {
         fontType = ((CreatePlanActivity)getActivity()).getFontType();
 
         siteInfoDialog = new InputInfoDialog(getContext());
+        timeDialog = new InputSpendTimeDialog(getContext());
     }
 
     @Nullable
@@ -95,15 +97,21 @@ public class InputSiteFragment extends Fragment {
                 siteInfoDialog.show(idx);
             }
         };
+        SiteListAdapter.ShowDialog showSpendTimeDialog = new SiteListAdapter.ShowDialog() {
+            @Override
+            public void showDialog(int idx) {
+                timeDialog.show(idx);
+            }
+        };
         if(siteList==null)
         {
             siteList = new ArrayList<Site>();
-            mAdapter = new SiteListAdapter(getContext(),null,showEditDialog);
+            //mAdapter = new SiteListAdapter(getContext(),null,showEditDialog);
         }
-        else
-        {
-            mAdapter = new SiteListAdapter(getContext(),siteList,showEditDialog);
-        };
+        //else
+        //{
+            mAdapter = new SiteListAdapter(getContext(),siteList,showEditDialog, showSpendTimeDialog);
+        //};
 
         siteListView.setAdapter(mAdapter);
 
@@ -170,6 +178,8 @@ public class InputSiteFragment extends Fragment {
                 site.setLocality(local);
 
                 mAdapter.addSite(site);
+                int pos = mAdapter.getIndexOf(site);
+                timeDialog.show(pos);
 
             }
         }
@@ -299,7 +309,9 @@ public class InputSiteFragment extends Fragment {
     {
         int idx = 0;
         View dialogView;
+        View titleView;
         Calendar visitStartCal = Calendar.getInstance();
+        Calendar visitEndCal = Calendar.getInstance();
         TextView visitStart;
         TextView visitEnd;
 
@@ -308,6 +320,9 @@ public class InputSiteFragment extends Fragment {
             super(context);
             //set view of dialog
             dialogView = getLayoutInflater().inflate(R.layout.dialog_input_site_info,null);
+            titleView = getLayoutInflater().inflate(R.layout.dialog_title,null);
+            TextView title = (TextView)titleView.findViewById(R.id.dialog_title_view);
+            title.setTypeface(fontType); title.setText(getString(R.string.title_input_site_dialog));
             TextView textVistStart = (TextView)dialogView.findViewById(R.id.dialog_site_txt_visit_start);
             TextView textVisitEnd = (TextView)dialogView.findViewById(R.id.dialog_site_txt_visit_end);
             visitStart = (TextView)dialogView.findViewById(R.id.dialog_site_selected_visit_start);
@@ -331,13 +346,17 @@ public class InputSiteFragment extends Fragment {
                 }
             });
 
-            setTitle(getString(R.string.title_input_site_dialog));
+            //setTitle(getString(R.string.title_input_site_dialog));
+            setCustomTitle(titleView);
             setView(dialogView);
+
             setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.site_dialog_positive), new OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     if(siteInfoDialog.isShowing())
                     {
+                        mAdapter.setVisitStart(idx,visitStartCal);
+                        mAdapter.setVisitEnd(idx,visitEndCal);
                         siteInfoDialog.dismiss();
                     }
                 }
@@ -350,6 +369,17 @@ public class InputSiteFragment extends Fragment {
                     {
                         siteInfoDialog.dismiss();
                     }
+                }
+            });
+
+            this.setOnShowListener(new OnShowListener() {
+                @Override
+                public void onShow(DialogInterface dialogInterface) {
+                    Button posButton = getButton(AlertDialog.BUTTON_POSITIVE);
+                    posButton.setTypeface(fontType);
+
+                    Button negButton = getButton(AlertDialog.BUTTON_NEGATIVE);
+                    negButton.setTypeface(fontType);
                 }
             });
 
@@ -385,7 +415,6 @@ public class InputSiteFragment extends Fragment {
             public void onTimeSet(TimePicker timePicker, int hour, int min) {
                 visitStartCal.set(Calendar.HOUR_OF_DAY,hour);
                 visitStartCal.set(Calendar.MINUTE,min);
-                mAdapter.setVisitStart(idx,visitStartCal);
                 visitStart.setSelected(true);
                 visitStart.setText(hour+"시 "+min+"분");
             }
@@ -395,12 +424,102 @@ public class InputSiteFragment extends Fragment {
         {
             @Override
             public void onTimeSet(TimePicker timePicker, int hour, int min) {
-                Calendar cal = Calendar.getInstance();
-                cal.set(Calendar.HOUR_OF_DAY,hour);
-                cal.set(Calendar.MINUTE,min);
-                mAdapter.setVisitEnd(idx,cal);
+                visitEndCal.set(Calendar.HOUR_OF_DAY,hour);
+                visitEndCal.set(Calendar.MINUTE,min);
                 visitEnd.setSelected(true);
                 visitEnd.setText(hour+"시 "+min+"분");
+            }
+        }
+    }
+
+    public class InputSpendTimeDialog extends AlertDialog
+    {
+        int pos = 0;
+        View titleView;
+        View dialogView;
+        Calendar spendTime = Calendar.getInstance();
+        TextView timeText;
+
+        protected InputSpendTimeDialog(Context context) {
+            super(context);
+
+            dialogView = getLayoutInflater().inflate(R.layout.dialog_input_spend_time,null);
+            titleView = getLayoutInflater().inflate(R.layout.dialog_title,null);
+            TextView title = (TextView)titleView.findViewById(R.id.dialog_title_view);
+            title.setTypeface(fontType); title.setText(getString(R.string.title_input_spend_time_dialog));
+
+            spendTime.set(Calendar.HOUR_OF_DAY,0);
+            spendTime.set(Calendar.MINUTE,0);
+
+            TextView textView = (TextView)dialogView.findViewById(R.id.dialog_time_txt);
+            textView.setTypeface(fontType);
+            timeText = (TextView)dialogView.findViewById(R.id.dialog_time_selected);
+            timeText.setTypeface(fontType);
+            timeText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    new TimePickerDialog(getContext(),new TimeSetListener(),
+                            spendTime.get(Calendar.HOUR_OF_DAY),spendTime.get(Calendar.MINUTE),true).show();
+                }
+            });
+
+            setCustomTitle(titleView);
+            setView(dialogView);
+
+            setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.site_dialog_positive), new OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    if(timeDialog.isShowing())
+                    {
+                        mAdapter.setSpendTime(pos,spendTime);
+                        timeDialog.dismiss();
+                    }
+                }
+            });
+
+            setButton(AlertDialog.BUTTON_NEGATIVE,getString(R.string.site_dialog_negative), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    if(timeDialog.isShowing())
+                    {
+                        timeDialog.dismiss();
+                    }
+                }
+            });
+
+            this.setOnShowListener(new OnShowListener() {
+                @Override
+                public void onShow(DialogInterface dialogInterface) {
+                    Button posButton = getButton(AlertDialog.BUTTON_POSITIVE);
+                    posButton.setTypeface(fontType);
+
+                    Button negButton = getButton(AlertDialog.BUTTON_NEGATIVE);
+                    negButton.setTypeface(fontType);
+                }
+            });
+
+        }
+
+        public void show(Site site)
+        {
+            this.show();
+            this.pos = mAdapter.getIndexOf(site);
+        }
+
+        public void show(int pos)
+        {
+            this.pos = pos;
+            this.show();
+        }
+
+        private class TimeSetListener implements TimePickerDialog.OnTimeSetListener
+        {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int hour, int min) {
+                spendTime.set(Calendar.HOUR_OF_DAY,hour);
+                spendTime.set(Calendar.MINUTE,min);
+                timeText.setSelected(true);
+                timeText.setText(hour+"시간 "+min+"분");
             }
         }
     }

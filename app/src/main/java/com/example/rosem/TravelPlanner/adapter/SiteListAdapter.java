@@ -23,9 +23,10 @@ public class SiteListAdapter extends RecyclerView.Adapter<SiteListAdapter.ViewHo
 
     ArrayList<Site> siteList = null;
     Context context;
-    ShowDialog showDialog = null;
+    ShowDialog longClickDialog = null;
+    ShowDialog clickDialog = null;
 
-    public SiteListAdapter(Context ctx, ArrayList<Site> site, ShowDialog showDialog)
+    public SiteListAdapter(Context ctx, ArrayList<Site> site, ShowDialog onLongClickDialog, ShowDialog onClickDialog)
     {
         super();
         context = ctx;
@@ -37,7 +38,8 @@ public class SiteListAdapter extends RecyclerView.Adapter<SiteListAdapter.ViewHo
         {
             siteList = site;
         }
-        this.showDialog = showDialog;
+        this.longClickDialog = onLongClickDialog;
+        this.clickDialog = onClickDialog;
     }
 
     @Override
@@ -93,6 +95,11 @@ public class SiteListAdapter extends RecyclerView.Adapter<SiteListAdapter.ViewHo
         Log.v("SiteAdapter::","siteList visitStart="+siteList.get(idx).getVisitEnd().get(Calendar.HOUR_OF_DAY));
     }
 
+    public void setSpendTime(int idx, Calendar time)
+    {
+        siteList.get(idx).setSpendTime(time);
+    }
+
     public Site getSite(int idx)
     {
         return siteList.get(idx);
@@ -120,7 +127,17 @@ public class SiteListAdapter extends RecyclerView.Adapter<SiteListAdapter.ViewHo
                 @Override
                 public boolean onLongClick(View view) {
                     siteView.setButtonVisibility(View.VISIBLE);
-                    return false;
+                    return true;
+                }
+            });
+
+            viewLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(clickDialog!=null)
+                    {
+                        clickDialog.showDialog(siteList.indexOf(siteView.getSite()));
+                    }
                 }
             });
 
@@ -150,9 +167,9 @@ public class SiteListAdapter extends RecyclerView.Adapter<SiteListAdapter.ViewHo
             editButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(editButton.getVisibility()==View.VISIBLE && showDialog!=null)
+                    if(editButton.getVisibility()==View.VISIBLE && longClickDialog!=null)
                     {
-                        showDialog.showDialog(siteList.indexOf(siteView.getSite()));
+                        longClickDialog.showDialog(siteList.indexOf(siteView.getSite()));
                     }
                 }
             });
@@ -161,8 +178,8 @@ public class SiteListAdapter extends RecyclerView.Adapter<SiteListAdapter.ViewHo
 
     public interface ShowDialog
     {
-        public Calendar visitStart = Calendar.getInstance();
-        public Calendar visitEnd = Calendar.getInstance();
+        //public Calendar visitStart = Calendar.getInstance();
+        //public Calendar visitEnd = Calendar.getInstance();
 
         public void showDialog(int idx);
     }
