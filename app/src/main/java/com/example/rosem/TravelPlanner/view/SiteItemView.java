@@ -11,6 +11,8 @@ import android.widget.TextView;
 import com.example.rosem.TravelPlanner.R;
 import com.example.rosem.TravelPlanner.object.Site;
 
+import java.util.Calendar;
+
 /**
  * Created by rosem on 2017-03-06.
  */
@@ -18,6 +20,7 @@ import com.example.rosem.TravelPlanner.object.Site;
 public class SiteItemView extends RelativeLayout {
     TextView mSiteName;
     TextView mSiteAddr;
+    TextView mSiteTime;
     ImageView editButton;
     ImageView deleteButton;
     ImageView confirmButton;
@@ -25,6 +28,8 @@ public class SiteItemView extends RelativeLayout {
     Site mSite = null;
     RelativeLayout mView;
     Context mContext;
+    String timeBaseStr;
+
     public SiteItemView(Context context) {
         super(context);
         mContext = context;
@@ -36,11 +41,13 @@ public class SiteItemView extends RelativeLayout {
 
         mSiteName = (TextView)findViewById(R.id.site_item_name); mSiteName.setTypeface(fontType);
         mSiteAddr = (TextView)findViewById(R.id.site_item_addr); mSiteAddr.setTypeface(fontType);
+        mSiteTime = (TextView)findViewById(R.id.site_item_spend_time); mSiteTime.setTypeface(fontType);
         mView = (RelativeLayout)findViewById(R.id.site_item_layout);
         editButton = (ImageView)findViewById(R.id.site_item_edit);
         deleteButton = (ImageView)findViewById(R.id.site_item_delete);
         confirmButton = (ImageView)findViewById(R.id.site_item_ok);
         setButtonVisibility(View.INVISIBLE);
+        timeBaseStr = context.getString(R.string.view_site_time_base)+" ";
     }
 
     public String getSiteName()
@@ -62,6 +69,36 @@ public class SiteItemView extends RelativeLayout {
         mSite = site;
         mSiteName.setText(site.getPlaceName());
         mSiteAddr.setText(site.getAddress());
+    }
+
+    public void setSiteTime(Calendar time)
+    {
+        int hour = time.get(Calendar.HOUR_OF_DAY);
+        if(hour==0)
+        {
+            mSiteTime.setText(timeBaseStr+time.get(Calendar.MINUTE)+"분");
+        }
+        else
+        {
+            mSiteTime.setText(timeBaseStr+hour+"시간 "+time.get(Calendar.MINUTE)+"분");
+        }
+    }
+
+    public void setSiteTime()
+    {
+        Calendar time = mSite.getSpendTime();
+        if(time!=null)
+        {
+            int hour = time.get(Calendar.HOUR_OF_DAY);
+            if(hour==0)
+            {
+                mSiteTime.setText(timeBaseStr+time.get(Calendar.MINUTE)+"분");
+            }
+            else
+            {
+                mSiteTime.setText(timeBaseStr+hour+"시간 "+time.get(Calendar.MINUTE)+"분");
+            }
+        }
     }
 
     public void toggleVisibility()

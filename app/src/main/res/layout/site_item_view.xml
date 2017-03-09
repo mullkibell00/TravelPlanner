@@ -32,6 +32,15 @@
             android:gravity="center_vertical"
             android:textColor="@color/colorFontLightGrey"
             android:id="@+id/site_item_addr"
+            android:layout_marginBottom="10dp"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:gravity="center_vertical"
+            android:textColor="@color/colorFontLightGrey"
+            android:id="@+id/site_item_spend_time"
             />
     </LinearLayout>
     <ImageView

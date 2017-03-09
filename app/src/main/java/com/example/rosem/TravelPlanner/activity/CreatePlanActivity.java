@@ -221,7 +221,27 @@ public class CreatePlanActivity extends AppCompatActivity {
         return fontType;
     }
 
+    public void setTimeText(TextView view, int hour, int min)
+    {
+        view.setText(hour+"시 "+min+"분");
+    }
 
+    public void setTimerText(TextView view, int hour, int min)
+    {
+        if(hour==0)
+        {
+            view.setText(min+"분");
+        }
+        else
+        {
+            view.setText(hour+"시간 "+min+"분");;
+        }
+    }
+
+    public void setDateText(TextView view, int year, int month, int day)
+    {
+        view.setText(year+"년 "+(month+1)+"월 "+day+"일");
+    }
 
     //about schedule class
     public Calendar getArrived() {

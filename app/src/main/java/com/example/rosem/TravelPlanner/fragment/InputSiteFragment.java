@@ -402,12 +402,14 @@ public class InputSiteFragment extends Fragment {
         public void setVisitStart(Calendar cal)
         {
             visitStart.setSelected(true);
-            visitStart.setText(cal.get(Calendar.HOUR_OF_DAY)+"시 "+cal.get(Calendar.MINUTE)+"분");
+            ((CreatePlanActivity)getActivity()).setTimeText(visitStart,cal.get(Calendar.HOUR_OF_DAY),cal.get(Calendar.MINUTE));
+            //visitStart.setText(cal.get(Calendar.HOUR_OF_DAY)+"시 "+cal.get(Calendar.MINUTE)+"분");
         }
         public void setVisitEnd(Calendar cal)
         {
             visitEnd.setSelected(true);
-            visitEnd.setText(cal.get(Calendar.HOUR_OF_DAY)+"시 "+cal.get(Calendar.MINUTE)+"분");
+            ((CreatePlanActivity)getActivity()).setTimeText(visitEnd,cal.get(Calendar.HOUR_OF_DAY),cal.get(Calendar.MINUTE));
+            //visitEnd.setText(cal.get(Calendar.HOUR_OF_DAY)+"시 "+cal.get(Calendar.MINUTE)+"분");
         }
         private class VisitStartSetListener implements TimePickerDialog.OnTimeSetListener
         {
@@ -415,8 +417,7 @@ public class InputSiteFragment extends Fragment {
             public void onTimeSet(TimePicker timePicker, int hour, int min) {
                 visitStartCal.set(Calendar.HOUR_OF_DAY,hour);
                 visitStartCal.set(Calendar.MINUTE,min);
-                visitStart.setSelected(true);
-                visitStart.setText(hour+"시 "+min+"분");
+                setVisitStart(visitStartCal);
             }
         }
 
@@ -426,8 +427,7 @@ public class InputSiteFragment extends Fragment {
             public void onTimeSet(TimePicker timePicker, int hour, int min) {
                 visitEndCal.set(Calendar.HOUR_OF_DAY,hour);
                 visitEndCal.set(Calendar.MINUTE,min);
-                visitEnd.setSelected(true);
-                visitEnd.setText(hour+"시 "+min+"분");
+                setVisitEnd(visitEndCal);
             }
         }
     }
@@ -472,6 +472,7 @@ public class InputSiteFragment extends Fragment {
                     if(timeDialog.isShowing())
                     {
                         mAdapter.setSpendTime(pos,spendTime);
+                        mAdapter.notifyDataSetChanged();
                         timeDialog.dismiss();
                     }
                 }
@@ -519,7 +520,7 @@ public class InputSiteFragment extends Fragment {
                 spendTime.set(Calendar.HOUR_OF_DAY,hour);
                 spendTime.set(Calendar.MINUTE,min);
                 timeText.setSelected(true);
-                timeText.setText(hour+"시간 "+min+"분");
+                ((CreatePlanActivity)getActivity()).setTimerText(timeText,hour,min);
             }
         }
     }

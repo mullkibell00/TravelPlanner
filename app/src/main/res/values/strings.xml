@@ -14,6 +14,7 @@
     <!--about views-->
     <string name="view_hotel_checkin">체크인</string>
     <string name="view_hotel_checkout">체크아웃</string>
+    <string name="view_site_time_base">희망 소요 시간 : </string>
     <!--about create plan -->
     <string name="create_plan_title">플랜 작성</string>
     <!--create plan - input plan name-->

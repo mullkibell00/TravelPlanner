@@ -56,6 +56,7 @@ public class SiteListAdapter extends RecyclerView.Adapter<SiteListAdapter.ViewHo
     @Override
     public void onBindViewHolder(SiteListAdapter.ViewHolder holder, int position) {
         holder.siteView.setSite(siteList.get(position));
+        holder.siteView.setSiteTime();
     }
 
     public ArrayList<Site> getSiteList()

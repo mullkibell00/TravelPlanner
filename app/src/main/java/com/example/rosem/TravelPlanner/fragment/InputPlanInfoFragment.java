@@ -105,7 +105,8 @@ public class InputPlanInfoFragment extends Fragment {
             @Override
             public void onTimeSet(TimePicker timePicker, int hour, int minute) {
                 texts[mSelectedTourStart].setSelected(true);
-                texts[mSelectedTourStart].setText(hour+"시 "+minute+"분");
+                ((CreatePlanActivity)getActivity()).setTimeText(texts[mSelectedTourStart],hour,minute);
+                //texts[mSelectedTourStart].setText(hour+"시 "+minute+"분");
                 tourStartTime.set(Calendar.HOUR_OF_DAY,hour);
                 tourStartTime.set(Calendar.MINUTE,minute);
             }
@@ -114,7 +115,8 @@ public class InputPlanInfoFragment extends Fragment {
             @Override
             public void onTimeSet(TimePicker timePicker, int hour, int minute) {
                 texts[mSelectedTourEnd].setSelected(true);
-                texts[mSelectedTourEnd].setText(hour+"시 "+minute+"분");
+                ((CreatePlanActivity)getActivity()).setTimeText(texts[mSelectedTourEnd],hour,minute);
+                //texts[mSelectedTourEnd].setText(hour+"시 "+minute+"분");
                 tourEndTime.set(Calendar.HOUR_OF_DAY,hour);
                 tourEndTime.set(Calendar.MINUTE,minute);
             }
@@ -123,7 +125,8 @@ public class InputPlanInfoFragment extends Fragment {
         arrivalDateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                texts[mSelectedArrivalDate].setText(year+"년 "+(month+1)+"월 "+day+"일");
+                ((CreatePlanActivity)getActivity()).setDateText(texts[mSelectedArrivalDate],year,month,day);
+                //texts[mSelectedArrivalDate].setText(year+"년 "+(month+1)+"월 "+day+"일");
                 selectedArrival.set(Calendar.YEAR,year); selectedArrival.set(Calendar.MONTH,month);
                 selectedArrival.set(Calendar.DAY_OF_MONTH,day);
             }
@@ -134,7 +137,8 @@ public class InputPlanInfoFragment extends Fragment {
                 //texts[mSelectedArrivalTime].setBackgroundColor(Color.TRANSPARENT);
                 //texts[mSelectedArrivalTime].setTextColor(ContextCompat.getColor(getContext(),R.color.colorAccent));
                 texts[mSelectedArrivalTime].setSelected(true);
-                texts[mSelectedArrivalTime].setText(hour+"시 "+minute+"분");
+                //texts[mSelectedArrivalTime].setText(hour+"시 "+minute+"분");
+                ((CreatePlanActivity)getActivity()).setTimeText(texts[mSelectedArrivalTime],hour,minute);
                 selectedArrival.set(Calendar.HOUR_OF_DAY,hour);
                 selectedArrival.set(Calendar.MINUTE,minute);
             }
@@ -142,7 +146,8 @@ public class InputPlanInfoFragment extends Fragment {
         departDateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                texts[mSelectedDepartDate].setText(year+"년 "+(month+1)+"월 "+day+"일");
+                //texts[mSelectedDepartDate].setText(year+"년 "+(month+1)+"월 "+day+"일");
+                ((CreatePlanActivity)getActivity()).setDateText(texts[mSelectedDepartDate],year,month,day);
                 selectedDepart.set(Calendar.YEAR,year); selectedDepart.set(Calendar.MONTH,month);
                 selectedDepart.set(Calendar.DAY_OF_MONTH,day);
             }
@@ -153,7 +158,8 @@ public class InputPlanInfoFragment extends Fragment {
                 //texts[mSelectedDepartTime].setBackgroundColor(Color.TRANSPARENT);
                 //texts[mSelectedDepartTime].setTextColor(ContextCompat.getColor(getContext(),R.color.colorAccent));
                 texts[mSelectedDepartTime].setSelected(true);
-                texts[mSelectedDepartTime].setText(hour+"시 "+minute+"분");
+                //texts[mSelectedDepartTime].setText(hour+"시 "+minute+"분");
+                ((CreatePlanActivity)getActivity()).setTimeText(texts[mSelectedDepartTime],hour,minute);
                 selectedDepart.set(Calendar.HOUR_OF_DAY,hour);
                 selectedDepart.set(Calendar.MINUTE,minute);
             }
@@ -332,38 +338,52 @@ public class InputPlanInfoFragment extends Fragment {
         Calendar arrival = null;
         if((arrival = ((CreatePlanActivity)getActivity()).getArrived())!=null)
         {
-            texts[mSelectedArrivalDate].setText(arrival.get(Calendar.YEAR)+"년 "
-                    +(arrival.get(Calendar.MONTH)+1)+"월 "+arrival.get(Calendar.DAY_OF_MONTH)+"일");
+            //texts[mSelectedArrivalDate].setText(arrival.get(Calendar.YEAR)+"년 "
+            //        +(arrival.get(Calendar.MONTH)+1)+"월 "+arrival.get(Calendar.DAY_OF_MONTH)+"일");
+            ((CreatePlanActivity)getActivity()).
+                    setDateText(texts[mSelectedArrivalDate],arrival.get(Calendar.YEAR),
+                            arrival.get(Calendar.MONTH),arrival.get(Calendar.DAY_OF_MONTH));
             texts[mSelectedArrivalTime].setSelected(true);
-            texts[mSelectedArrivalTime]
-                    .setText(arrival.get(Calendar.HOUR_OF_DAY)+"시 "
-                            +arrival.get(Calendar.MINUTE)+"분");
+            ((CreatePlanActivity)getActivity())
+                    .setTimeText(texts[mSelectedArrivalTime],arrival.get(Calendar.HOUR_OF_DAY),arrival.get(Calendar.MINUTE));
+            //texts[mSelectedArrivalTime]
+            //        .setText(arrival.get(Calendar.HOUR_OF_DAY)+"시 "
+            //                +arrival.get(Calendar.MINUTE)+"분");
         }
         Calendar depart = null;
         if((depart=((CreatePlanActivity)getActivity()).getDepature())!=null)
         {
-            texts[mSelectedDepartDate].setText(depart.get(Calendar.YEAR)+"년 "
-                    +(depart.get(Calendar.MONTH)+1)+"월 "+depart.get(Calendar.DAY_OF_MONTH)+"일");
+           // texts[mSelectedDepartDate].setText(depart.get(Calendar.YEAR)+"년 "
+           //         +(depart.get(Calendar.MONTH)+1)+"월 "+depart.get(Calendar.DAY_OF_MONTH)+"일");
+            ((CreatePlanActivity)getActivity()).
+                    setDateText(texts[mSelectedDepartDate],arrival.get(Calendar.YEAR),
+                            arrival.get(Calendar.MONTH),arrival.get(Calendar.DAY_OF_MONTH));
             texts[mSelectedDepartTime].setSelected(true);
-            texts[mSelectedDepartTime]
-                    .setText(depart.get(Calendar.HOUR_OF_DAY)+"시 "
-                            +depart.get(Calendar.MINUTE)+"분");
+            ((CreatePlanActivity)getActivity()).setTimeText(texts[mSelectedDepartTime]
+                    ,arrival.get(Calendar.HOUR_OF_DAY),arrival.get(Calendar.MINUTE));
+            //texts[mSelectedDepartTime]
+            //        .setText(depart.get(Calendar.HOUR_OF_DAY)+"시 "
+            //                +depart.get(Calendar.MINUTE)+"분");
         }
         Calendar tourS = null;
         if((tourS=((CreatePlanActivity)getActivity()).getTourStart())!=null)
         {
             texts[mSelectedTourStart].setSelected(true);
-            texts[mSelectedTourStart].setText(
-                    tourS.get(Calendar.HOUR_OF_DAY)+"시 "+
-                            tourS.get(Calendar.MINUTE)+"분");
+            //texts[mSelectedTourStart].setText(
+            //        tourS.get(Calendar.HOUR_OF_DAY)+"시 "+
+            //                tourS.get(Calendar.MINUTE)+"분");
+            ((CreatePlanActivity)getActivity()).setTimeText(texts[mSelectedTourStart]
+                    ,tourS.get(Calendar.HOUR_OF_DAY),tourS.get(Calendar.MINUTE));
         }
         Calendar tourE = null;
         if((tourE=((CreatePlanActivity)getActivity()).getTourEnd())!=null)
         {
             texts[mSelectedTourEnd].setSelected(true);
-            texts[mSelectedTourEnd].setText(
-                    tourE.get(Calendar.HOUR_OF_DAY)+"시 "+
-                            tourE.get(Calendar.MINUTE)+"분");
+            //texts[mSelectedTourEnd].setText(
+            //        tourE.get(Calendar.HOUR_OF_DAY)+"시 "+
+            //                tourE.get(Calendar.MINUTE)+"분");
+            ((CreatePlanActivity)getActivity()).setTimeText(texts[mSelectedTourEnd]
+                    ,tourE.get(Calendar.HOUR_OF_DAY),tourE.get(Calendar.MINUTE));
         }
     }
 
