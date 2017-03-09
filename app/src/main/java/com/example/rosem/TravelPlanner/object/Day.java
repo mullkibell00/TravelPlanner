@@ -1,8 +1,64 @@
 package com.example.rosem.TravelPlanner.object;
 
+import com.example.rosem.TravelPlanner.course.Course;
+
+import java.util.ArrayList;
+
 /**
  * Created by rosem on 2017-03-09.
  */
 
 public class Day {
+
+    ArrayList<Course> courseList;
+    int totalTimeUnit=0;
+    int availableTimeUnit=0;
+
+    public Day()
+    {
+        courseList = new ArrayList<Course>();
+    }
+
+    public Day(ArrayList<Course> list)
+    {
+        if(list!=null)
+        {
+            courseList = list;
+        }
+        else
+        {
+            courseList = new ArrayList<Course>();
+        }
+
+    }
+
+    public int getAvailableTimeUnit() {
+        return availableTimeUnit;
+    }
+
+    public void setAvailableTimeUnit(int availableTimeUnit) {
+        this.availableTimeUnit = availableTimeUnit;
+    }
+
+    public ArrayList<Course> getCourseList() {
+        return courseList;
+    }
+
+    public void setCourseList(ArrayList<Course> courseList) {
+        this.courseList = courseList;
+    }
+
+    public int getTotalTimeUnit() {
+        return totalTimeUnit;
+    }
+
+    public void setTotalTimeUnit(int totalTimeUnit) {
+        this.totalTimeUnit = totalTimeUnit;
+    }
+
+    public void addCourse(Course c)
+    {
+        courseList.add(c);
+    }
+
 }
