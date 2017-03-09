@@ -6,6 +6,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Calendar;
+
 import io.realm.RealmObject;
 
 /**
@@ -18,11 +20,45 @@ public class Course extends RealmObject{
     private String mTime;
     private String mCostTime;
     private String mCostMoney;
+    private Calendar mArrival;
+    private Calendar mDepart;
+    private int mSpendTime; //unit = minute or timeunit
+    private long mCostTimeVal;
+    private long mCostMoneyVal;
 
     public Course()
     {
 
     }
+
+    public Calendar getArrival() { return mArrival; }
+    public Calendar getDepart() {return mDepart;}
+    public void setArrival(Calendar c)
+    {
+        mArrival = c;
+    }
+    public void setDepart(Calendar c)
+    {
+        mDepart = c;
+    }
+
+    public int getSpendTime() { return mSpendTime; }
+    public void setSpendTime(int t)
+    {
+        mSpendTime = t;
+    }
+
+    public long getCostTimeVal() {return mCostTimeVal; }
+    public long getCostMoneyVal() { return  mCostMoneyVal; }
+    public void setCostTimeVal(long c)
+    {
+        mCostTimeVal = c;
+    }
+    public void setCostMoneyVal(long c)
+    {
+        mCostMoneyVal = c;
+    }
+
     public String getName()
     {
         return mName;
