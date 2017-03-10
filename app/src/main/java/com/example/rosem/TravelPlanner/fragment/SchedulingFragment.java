@@ -2,10 +2,10 @@ package com.example.rosem.TravelPlanner.fragment;
 
 import android.app.ProgressDialog;
 import android.graphics.Typeface;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +17,18 @@ import com.example.rosem.TravelPlanner.object.Day;
 import com.example.rosem.TravelPlanner.object.Local;
 import com.example.rosem.TravelPlanner.object.Site;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -121,7 +133,8 @@ public class SchedulingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup view = (ViewGroup)inflater.inflate(R.layout.plan_schedule,container,false);
 
-
+        Scheduling getPlan = new Scheduling();
+        getPlan.run();
 
 
         Button nextButton = (Button)getActivity().findViewById(R.id.create_plan_next);
@@ -169,31 +182,142 @@ public class SchedulingFragment extends Fragment {
         return Long.valueOf(l).intValue();
     }
 
+    private String latlngToString(double lat, double lng)
+    {
+        String str = Double.toString(lat)+","+Double.toString(lng);
+        return str;
+    }
+
    private class Scheduling extends Thread
    {
        @Override
        public void run() {
            //super.run();
+           //get fare and duration matrix from google
            int limit = 25;
+           String separator="%7C";
+           String originData="origins=";
+           String destData="&destinations=";
            if(numOfSite>limit)
            {
 
            }
            else
            {
-               String originData;
-               String destData;
+               String bodyData = siteList.get(0).getLatLngStr();
+               for(int i =1; i<numOfSite;i++)
+               {
+                   bodyData+=separator;
+                   bodyData=bodyData+siteList.get(i).getLatLngStr();
+               }
+
+               RequestMatrix request = new RequestMatrix(originData+bodyData+destData+bodyData,0,0);
+               request.run();
            }
        }
+
    }
 
-    class RequestMatrix extends AsyncTask<String,String,String>
+    class RequestMatrix extends Thread
     {
-        String headStr;
-        String tailStr;
+        String headStr = getString(R.string.google_http_matrix_head);
+        String bodyStr=null;
+        String tailStr = "&mode=transit&language=ko&key="+getString(R.string.google_http_api_key);
+        String data = null;
+        int rowStart; int colStart;
+        public RequestMatrix(String str,int rowStart, int colStart)
+        {
+            if(str!=null)
+            {
+                bodyStr=str;
+            }
+            this.rowStart = rowStart;
+            this.colStart = colStart;
+        }
+
         @Override
-        protected String doInBackground(String... strings) {
-            return null;
+        public void run() {
+           // super.run();
+            request(rowStart,colStart);
+        }
+
+        public void request(int rowStart, int colStart )
+        {
+            data = headStr+bodyStr+tailStr;
+
+            InputStream inputStream = null;
+            BufferedReader rd = null;
+            StringBuilder response = new StringBuilder();
+
+            HttpClient httpClient = new DefaultHttpClient();
+
+            try {
+                HttpPost httpPost = new HttpPost(data);
+                //서버로 전송 & 받아오기
+                HttpResponse httpResponse = httpClient.execute(httpPost);
+                Log.v("Schedule::Request", "sending success");
+
+                inputStream = httpResponse.getEntity().getContent();
+                rd = new BufferedReader(new InputStreamReader(inputStream));
+                String line;
+                while((line=rd.readLine())!=null)
+                {
+                    response.append(line);
+                }
+                Log.v("Schedule::Request","result:"+response.toString());
+
+                //parsing
+                JSONObject result = null;
+                JSONArray rows = null;
+                try
+                {
+                    int rowSize = 0;
+                    result = new JSONObject(response.toString());
+                    if(result!=null && result.has("rows"))
+                    {
+                        rows = result.getJSONArray("rows");
+                        rowSize = rows.length();
+                    }
+                    for(int row = 0, i =rowStart ; row<rowSize;row++, i++)
+                    {
+                        JSONObject columns = rows.getJSONObject(row);
+                        JSONArray elements = null;
+
+                        int colSize = 0;
+
+                        if(columns!=null&&columns.has("elements"))
+                        {
+                            elements = columns.getJSONArray("elements");
+                            colSize = elements.length();
+                        }
+                        for(int col= 0, j = colStart; col<colSize;col++,j++)
+                        {
+                            JSONObject matrixObj = elements.getJSONObject(col);
+                            JSONObject fare = null; JSONObject duration = null;
+                            if(matrixObj!=null&&matrixObj.has("duration"))
+                            {
+                                duration = matrixObj.getJSONObject("duration");
+                                timeMatrix[i][j] = duration.getLong("value");
+                            }
+                            if(matrixObj!=null&&matrixObj.has("fare"))
+                            {
+                                fare = matrixObj.getJSONObject("fare");
+                                fareMatrix[i][j] = fare.getInt("fare");
+                            }
+                        }
+                    }
+                }
+                catch (JSONException e)
+                {
+                    e.printStackTrace();
+                }//end of parsing try/ catch
+
+                //data 처리
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.v("Schedule::Request", "sending failed");
+            }
+
         }
     }
 

@@ -11,9 +11,11 @@ import java.util.ArrayList;
 public class Day {
 
     ArrayList<Course> courseList;
-    Site [] timetable = null;
+    boolean [] timetable = null;
     int totalTimeUnit=0;
     int availableTimeUnit=0;
+    int totalFare = 0;
+    int totalDuration = 0;
 
     public Day()
     {
@@ -24,11 +26,7 @@ public class Day {
     {
         courseList = new ArrayList<Course>();
         availableTimeUnit = timeU;
-        timetable = new Site[availableTimeUnit];
-        for(int i = 0; i<availableTimeUnit;i++)
-        {
-            timetable[i] = new Site();
-        }
+        timetable = new boolean[availableTimeUnit];
     }
 
     public Day(ArrayList<Course> list)

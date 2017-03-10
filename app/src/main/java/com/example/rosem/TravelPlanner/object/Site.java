@@ -103,4 +103,10 @@ public class Site {
     public void setLocality(String locality) {
         this.locality = locality;
     }
+
+    public String getLatLngStr()
+    {
+        String str = Double.toString(lat)+","+Double.toString(lng);
+        return str;
+    }
 }

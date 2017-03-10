@@ -10,6 +10,7 @@
     <!--google related-->
     <string name="google_geocoding_base">https://maps.googleapis.com/maps/api/geocode/json?place_id=</string>
     <string name="google_http_searching_loc">https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=</string>
+    <string name="google_http_matrix_head">https://maps.googleapis.com/maps/api/distancematrix/json?</string>
 
     <!--about views-->
     <string name="view_hotel_checkin">체크인</string>

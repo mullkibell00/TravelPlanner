@@ -23,11 +23,18 @@ public class Course {
     private int mSpendTime; //unit = minute or timeunit
     private long mCostTimeVal;
     private long mCostMoneyVal;
+    private int startIdx = 0;
+    private int endIdx=0;
 
     public Course()
     {
 
     }
+
+    public int getStartIdx(){ return  startIdx; }
+    public int getEndIdx() { return endIdx; }
+    public void setStartIdx(int i) { startIdx = i; }
+    public void setEndIdx(int i ){endIdx = i; }
 
     public Calendar getArrival() { return mArrival; }
     public Calendar getDepart() {return mDepart;}
