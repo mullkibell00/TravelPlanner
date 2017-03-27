@@ -1,14 +1,19 @@
 package com.example.rosem.TravelPlanner.object;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.LinkedList;
 
 /**
  * Created by rosem on 2017-03-27.
  */
 
-public class Schedule {
+public class Schedule extends Thread {
 
     private String planName;
     private int numOfDays = 0;
@@ -30,10 +35,35 @@ public class Schedule {
     private int numOfSites = 0;
     private int numOfHotels = 0;
     private int totalNum = 0;
-    private long [][] timeMat;
-    private int [][] costMat;
-    private int [][] unitMat;
-    private int TIME_UNIT = 0;
+    private long [][] timeMat = null;
+    private int [][] costMat = null;
+    private int [][] unitMat= null;
+    private int TIMEUNIT = 0;
+    private boolean [] isSelected= null;
+
+    private Comparator<Site> sortByVisitTimeLate = new Comparator<Site>()
+    {
+
+        @Override
+        public int compare(Site s1, Site s2) {
+            // TODO Auto-generated method stub
+            //visitTIme이 늦은 순으로 정렬
+            return -(s1.visitTime.compareTo(s2.visitTime));
+        }
+
+    });
+
+    private Comparator<Site> sortByVisitTimeEarly = new Comparator<Site>()
+    {
+
+        @Override
+        public int compare(Site s1, Site s2) {
+            // TODO Auto-generated method stub
+            //visitTime이 빠른 순으로 정렬
+            return (s1.visitTime.compareTo(s2.visitTime));
+        }
+
+    };
 
     //about schedule class
     public Calendar getArrived() {
@@ -151,5 +181,135 @@ public class Schedule {
     public void setRecommendHotelList(ArrayList<Site> list)
     {
         this.recommendHotelList =list;
+    }
+
+
+    public void getSchedule(int tu, JSONObject json)
+    {
+        //set datas
+        int touringHourInUnit =0;
+        numOfSites = siteList.size();
+        numOfHotels = hotel.size();
+        totalNum = numOfHotels+numOfSites;
+        timeMat = new long[totalNum][totalNum];
+        costMat = new int[totalNum][totalNum];
+        unitMat = new int[totalNum][totalNum];
+        TIMEUNIT = tu;
+        isSelected = new boolean[numOfSites];
+
+        try {
+            JSONArray response = json.getJSONArray("results");
+            //set matrix
+            for(int i =0; i<response.length();i++)
+            {
+                JSONObject obj = response.getJSONObject(i);
+                JSONArray rows = obj.getJSONArray("rows");
+                for(int j = 0; j<rows.length();j++)
+                {
+                    JSONObject rowObj = rows.getJSONObject(j);
+                    JSONArray elements = rowObj.getJSONArray("elements");
+                    JSONObject elementObj = elements.getJSONObject(0);
+                    JSONObject duration = elementObj.getJSONObject("duration");
+
+                    timeMat[j][i] = duration.getLong("value");
+                    //j = dest
+                    // i = start
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        this.run();
+    }
+
+    @Override
+    public void run() {
+        //super.run();
+    }
+
+    private Time durationToTime(long duration) {
+        Time t = new Time();
+        t.hour = Long.valueOf(duration / 3600).intValue();
+        t.min = Long.valueOf((duration - (t.hour * 3600)) / 60).intValue();
+        return t;
+    }
+
+    private int hourToUnit(int hour) {
+        return (hour * 60) / TIMEUNIT;
+    }
+
+    private int hourToUnit(Time t) {
+        return (t.hour * 60) / TIMEUNIT;
+    }
+
+    private int minToUnit(int min) {
+        int unit = min / TIMEUNIT;
+        if (min % TIMEUNIT != 0) {
+            if(unit>=0)
+            {
+                unit++;
+            }
+            else
+            {
+                unit--;
+            }
+        }
+        return unit;
+    }
+
+    private int minToUnit(Time t) {
+        int unit = t.min / TIMEUNIT;
+        if (t.min % TIMEUNIT != 0) {
+            if(unit>=0)
+            {
+                unit++;
+            }
+            else
+            {
+                unit--;
+            }
+        }
+        return unit;
+    }
+
+    private int timeToUnit(Time t) {
+        return (hourToUnit(t.hour)) + minToUnit(t.min);
+    }
+    private Time unitToTime(int unit)
+    {
+        Time t = new Time();
+        while(unit > HOUR_IN_TIMEUNIT)
+        {
+            t.hour++;
+            unit -= HOUR_IN_TIMEUNIT;
+        }
+        t.min = unit*TIMEUNIT;
+        return t;
+    }
+
+    private Time getTimeDiff(Time t1, Time t2)
+    {
+        return t1.sub(t2);
+    }
+
+
+
+    class CourseCostResult
+    {
+        public int cost;
+        public int timeUnit;
+
+        public CourseCostResult()
+        {
+            cost = 0;
+            timeUnit=0;
+        }
+
+        public CourseCostResult(int c, int t)
+        {
+            cost = c;
+            timeUnit= t;
+        }
     }
 }
