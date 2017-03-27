@@ -105,4 +105,9 @@ public class Time {
             return -1; // this < t
         }
     }
+
+    public static Time getTimeDiff(Time t1, Time t2)
+    {
+        return t1.sub(t2);
+    }
 }

@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.LinkedList;
-import java.util.Timer;
 
 /**
  * Created by rosem on 2017-03-27.
@@ -50,10 +49,10 @@ public class Schedule extends Thread {
         public int compare(Site s1, Site s2) {
             // TODO Auto-generated method stub
             //visitTIme이 늦은 순으로 정렬
-            return -(s1.getVisitStart().compareTo(s2.getVisitStart()));
+            return -(s1.getVisitTime().compareTo(s2.getVisitTime()));
         }
 
-    });
+    };
 
     private Comparator<Site> sortByVisitTimeEarly = new Comparator<Site>()
     {
@@ -62,7 +61,7 @@ public class Schedule extends Thread {
         public int compare(Site s1, Site s2) {
             // TODO Auto-generated method stub
             //visitTime이 빠른 순으로 정렬
-            return (s1.getVisitStart().compareTo(s2.getVisitStart()));
+            return (s1.getVisitTime().compareTo(s2.getVisitTime()));
         }
 
     };

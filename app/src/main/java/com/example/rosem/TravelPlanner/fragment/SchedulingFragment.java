@@ -16,6 +16,7 @@ import com.example.rosem.TravelPlanner.activity.CreatePlanActivity;
 import com.example.rosem.TravelPlanner.object.Day;
 import com.example.rosem.TravelPlanner.object.Local;
 import com.example.rosem.TravelPlanner.object.Site;
+import com.example.rosem.TravelPlanner.object.Time;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -55,8 +56,8 @@ public class SchedulingFragment extends Fragment {
     ArrayList<Calendar> checkInList = null;
     ArrayList<Calendar> checkOutList = null;
     ArrayList<Site> hotel = null;
-    Calendar tourStart;
-    Calendar tourEnd;
+    Time tourStart;
+    Time tourEnd;
     Time touringHour;
     ArrayList<Site> siteList = new ArrayList<Site>();
 
@@ -110,7 +111,7 @@ public class SchedulingFragment extends Fragment {
 
         timeUnit = getResources().getInteger(R.integer.time_unit);
         timeUnitSecond = timeUnit*60;
-        touringHour = getTimeDiff(tourStart,tourEnd);
+        touringHour = Time.getTimeDiff(tourStart,tourEnd);
         touringHourInUnit = timeToUnit(touringHour);
         numOfSite = siteList.size();
         numOfHotel = hotel.size();
@@ -317,7 +318,9 @@ public class SchedulingFragment extends Fragment {
            public boolean isPromising(int idx)
            {
                //is In TimeTable
-               int nextTimeUnit = presentTimeUnit+
+              // int nextTimeUnit = presentTimeUnit+
+               return false;
+               //fix here
            }
 
        }
@@ -405,11 +408,5 @@ public class SchedulingFragment extends Fragment {
        }
 
    }
-
-    class Time
-    {
-        int hour;
-        int min;
-    }
 
 }
