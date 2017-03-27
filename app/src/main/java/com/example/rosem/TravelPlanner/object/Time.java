@@ -1,5 +1,7 @@
 package com.example.rosem.TravelPlanner.object;
 
+import java.util.Calendar;
+
 /**
  * Created by rosem on 2017-03-27.
  */
@@ -23,6 +25,12 @@ public class Time {
     public Time(int h, int m) {
         hour = h;
         min = m;
+    }
+
+    public Time(Calendar c)
+    {
+        hour = c.get(Calendar.HOUR_OF_DAY);
+        min = c.get(Calendar.MINUTE);
     }
     public Time add(Time t)
     {

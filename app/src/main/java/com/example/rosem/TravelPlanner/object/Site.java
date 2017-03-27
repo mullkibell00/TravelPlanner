@@ -1,6 +1,5 @@
 package com.example.rosem.TravelPlanner.object;
 
-import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -15,9 +14,9 @@ public class Site {
     private double lat;
     private double lng;
     private String locality;
-    private Calendar visitStart;//방문 시작 시간
-    private Calendar visitEnd;//방문 종료 시간
-    private Calendar spendTime;//소요예정시간
+    private Time visitStart;//방문 시작 시간
+    private Time visitEnd;//방문 종료 시간
+    private Time spendTime;//소요예정시간
 
     public Site()
     {
@@ -72,27 +71,27 @@ public class Site {
         this.placeType = placeType;
     }
 
-    public Calendar getSpendTime() {
+    public Time getSpendTime() {
         return spendTime;
     }
 
-    public void setSpendTime(Calendar spendTime) {
+    public void setSpendTime(Time spendTime) {
         this.spendTime = spendTime;
     }
 
-    public Calendar getVisitEnd() {
+    public Time getVisitEnd() {
         return visitEnd;
     }
 
-    public void setVisitEnd(Calendar visitEnd) {
+    public void setVisitEnd(Time visitEnd) {
         this.visitEnd = visitEnd;
     }
 
-    public Calendar getVisitStart() {
+    public Time getVisitStart() {
         return visitStart;
     }
 
-    public void setVisitStart(Calendar visitStart) {
+    public void setVisitStart(Time visitStart) {
         this.visitStart = visitStart;
     }
 

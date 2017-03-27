@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.LinkedList;
+import java.util.Timer;
 
 /**
  * Created by rosem on 2017-03-27.
@@ -25,8 +26,8 @@ public class Schedule extends Thread {
     private ArrayList<Site> hotel = null;
     private ArrayList<Site> recommendHotelList = null;
     private String country;
-    private Calendar tourStart;
-    private Calendar tourEnd;
+    private Time tourStart;
+    private Time tourEnd;
     private ArrayList<Site> siteList = new ArrayList<Site>();
     private LinkedList<Site> fixedHourSiteList = new LinkedList<Site>();
     private LinkedList<Site> overHourSiteList = new LinkedList<Site>();
@@ -39,6 +40,7 @@ public class Schedule extends Thread {
     private int [][] costMat = null;
     private int [][] unitMat= null;
     private int TIMEUNIT = 0;
+    private int HOUR_IN_TIMEUNIT=0;
     private boolean [] isSelected= null;
 
     private Comparator<Site> sortByVisitTimeLate = new Comparator<Site>()
@@ -130,19 +132,19 @@ public class Schedule extends Thread {
         this.planName = planName;
     }
 
-    public Calendar getTourEnd() {
+    public Time getTourEnd() {
         return this.tourEnd;
     }
 
-    public void setTourEnd(Calendar tourEnd) {
+    public void setTourEnd(Time tourEnd) {
         this.tourEnd = tourEnd;
     }
 
-    public Calendar getTourStart() {
+    public Time getTourStart() {
         return this.tourStart;
     }
 
-    public void setTourStart(Calendar tourStart) {
+    public void setTourStart(Time tourStart) {
         this.tourStart = tourStart;
     }
 
@@ -195,6 +197,7 @@ public class Schedule extends Thread {
         costMat = new int[totalNum][totalNum];
         unitMat = new int[totalNum][totalNum];
         TIMEUNIT = tu;
+        HOUR_IN_TIMEUNIT = 60/tu;
         isSelected = new boolean[numOfSites];
 
         try {

@@ -2,7 +2,6 @@ package com.example.rosem.TravelPlanner.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -10,6 +9,7 @@ import android.widget.RelativeLayout;
 
 import com.example.rosem.TravelPlanner.R;
 import com.example.rosem.TravelPlanner.object.Site;
+import com.example.rosem.TravelPlanner.object.Time;
 import com.example.rosem.TravelPlanner.view.SiteItemView;
 
 import java.util.ArrayList;
@@ -86,18 +86,21 @@ public class SiteListAdapter extends RecyclerView.Adapter<SiteListAdapter.ViewHo
 
     public void setVisitStart(int idx, Calendar start)
     {
-        siteList.get(idx).setVisitStart(start);
-        Log.v("SiteAdapter::","siteList visitStart="+siteList.get(idx).getVisitStart().get(Calendar.HOUR_OF_DAY));
+        Time time = new Time(start);
+        siteList.get(idx).setVisitStart(time);
+        //Log.v("SiteAdapter::","siteList visitStart="+siteList.get(idx).getVisitStart().get(Calendar.HOUR_OF_DAY));
     }
 
     public void setVisitEnd(int idx, Calendar end)
     {
-        siteList.get(idx).setVisitEnd(end);
-        Log.v("SiteAdapter::","siteList visitStart="+siteList.get(idx).getVisitEnd().get(Calendar.HOUR_OF_DAY));
+        Time time = new Time(end);
+        siteList.get(idx).setVisitEnd(time);
+        //Log.v("SiteAdapter::","siteList visitStart="+siteList.get(idx).getVisitEnd().get(Calendar.HOUR_OF_DAY));
     }
 
-    public void setSpendTime(int idx, Calendar time)
+    public void setSpendTime(int idx, Calendar spend)
     {
+        Time time = new Time(spend);
         siteList.get(idx).setSpendTime(time);
     }
 
