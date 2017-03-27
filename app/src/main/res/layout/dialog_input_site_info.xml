@@ -20,7 +20,7 @@
             android:textSize="17sp"
             android:text="@string/txt_tour_start_time"
             android:layout_marginRight="20dp"
-            android:id="@+id/dialog_site_txt_visit_start"
+            android:id="@+id/dialog_site_txt_visit_day"
             />
         <TextView
             android:layout_width="match_parent"
@@ -34,7 +34,7 @@
             android:textIsSelectable="true"
             android:focusableInTouchMode="false"
             android:focusable="false"
-            android:id="@+id/dialog_site_selected_visit_start"
+            android:id="@+id/dialog_site_selected_visit_day"
             />
     </LinearLayout>
     <!--daily tour end-->
@@ -52,7 +52,7 @@
             android:textSize="17sp"
             android:text="@string/txt_tour_end_time"
             android:layout_marginRight="20dp"
-            android:id="@+id/dialog_site_txt_visit_end"
+            android:id="@+id/dialog_site_txt_visit_time"
             />
         <TextView
             android:layout_width="match_parent"
@@ -66,7 +66,7 @@
             android:textIsSelectable="true"
             android:focusableInTouchMode="false"
             android:focusable="false"
-            android:id="@+id/dialog_site_selected_visit_end"
+            android:id="@+id/dialog_site_selected_visit_time"
             />
     </LinearLayout>
 

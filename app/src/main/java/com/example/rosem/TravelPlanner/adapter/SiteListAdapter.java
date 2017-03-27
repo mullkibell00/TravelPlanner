@@ -84,17 +84,16 @@ public class SiteListAdapter extends RecyclerView.Adapter<SiteListAdapter.ViewHo
         notifyDataSetChanged();
     }
 
-    public void setVisitStart(int idx, Calendar start)
+    public void setVisitTime(int idx, Calendar t)
     {
-        Time time = new Time(start);
-        siteList.get(idx).setVisitStart(time);
+        Time time = new Time(t);
+        siteList.get(idx).setVisitTime(time);
         //Log.v("SiteAdapter::","siteList visitStart="+siteList.get(idx).getVisitStart().get(Calendar.HOUR_OF_DAY));
     }
 
-    public void setVisitEnd(int idx, Calendar end)
+    public void setVisitDay(int idx, Calendar day)
     {
-        Time time = new Time(end);
-        siteList.get(idx).setVisitEnd(time);
+        siteList.get(idx).setVisitDay(day);
         //Log.v("SiteAdapter::","siteList visitStart="+siteList.get(idx).getVisitEnd().get(Calendar.HOUR_OF_DAY));
     }
 

@@ -2,6 +2,7 @@ package com.example.rosem.TravelPlanner.fragment;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -20,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -310,10 +312,10 @@ public class InputSiteFragment extends Fragment {
         int idx = 0;
         View dialogView;
         View titleView;
-        Calendar visitStartCal = Calendar.getInstance();
-        Calendar visitEndCal = Calendar.getInstance();
-        TextView visitStart;
-        TextView visitEnd;
+        Calendar visitTime = Calendar.getInstance();
+        Calendar visitDay = Calendar.getInstance();
+        TextView visitDayBtn;
+        TextView visitTimeBtn;
 
         public InputInfoDialog(Context context)
         {
@@ -323,26 +325,26 @@ public class InputSiteFragment extends Fragment {
             titleView = getLayoutInflater().inflate(R.layout.dialog_title,null);
             TextView title = (TextView)titleView.findViewById(R.id.dialog_title_view);
             title.setTypeface(fontType); title.setText(getString(R.string.title_input_site_dialog));
-            TextView textVistStart = (TextView)dialogView.findViewById(R.id.dialog_site_txt_visit_start);
-            TextView textVisitEnd = (TextView)dialogView.findViewById(R.id.dialog_site_txt_visit_end);
-            visitStart = (TextView)dialogView.findViewById(R.id.dialog_site_selected_visit_start);
-            visitEnd = (TextView)dialogView.findViewById(R.id.dialog_site_selected_visit_end);
-            textVistStart.setTypeface(fontType); textVisitEnd.setTypeface(fontType);
-            visitStart.setTypeface(fontType); visitEnd.setTypeface(fontType);
+            TextView textVistDay = (TextView)dialogView.findViewById(R.id.dialog_site_txt_visit_day);
+            TextView textVisitTime = (TextView)dialogView.findViewById(R.id.dialog_site_txt_visit_time);
+            visitDayBtn = (TextView)dialogView.findViewById(R.id.dialog_site_selected_visit_day);
+            visitTimeBtn = (TextView)dialogView.findViewById(R.id.dialog_site_selected_visit_time);
+            textVistDay.setTypeface(fontType); textVisitTime.setTypeface(fontType);
+            visitDayBtn.setTypeface(fontType); visitTimeBtn.setTypeface(fontType);
 
             //set onClickListener in dialog
-            visitStart.setOnClickListener(new View.OnClickListener() {
+            visitDayBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    new TimePickerDialog(getContext(),new VisitStartSetListener(),
-                            visitStartCal.get(Calendar.HOUR_OF_DAY),visitStartCal.get(Calendar.MINUTE),false).show();
+                    new DatePickerDialog(getContext(),new VisitDaySetListener(),
+                            visitDay.get(Calendar.YEAR), visitDay.get(Calendar.MONTH),visitDay.get(Calendar.DAY_OF_MONTH)).show();
                 }
             });
-            visitEnd.setOnClickListener(new View.OnClickListener() {
+            visitTimeBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    new TimePickerDialog(getContext(),new VisitEndSetListener(),
-                            visitStartCal.get(Calendar.HOUR_OF_DAY),visitStartCal.get(Calendar.MINUTE),false).show();
+                    new TimePickerDialog(getContext(),new VisitTimeSetListener(),
+                            visitTime.get(Calendar.HOUR_OF_DAY), visitTime.get(Calendar.MINUTE),false).show();
                 }
             });
 
@@ -355,8 +357,8 @@ public class InputSiteFragment extends Fragment {
                 public void onClick(DialogInterface dialogInterface, int i) {
                     if(siteInfoDialog.isShowing())
                     {
-                        mAdapter.setVisitStart(idx,visitStartCal);
-                        mAdapter.setVisitEnd(idx,visitEndCal);
+                        mAdapter.setVisitTime(idx, visitTime);
+                        mAdapter.setVisitDay(idx, visitDay);
                         siteInfoDialog.dismiss();
                     }
                 }
@@ -389,45 +391,47 @@ public class InputSiteFragment extends Fragment {
             idx = pos;
             this.show();
             Site site = mAdapter.getSite(idx);
-            if(site.getVisitStart()!=null)
+            if(site.getVisitTime()!=null)
             {
-                setVisitStart(site.getVisitStart());
+                setVisitTimeBtn(site.getVisitTime().getCalendar());
             }
-            if(site.getVisitEnd()!=null)
+            if(site.getVisitDay()!=null)
             {
-                setVisitEnd(site.getVisitEnd());
+                setVisitDayBtn(site.getVisitDay());
             }
         }
 
-        public void setVisitStart(Calendar cal)
+        public void setVisitDayBtn(Calendar cal)
         {
-            visitStart.setSelected(true);
-            ((CreatePlanActivity)getActivity()).setTimeText(visitStart,cal.get(Calendar.HOUR_OF_DAY),cal.get(Calendar.MINUTE));
-            //visitStart.setText(cal.get(Calendar.HOUR_OF_DAY)+"시 "+cal.get(Calendar.MINUTE)+"분");
+            visitDayBtn.setSelected(true);
+            ((CreatePlanActivity)getActivity()).setDateText(visitDayBtn,cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH));
+            //visitDayBtn.setText(cal.get(Calendar.HOUR_OF_DAY)+"시 "+cal.get(Calendar.MINUTE)+"분");
         }
-        public void setVisitEnd(Calendar cal)
+        public void setVisitTimeBtn(Calendar cal)
         {
-            visitEnd.setSelected(true);
-            ((CreatePlanActivity)getActivity()).setTimeText(visitEnd,cal.get(Calendar.HOUR_OF_DAY),cal.get(Calendar.MINUTE));
-            //visitEnd.setText(cal.get(Calendar.HOUR_OF_DAY)+"시 "+cal.get(Calendar.MINUTE)+"분");
+            visitTimeBtn.setSelected(true);
+            ((CreatePlanActivity)getActivity()).setTimeText(visitTimeBtn,cal.get(Calendar.HOUR_OF_DAY),cal.get(Calendar.MINUTE));
+            //visitTimeBtn.setText(cal.get(Calendar.HOUR_OF_DAY)+"시 "+cal.get(Calendar.MINUTE)+"분");
         }
-        private class VisitStartSetListener implements TimePickerDialog.OnTimeSetListener
+        private class VisitDaySetListener implements DatePickerDialog.OnDateSetListener
         {
+
             @Override
-            public void onTimeSet(TimePicker timePicker, int hour, int min) {
-                visitStartCal.set(Calendar.HOUR_OF_DAY,hour);
-                visitStartCal.set(Calendar.MINUTE,min);
-                setVisitStart(visitStartCal);
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                visitDay.set(Calendar.YEAR,year);
+                visitDay.set(Calendar.MONTH, month);
+                visitDay.set(Calendar.DAY_OF_MONTH,day);
+                setVisitDayBtn(visitDay);
             }
         }
 
-        private class VisitEndSetListener implements TimePickerDialog.OnTimeSetListener
+        private class VisitTimeSetListener implements TimePickerDialog.OnTimeSetListener
         {
             @Override
             public void onTimeSet(TimePicker timePicker, int hour, int min) {
-                visitEndCal.set(Calendar.HOUR_OF_DAY,hour);
-                visitEndCal.set(Calendar.MINUTE,min);
-                setVisitEnd(visitEndCal);
+                visitTime.set(Calendar.HOUR_OF_DAY,hour);
+                visitTime.set(Calendar.MINUTE,min);
+                setVisitTimeBtn(visitTime);
             }
         }
     }

@@ -50,7 +50,7 @@ public class Schedule extends Thread {
         public int compare(Site s1, Site s2) {
             // TODO Auto-generated method stub
             //visitTIme이 늦은 순으로 정렬
-            return -(s1.getVisitStart().compareTo(s2.visitTime));
+            return -(s1.getVisitStart().compareTo(s2.getVisitStart()));
         }
 
     });
@@ -62,7 +62,7 @@ public class Schedule extends Thread {
         public int compare(Site s1, Site s2) {
             // TODO Auto-generated method stub
             //visitTime이 빠른 순으로 정렬
-            return (s1.visitTime.compareTo(s2.visitTime));
+            return (s1.getVisitStart().compareTo(s2.getVisitStart()));
         }
 
     };
