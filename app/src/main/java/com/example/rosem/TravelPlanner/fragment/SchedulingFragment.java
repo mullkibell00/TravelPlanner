@@ -32,8 +32,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import static com.example.rosem.TravelPlanner.R.mipmap.star;
-
 /**
  * Created by rosem on 2017-03-07.
  */
@@ -101,7 +99,7 @@ public class SchedulingFragment extends Fragment {
         //set vars
         numOfDays = ((CreatePlanActivity)getActivity()).getNumOfDays();
         arrival = ((CreatePlanActivity)getActivity()).getArrived();
-        depart= ((CreatePlanActivity)getActivity()).getDepature();
+        depart= ((CreatePlanActivity)getActivity()).getDeparture();
         checkInList = ((CreatePlanActivity)getActivity()).getCheckInList();
         checkOutList = ((CreatePlanActivity)getActivity()).getCheckOutList();
         hotel = ((CreatePlanActivity)getActivity()).getHotel();

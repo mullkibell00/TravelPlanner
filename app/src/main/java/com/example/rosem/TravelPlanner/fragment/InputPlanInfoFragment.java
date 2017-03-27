@@ -211,7 +211,7 @@ public class InputPlanInfoFragment extends Fragment {
     {
         //numofDays, arrival,departure,country
         ((CreatePlanActivity)getActivity()).setArrived(selectedArrival);
-        ((CreatePlanActivity)getActivity()).setDepature(selectedDepart);
+        ((CreatePlanActivity)getActivity()).setDeparture(selectedDepart);
         ((CreatePlanActivity)getActivity()).setCountry(texts[mSelectedCountry].getText().toString());
         ((CreatePlanActivity)getActivity()).setTourStart(tourStartTime);
         ((CreatePlanActivity)getActivity()).setTourEnd(tourEndTime);
@@ -351,7 +351,7 @@ public class InputPlanInfoFragment extends Fragment {
             //                +arrival.get(Calendar.MINUTE)+"분");
         }
         Calendar depart = null;
-        if((depart=((CreatePlanActivity)getActivity()).getDepature())!=null)
+        if((depart=((CreatePlanActivity)getActivity()).getDeparture())!=null)
         {
            // texts[mSelectedDepartDate].setText(depart.get(Calendar.YEAR)+"년 "
            //         +(depart.get(Calendar.MONTH)+1)+"월 "+depart.get(Calendar.DAY_OF_MONTH)+"일");

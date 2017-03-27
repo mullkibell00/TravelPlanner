@@ -23,6 +23,7 @@ import com.example.rosem.TravelPlanner.fragment.InputPlanInfoFragment;
 import com.example.rosem.TravelPlanner.fragment.InputSiteFragment;
 import com.example.rosem.TravelPlanner.fragment.InputTitleFragment;
 import com.example.rosem.TravelPlanner.fragment.SchedulingFragment;
+import com.example.rosem.TravelPlanner.object.Schedule;
 import com.example.rosem.TravelPlanner.object.Site;
 import com.example.rosem.TravelPlanner.plan.Plan;
 import com.google.android.gms.common.ConnectionResult;
@@ -32,7 +33,6 @@ import com.google.android.gms.location.places.Places;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.LinkedList;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -52,7 +52,7 @@ public class CreatePlanActivity extends AppCompatActivity {
     PorterDuff.Mode iconMode;
     Realm db;
 
-    Schedule schedule = new Schedule();
+    private Schedule schedule = new Schedule();
 
     private int STEP_NUM;
     Fragment [] stepFragments;
@@ -186,7 +186,7 @@ public class CreatePlanActivity extends AppCompatActivity {
         }
         else if(currentStep==HOTEL_RECOMMEND)
         {
-            if(schedule.isHotelReserved)
+            if(schedule.isHotelReserved())
             {
                 if(order==NEXT_STEP)
                 {
@@ -246,149 +246,122 @@ public class CreatePlanActivity extends AppCompatActivity {
 
     //about schedule class
     public Calendar getArrived() {
-        return schedule.arrived;
+        return schedule.getArrived();
     }
 
     public void setArrived(Calendar arrived) {
-        schedule.arrived = arrived;
+        schedule.setArrived(arrived);
     }
 
     public String getCountry() {
-        return schedule.country;
+        return schedule.getCountry();
     }
 
     public void setCountry(String country) {
-        schedule.country = country;
+        schedule.setCountry(country);
     }
 
-    public Calendar getDepature() {
-        return schedule.depature;
+    public Calendar getDeparture() {
+        return schedule.getDeparture();
     }
 
-    public void setDepature(Calendar depature) {
-        schedule.depature = depature;
+    public void setDeparture(Calendar departure) {
+        schedule.setDeparture(departure);;
     }
 
     public ArrayList<Site> getHotel() {
-        return schedule.hotel;
+        return schedule.getHotel();
     }
 
     public void setHotel(ArrayList<Site> hotel) {
-        schedule.hotel = hotel;
+        schedule.setHotel(hotel);
     }
 
     public boolean isHotelReserved() {
-        return schedule.isHotelReserved;
+        return schedule.isHotelReserved();
     }
 
     public void setHotelReserved(boolean hotelReserved) {
-        schedule.isHotelReserved = hotelReserved;
+        schedule.setHotelReserved(hotelReserved);
     }
 
     public int getNumOfDays() {
-        return schedule.numOfDays;
+        return schedule.getNumOfDays();
     }
 
     public void setNumOfDays(int numOfDays) {
-        schedule.numOfDays = numOfDays;
+        schedule.setNumOfDays(numOfDays);
     }
 
     public ArrayList<Site> getSiteList() {
-        return schedule.siteList;
+        return schedule.getSiteList();
     }
 
     public void setSiteList(ArrayList<Site> siteList) {
-        schedule.siteList = siteList;
+        schedule.setSiteList(siteList);
     }
 
     public String getPlanName() {
-        return schedule.planName;
+        return schedule.getPlanName();
     }
 
     public void setPlanName(String planName) {
-        schedule.planName = planName;
+        schedule.setPlanName(planName);
     }
 
     public Calendar getTourEnd() {
-        return schedule.tourEnd;
+        return schedule.getTourEnd();
     }
 
     public void setTourEnd(Calendar tourEnd) {
-        schedule.tourEnd = tourEnd;
+        schedule.setTourEnd(tourEnd);
     }
 
     public Calendar getTourStart() {
-        return schedule.tourStart;
+        return schedule.getTourStart();
     }
 
     public void setTourStart(Calendar tourStart) {
-        schedule.tourStart = tourStart;
+        schedule.setTourStart(tourStart);
     }
 
     public void addSite(Site p)
     {
-        schedule.siteList.add(p);
+        schedule.addSite(p);
     }
 
     public int getScheduleSize()
     {
-        return schedule.siteList.size();
+        return schedule.getScheduleSize();
     }
 
 
     public ArrayList<Calendar> getCheckInList() {
-        return schedule.checkInList;
+        return schedule.getCheckInList();
     }
 
     public void setCheckInList(ArrayList<Calendar> checkInList) {
-        schedule.checkInList = checkInList;
+        schedule.setCheckInList(checkInList);
     }
 
     public ArrayList<Calendar> getCheckOutList() {
-        return schedule.checkOutList;
+        return schedule.getCheckOutList();
     }
 
     public void setCheckOutList(ArrayList<Calendar> checkOutList) {
-        schedule.checkOutList = checkOutList;
+        schedule.setCheckOutList(checkOutList);
     }
 
     public ArrayList<Site> getRecommendHotelList()
     {
-        return schedule.recommendHotelList;
+        return schedule.getRecommendHotelList();
     }
 
     public void setRecommendHotelList(ArrayList<Site> list)
     {
-        schedule.recommendHotelList =list;
+        schedule.setRecommendHotelList(list);
     }
 
-    private class Schedule
-    {
-        public String planName;
-        public int numOfDays = 0;
-        public Calendar depature;
-        public Calendar arrived;
-        public boolean isHotelReserved;
-        public ArrayList<Calendar> checkInList = null;
-        public ArrayList<Calendar> checkOutList = null;
-        public ArrayList<Site> hotel = null;
-        public ArrayList<Site> recommendHotelList = null;
-        public String country;
-        public Calendar tourStart;
-        public Calendar tourEnd;
-        public ArrayList<Site> siteList = new ArrayList<Site>();
-        public LinkedList<Site> fixedHourSiteList = new LinkedList<Site>();
-        public LinkedList<Site> overHourSiteList = new LinkedList<Site>();
-        //for calculation
-        private int touringHourInUnit =0;
-        private int numOfSites = 0;
-        private int numOfHotels = 0;
-        private int totalNum = 0;
-        private long [][] timeMat;
-        private int [][] costMat;
-        private int [][] unitMat;
-        private int TIME_UNIT = 0;
-    }
     public Site setSiteFromPlace(Place place)
     {
         Site site = new Site();

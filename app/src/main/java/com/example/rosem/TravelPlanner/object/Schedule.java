@@ -10,21 +10,21 @@ import java.util.LinkedList;
 
 public class Schedule {
 
-    public String planName;
-    public int numOfDays = 0;
-    public Calendar depature;
-    public Calendar arrived;
-    public boolean isHotelReserved;
-    public ArrayList<Calendar> checkInList = null;
-    public ArrayList<Calendar> checkOutList = null;
-    public ArrayList<Site> hotel = null;
-    public ArrayList<Site> recommendHotelList = null;
-    public String country;
-    public Calendar tourStart;
-    public Calendar tourEnd;
-    public ArrayList<Site> siteList = new ArrayList<Site>();
-    public LinkedList<Site> fixedHourSiteList = new LinkedList<Site>();
-    public LinkedList<Site> overHourSiteList = new LinkedList<Site>();
+    private String planName;
+    private int numOfDays = 0;
+    private Calendar departure;
+    private Calendar arrived;
+    private boolean isHotelReserved;
+    private ArrayList<Calendar> checkInList = null;
+    private ArrayList<Calendar> checkOutList = null;
+    private ArrayList<Site> hotel = null;
+    private ArrayList<Site> recommendHotelList = null;
+    private String country;
+    private Calendar tourStart;
+    private Calendar tourEnd;
+    private ArrayList<Site> siteList = new ArrayList<Site>();
+    private LinkedList<Site> fixedHourSiteList = new LinkedList<Site>();
+    private LinkedList<Site> overHourSiteList = new LinkedList<Site>();
     //for calculation
     private int touringHourInUnit =0;
     private int numOfSites = 0;
@@ -52,12 +52,12 @@ public class Schedule {
         this.country = country;
     }
 
-    public Calendar getDepature() {
-        return this.depature;
+    public Calendar getDeparture() {
+        return this.departure;
     }
 
-    public void setDepature(Calendar depature) {
-        this.depature = depature;
+    public void setDeparture(Calendar departure) {
+        this.departure = departure;
     }
 
     public ArrayList<Site> getHotel() {
