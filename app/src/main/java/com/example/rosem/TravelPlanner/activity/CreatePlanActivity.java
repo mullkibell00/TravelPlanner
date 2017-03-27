@@ -32,6 +32,7 @@ import com.google.android.gms.location.places.Places;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.LinkedList;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -376,6 +377,17 @@ public class CreatePlanActivity extends AppCompatActivity {
         public Calendar tourStart;
         public Calendar tourEnd;
         public ArrayList<Site> siteList = new ArrayList<Site>();
+        public LinkedList<Site> fixedHourSiteList = new LinkedList<Site>();
+        public LinkedList<Site> overHourSiteList = new LinkedList<Site>();
+        //for calculation
+        private int touringHourInUnit =0;
+        private int numOfSites = 0;
+        private int numOfHotels = 0;
+        private int totalNum = 0;
+        private long [][] timeMat;
+        private int [][] costMat;
+        private int [][] unitMat;
+        private int TIME_UNIT = 0;
     }
     public Site setSiteFromPlace(Place place)
     {

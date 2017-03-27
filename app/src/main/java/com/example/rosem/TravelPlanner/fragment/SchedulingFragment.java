@@ -32,6 +32,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import static com.example.rosem.TravelPlanner.R.mipmap.star;
+
 /**
  * Created by rosem on 2017-03-07.
  */
@@ -50,7 +52,6 @@ public class SchedulingFragment extends Fragment {
 
     //var
     int numOfDays;
-    int numOfSite;
     Calendar arrival;
     Calendar depart;
     ArrayList<Calendar> checkInList = null;
@@ -65,6 +66,9 @@ public class SchedulingFragment extends Fragment {
     ArrayList<Local> locals = new ArrayList<Local>();
     Day [] schedule;
 
+    int numOfSite;
+    int numOfHotel;
+    int totalNodeNum;
     int timeUnit;
     int timeUnitSecond;
     int touringHourInUnit;
@@ -108,23 +112,14 @@ public class SchedulingFragment extends Fragment {
 
         timeUnit = getResources().getInteger(R.integer.time_unit);
         timeUnitSecond = timeUnit*60;
-        touringHour = new Time();
-        touringHour.hour = tourEnd.get(Calendar.HOUR_OF_DAY)-tourStart.get(Calendar.HOUR_OF_DAY);
-        int minS = tourStart.get(Calendar.MINUTE); int minE = tourEnd.get(Calendar.MINUTE);
-        if(minE<minS)
-        {
-            touringHour.min = minS-minE;
-            touringHour.hour--;
-        }
-        else
-        {
-            touringHour.min = minE-minS;
-        }
-        touringHourInUnit = (60/timeUnit)*touringHour.hour+(touringHour.min/timeUnit);
+        touringHour = getTimeDiff(tourStart,tourEnd);
+        touringHourInUnit = timeToUnit(touringHour);
         numOfSite = siteList.size();
+        numOfHotel = hotel.size();
+        totalNodeNum = numOfSite+numOfHotel;
 
-        timeMatrix = new long[numOfSite][numOfSite];
-        fareMatrix = new long[numOfSite][numOfSite];
+        timeMatrix = new long[totalNodeNum][totalNodeNum];
+        fareMatrix = new long[totalNodeNum][totalNodeNum];
 
     }
 
@@ -173,6 +168,36 @@ public class SchedulingFragment extends Fragment {
         return t;
     }
 
+    private int hourToUnit(int hour)
+    {
+        return  (60/timeUnit)*hour;
+    }
+    private int minuteToUnit(int min)
+    {
+        return (min/timeUnit);
+    }
+    private int timeToUnit(Time time)
+    {
+        return (60/timeUnit)*time.hour+(time.min/timeUnit);
+    }
+
+    private Time getTimeDiff(Calendar start, Calendar end)
+    {
+        Time diff = new Time();
+        diff.hour = end.get(Calendar.HOUR_OF_DAY)-start.get(Calendar.HOUR_OF_DAY);
+        int minS = start.get(Calendar.MINUTE); int minE = end.get(Calendar.MINUTE);
+        if(minE<minS)
+        {
+            diff.min = minS-minE;
+            diff.hour--;
+        }
+        else
+        {
+            diff.min = minE-minS;
+        }
+        return diff;
+    }
+
     private long intToLong(int i)
     {
         return Integer.valueOf(i).longValue();
@@ -190,6 +215,10 @@ public class SchedulingFragment extends Fragment {
 
    private class Scheduling extends Thread
    {
+       boolean [] isSelected;
+       String headStr = getString(R.string.google_http_matrix_head);
+       String tailStr = "&mode=transit&language=ko&key="+getString(R.string.google_http_api_key);
+       String requestUrl;
        @Override
        public void run() {
            //super.run();
@@ -198,128 +227,186 @@ public class SchedulingFragment extends Fragment {
            String separator="%7C";
            String originData="origins=";
            String destData="&destinations=";
-           if(numOfSite>limit)
+           if(totalNodeNum>limit)
            {
 
            }
            else
            {
                String bodyData = siteList.get(0).getLatLngStr();
-               for(int i =1; i<numOfSite;i++)
+               for(int i =1; i<totalNodeNum;i++)
                {
                    bodyData+=separator;
                    bodyData=bodyData+siteList.get(i).getLatLngStr();
                }
 
-               RequestMatrix request = new RequestMatrix(originData+bodyData+destData+bodyData,0,0);
-               request.run();
+               requestUrl = headStr+originData+bodyData+destData+bodyData+tailStr;
+               if(!request(requestUrl,0,0))
+               {
+                   //show toast failed
+                   return;
+               }
+           }
+           //processing start
+           isSelected = new boolean[numOfSite];
+           for(int i = 0; i<numOfSite;i++)
+           {
+               isSelected[i] = false;
            }
        }
 
+       private class DayScheduling
+       {
+           int day;
+           Site start;
+           Site end;
+           int fareOrDuration;
+           int totalTimeUnit;
+           int presentTimeUnit;
+           int presentCost;
+           boolean [] isSelected;
+           ArrayList<Integer> dayCourse = new ArrayList<Integer>();
+
+           public DayScheduling(int day, Site start, Site end, int fareOrDuration, boolean [] isSelected)
+           {
+               this.day = day;
+               this.start = start;
+               this.end = end;
+               this.fareOrDuration = fareOrDuration;
+               this.isSelected = new boolean[isSelected.length];
+               for(int i =0; i<isSelected.length;i++)
+               {
+                   this.isSelected[i] = isSelected[i];
+               }
+               if(day!=1 && day !=numOfDays)
+               {
+                   totalTimeUnit = touringHourInUnit;
+               }
+               else
+               {
+                   //calculate
+                   totalTimeUnit = 0;
+               }
+               presentTimeUnit = 0;
+               presentCost = 0;
+           }
+
+           public ArrayList<Integer> getDay()//input은 몇 번째 날인지, start지점과 end 지점
+           {
+
+               dayCourse.add(numOfSite+hotel.indexOf(start));
+               for(int i = 0; i<numOfSite;i++)
+               {
+                   getDayCourseByDuration(0);
+               }
+
+
+               return null;
+           }
+
+           public void getDayCourseByFare(int idx)
+           {
+
+           }
+           public void getDayCourseByDuration(int nodeNum)
+           {
+                if(isPromising(nodeNum))
+                {
+
+                }
+           }
+
+           public boolean isPromising(int idx)
+           {
+               //is In TimeTable
+               int nextTimeUnit = presentTimeUnit+
+           }
+
+       }
+
+
+       public boolean request(String data, int rowStart, int colStart )
+       {
+           InputStream inputStream = null;
+           BufferedReader rd = null;
+           StringBuilder response = new StringBuilder();
+
+           HttpClient httpClient = new DefaultHttpClient();
+
+           try {
+               HttpPost httpPost = new HttpPost(data);
+               //서버로 전송 & 받아오기
+               HttpResponse httpResponse = httpClient.execute(httpPost);
+               Log.v("Schedule::Request", "sending success");
+
+               inputStream = httpResponse.getEntity().getContent();
+               rd = new BufferedReader(new InputStreamReader(inputStream));
+               String line;
+               while((line=rd.readLine())!=null)
+               {
+                   response.append(line);
+               }
+               Log.v("Schedule::Request","result:"+response.toString());
+
+               //parsing
+               JSONObject result = null;
+               JSONArray rows = null;
+               try
+               {
+                   int rowSize = 0;
+                   result = new JSONObject(response.toString());
+                   if(result!=null && result.has("rows"))
+                   {
+                       rows = result.getJSONArray("rows");
+                       rowSize = rows.length();
+                   }
+                   for(int row = 0, i =rowStart ; row<rowSize;row++, i++)
+                   {
+                       JSONObject columns = rows.getJSONObject(row);
+                       JSONArray elements = null;
+
+                       int colSize = 0;
+
+                       if(columns!=null&&columns.has("elements"))
+                       {
+                           elements = columns.getJSONArray("elements");
+                           colSize = elements.length();
+                       }
+                       for(int col= 0, j = colStart; col<colSize;col++,j++)
+                       {
+                           JSONObject matrixObj = elements.getJSONObject(col);
+                           JSONObject fare = null; JSONObject duration = null;
+                           if(matrixObj!=null&&matrixObj.has("duration"))
+                           {
+                               duration = matrixObj.getJSONObject("duration");
+                               timeMatrix[i][j] = duration.getLong("value");
+                           }
+                           if(matrixObj!=null&&matrixObj.has("fare"))
+                           {
+                               fare = matrixObj.getJSONObject("fare");
+                               fareMatrix[i][j] = fare.getInt("fare");
+                           }
+                       }
+                   }
+               }
+               catch (JSONException e)
+               {
+                   e.printStackTrace();
+                   return false;
+               }//end of parsing try/ catch
+
+               //data 처리
+           } catch (IOException e) {
+               e.printStackTrace();
+               Log.v("Schedule::Request", "sending failed");
+               return false;
+           }
+
+           return true;
+
+       }
+
    }
-
-    class RequestMatrix extends Thread
-    {
-        String headStr = getString(R.string.google_http_matrix_head);
-        String bodyStr=null;
-        String tailStr = "&mode=transit&language=ko&key="+getString(R.string.google_http_api_key);
-        String data = null;
-        int rowStart; int colStart;
-        public RequestMatrix(String str,int rowStart, int colStart)
-        {
-            if(str!=null)
-            {
-                bodyStr=str;
-            }
-            this.rowStart = rowStart;
-            this.colStart = colStart;
-        }
-
-        @Override
-        public void run() {
-           // super.run();
-            request(rowStart,colStart);
-        }
-
-        public void request(int rowStart, int colStart )
-        {
-            data = headStr+bodyStr+tailStr;
-
-            InputStream inputStream = null;
-            BufferedReader rd = null;
-            StringBuilder response = new StringBuilder();
-
-            HttpClient httpClient = new DefaultHttpClient();
-
-            try {
-                HttpPost httpPost = new HttpPost(data);
-                //서버로 전송 & 받아오기
-                HttpResponse httpResponse = httpClient.execute(httpPost);
-                Log.v("Schedule::Request", "sending success");
-
-                inputStream = httpResponse.getEntity().getContent();
-                rd = new BufferedReader(new InputStreamReader(inputStream));
-                String line;
-                while((line=rd.readLine())!=null)
-                {
-                    response.append(line);
-                }
-                Log.v("Schedule::Request","result:"+response.toString());
-
-                //parsing
-                JSONObject result = null;
-                JSONArray rows = null;
-                try
-                {
-                    int rowSize = 0;
-                    result = new JSONObject(response.toString());
-                    if(result!=null && result.has("rows"))
-                    {
-                        rows = result.getJSONArray("rows");
-                        rowSize = rows.length();
-                    }
-                    for(int row = 0, i =rowStart ; row<rowSize;row++, i++)
-                    {
-                        JSONObject columns = rows.getJSONObject(row);
-                        JSONArray elements = null;
-
-                        int colSize = 0;
-
-                        if(columns!=null&&columns.has("elements"))
-                        {
-                            elements = columns.getJSONArray("elements");
-                            colSize = elements.length();
-                        }
-                        for(int col= 0, j = colStart; col<colSize;col++,j++)
-                        {
-                            JSONObject matrixObj = elements.getJSONObject(col);
-                            JSONObject fare = null; JSONObject duration = null;
-                            if(matrixObj!=null&&matrixObj.has("duration"))
-                            {
-                                duration = matrixObj.getJSONObject("duration");
-                                timeMatrix[i][j] = duration.getLong("value");
-                            }
-                            if(matrixObj!=null&&matrixObj.has("fare"))
-                            {
-                                fare = matrixObj.getJSONObject("fare");
-                                fareMatrix[i][j] = fare.getInt("fare");
-                            }
-                        }
-                    }
-                }
-                catch (JSONException e)
-                {
-                    e.printStackTrace();
-                }//end of parsing try/ catch
-
-                //data 처리
-            } catch (IOException e) {
-                e.printStackTrace();
-                Log.v("Schedule::Request", "sending failed");
-            }
-
-        }
-    }
 
     class Time
     {
