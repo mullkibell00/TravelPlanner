@@ -86,7 +86,7 @@ public class SiteItemView extends RelativeLayout {
 
     public void setSiteTime()
     {
-        Calendar time = mSite.getSpendTime();
+        Calendar time = mSite.getSpendTime().getCalendar();
         if(time!=null)
         {
             int hour = time.get(Calendar.HOUR_OF_DAY);

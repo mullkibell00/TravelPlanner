@@ -44,6 +44,14 @@ public class Time {
         }
         return result;
     }
+
+    public Calendar getCalendar()
+    {
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.HOUR_OF_DAY,this.hour);
+        c.set(Calendar.MINUTE, this.min);
+        return c;
+    }
     public Time sub(Time t)
     {
         Time result = new Time();
