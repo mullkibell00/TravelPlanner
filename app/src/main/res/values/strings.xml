@@ -51,6 +51,10 @@
     <string name="site_dialog_positive">설정</string>
     <string name="site_dialog_negative">취소</string>
 
+    <!--create plan - input site info-->
+    <string name="txt_visit_day">방문 희망 날짜</string>
+    <string name="txt_visit_time">방문 희망 시간</string>
+
     <!--create plan -hotel recommend-->
     <string name="recommend_dialog_message">추천 호텔 리스트를 가져오는 중입니다.</string>
 

@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/colorFontDark"
             android:textSize="17sp"
-            android:text="@string/txt_tour_start_time"
+            android:text="@string/txt_visit_day"
             android:layout_marginRight="20dp"
             android:id="@+id/dialog_site_txt_visit_day"
             />
@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/colorFontDark"
             android:textSize="17sp"
-            android:text="@string/txt_tour_end_time"
+            android:text="@string/txt_visit_time"
             android:layout_marginRight="20dp"
             android:id="@+id/dialog_site_txt_visit_time"
             />
