@@ -56,8 +56,8 @@ public class SchedulingFragment extends Fragment {
     ArrayList<Calendar> checkInList = null;
     ArrayList<Calendar> checkOutList = null;
     ArrayList<Site> hotel = null;
-    Time tourStart;
-    Time tourEnd;
+    Calendar tourStart;
+    Calendar tourEnd;
     Time touringHour;
     ArrayList<Site> siteList = new ArrayList<Site>();
 
@@ -111,7 +111,7 @@ public class SchedulingFragment extends Fragment {
 
         timeUnit = getResources().getInteger(R.integer.time_unit);
         timeUnitSecond = timeUnit*60;
-        touringHour = Time.getTimeDiff(tourStart,tourEnd);
+        touringHour = Time.getTimeDiff(new Time(tourStart),new Time(tourEnd));
         touringHourInUnit = timeToUnit(touringHour);
         numOfSite = siteList.size();
         numOfHotel = hotel.size();

@@ -25,8 +25,8 @@ public class Schedule extends Thread {
     private ArrayList<Site> hotel = null;
     private ArrayList<Site> recommendHotelList = null;
     private String country;
-    private Time tourStart;
-    private Time tourEnd;
+    private Calendar tourStart;
+    private Calendar tourEnd;
     private ArrayList<Site> siteList = new ArrayList<Site>();
     private LinkedList<Site> fixedHourSiteList = new LinkedList<Site>();
     private LinkedList<Site> overHourSiteList = new LinkedList<Site>();
@@ -131,19 +131,19 @@ public class Schedule extends Thread {
         this.planName = planName;
     }
 
-    public Time getTourEnd() {
+    public Calendar getTourEnd() {
         return this.tourEnd;
     }
 
-    public void setTourEnd(Time tourEnd) {
+    public void setTourEnd(Calendar tourEnd) {
         this.tourEnd = tourEnd;
     }
 
-    public Time getTourStart() {
+    public Calendar getTourStart() {
         return this.tourStart;
     }
 
-    public void setTourStart(Time tourStart) {
+    public void setTourStart(Calendar tourStart) {
         this.tourStart = tourStart;
     }
 
