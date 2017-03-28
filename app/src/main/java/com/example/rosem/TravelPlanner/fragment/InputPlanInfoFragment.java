@@ -19,6 +19,7 @@ import android.widget.TimePicker;
 
 import com.example.rosem.TravelPlanner.R;
 import com.example.rosem.TravelPlanner.activity.CreatePlanActivity;
+import com.example.rosem.TravelPlanner.object.Time;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
@@ -213,8 +214,10 @@ public class InputPlanInfoFragment extends Fragment {
         ((CreatePlanActivity)getActivity()).setArrived(selectedArrival);
         ((CreatePlanActivity)getActivity()).setDeparture(selectedDepart);
         ((CreatePlanActivity)getActivity()).setCountry(texts[mSelectedCountry].getText().toString());
-        ((CreatePlanActivity)getActivity()).setTourStart(tourStartTime);
-        ((CreatePlanActivity)getActivity()).setTourEnd(tourEndTime);
+        Time startTime = new Time(tourStartTime.get(Calendar.HOUR_OF_DAY),tourStartTime.get(Calendar.MINUTE));
+        ((CreatePlanActivity)getActivity()).setTourStart(startTime);
+        Time endTime = new Time(tourEndTime.get(Calendar.HOUR_OF_DAY),tourEndTime.get(Calendar.MINUTE));
+        ((CreatePlanActivity)getActivity()).setTourEnd(endTime);
 
         travelingPeriod = 0;
         if(selectedArrival.get(Calendar.MONTH)==selectedDepart.get(Calendar.MONTH))
@@ -365,25 +368,31 @@ public class InputPlanInfoFragment extends Fragment {
             //        .setText(depart.get(Calendar.HOUR_OF_DAY)+"시 "
             //                +depart.get(Calendar.MINUTE)+"분");
         }
-        Calendar tourS = null;
+        Time tourS = null;
         if((tourS=((CreatePlanActivity)getActivity()).getTourStart())!=null)
         {
+            Calendar tourSCal = Calendar.getInstance();
+            tourSCal.set(Calendar.HOUR_OF_DAY,tourS.hour);
+            tourSCal.set(Calendar.MINUTE,tourS.min);
             texts[mSelectedTourStart].setSelected(true);
             //texts[mSelectedTourStart].setText(
             //        tourS.get(Calendar.HOUR_OF_DAY)+"시 "+
             //                tourS.get(Calendar.MINUTE)+"분");
             ((CreatePlanActivity)getActivity()).setTimeText(texts[mSelectedTourStart]
-                    ,tourS.get(Calendar.HOUR_OF_DAY),tourS.get(Calendar.MINUTE));
+                    ,tourSCal.get(Calendar.HOUR_OF_DAY),tourSCal.get(Calendar.MINUTE));
         }
-        Calendar tourE = null;
+        Time tourE = null;
         if((tourE=((CreatePlanActivity)getActivity()).getTourEnd())!=null)
         {
+            Calendar tourECal = Calendar.getInstance();
+            tourECal.set(Calendar.HOUR_OF_DAY,tourS.hour);
+            tourECal.set(Calendar.MINUTE,tourS.min);
             texts[mSelectedTourEnd].setSelected(true);
             //texts[mSelectedTourEnd].setText(
             //        tourE.get(Calendar.HOUR_OF_DAY)+"시 "+
             //                tourE.get(Calendar.MINUTE)+"분");
             ((CreatePlanActivity)getActivity()).setTimeText(texts[mSelectedTourEnd]
-                    ,tourE.get(Calendar.HOUR_OF_DAY),tourE.get(Calendar.MINUTE));
+                    ,tourECal.get(Calendar.HOUR_OF_DAY),tourECal.get(Calendar.MINUTE));
         }
     }
 

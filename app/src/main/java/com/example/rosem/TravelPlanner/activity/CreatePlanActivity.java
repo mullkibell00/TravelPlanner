@@ -25,6 +25,7 @@ import com.example.rosem.TravelPlanner.fragment.InputTitleFragment;
 import com.example.rosem.TravelPlanner.fragment.SchedulingFragment;
 import com.example.rosem.TravelPlanner.object.Schedule;
 import com.example.rosem.TravelPlanner.object.Site;
+import com.example.rosem.TravelPlanner.object.Time;
 import com.example.rosem.TravelPlanner.plan.Plan;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -309,19 +310,19 @@ public class CreatePlanActivity extends AppCompatActivity {
         schedule.setPlanName(planName);
     }
 
-    public Calendar getTourEnd() {
+    public Time getTourEnd() {
         return schedule.getTourEnd();
     }
 
-    public void setTourEnd(Calendar tourEnd) {
+    public void setTourEnd(Time tourEnd) {
         schedule.setTourEnd(tourEnd);
     }
 
-    public Calendar getTourStart() {
+    public Time getTourStart() {
         return schedule.getTourStart();
     }
 
-    public void setTourStart(Calendar tourStart) {
+    public void setTourStart(Time tourStart) {
         schedule.setTourStart(tourStart);
     }
 
