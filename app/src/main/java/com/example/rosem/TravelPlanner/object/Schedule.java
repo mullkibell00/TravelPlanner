@@ -10,7 +10,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Timer;
 
 /**
  * Created by rosem on 2017-03-27.
@@ -279,7 +278,6 @@ public class Schedule{
                 fixedHourSiteList.remove(fixedVisit);
                 //get diff from tourStart to fixed hour
                 int upperHalfUnit = timeToUnit(getTimeDiff(fixedVisit.getVisitTime(),tourStart));
-                //upperHalfUnit+=timeToUnit(fixedVisit.spendTime);
                 //get upper course
                 course = getCourseBetween(siteList.indexOf(startSite),fixedVisitIdx, upperHalfUnit,false);
                 if(course!=null)
@@ -295,8 +293,8 @@ public class Schedule{
                     Site site = siteList.get(siteIdx);
                     isSelected[siteIdx] = true;
                     fixedHourSiteList.remove(site);
-                    int unit = timeToUnit(getTimeDiff(site.visitTime,fixedVisit.visitTime));
-                    //unit += timeToUnit(site.spendTime);
+                    int unit = timeToUnit(getTimeDiff(site.getVisitTime(),fixedVisit.getVisitTime()));
+
                     course = getCourseBetween(fixedVisitIdx,siteIdx,unit,false);
                     if(course!=null)
                     {
@@ -308,8 +306,7 @@ public class Schedule{
                     fixedVisitIdx = siteIdx;
                 }
                 //get diff from fixed hour to tourEnd
-                int lowerHalfUnit = timeToUnit(getTimeDiff(tourEnd,fixedVisit.visitTime));
-                //lowerHalfUnit -= timeToUnit(fixedVisit.spendTime);
+                int lowerHalfUnit = timeToUnit(getTimeDiff(tourEnd,fixedVisit.getVisitTime()));
                 //get lower course
                 course = getCourseBetween(fixedVisitIdx,siteList.indexOf(endSite),lowerHalfUnit,true);
                 if(course!=null)
@@ -328,24 +325,18 @@ public class Schedule{
                     finalCourse.addAll(course);
                     course.clear();
                 }
-
             }
-
             return finalCourse;
-            //return null;
         }
 
         public LinkedList<Integer> getCourseBetween(int startIdx, int endIdx, int endLimitUnit, boolean isEnd) {
-            //int startHotel = siteList.indexOf(startSite);
-            //int endHotel = siteList.indexOf(endSite);
             ArrayList<LinkedList<Integer>> course = new ArrayList<LinkedList<Integer>>();
             int [] costs;
             int startHotel = startIdx;
             int endHotel = endIdx;
-            //int endSite = -1;
             int limitUnit = endLimitUnit;
             int fixedSiteNum = 2;
-            int overTourSiteNum = overTouringHour.size();
+            int overTourSiteNum = overHourSiteList.size();
             int overTourCost = 0;
             int overTourTimeUnit = 0;
             Time presentTime = new Time(); //presentTime
@@ -361,57 +352,31 @@ public class Schedule{
                 }
             }
             costs = new int[course.size()];
-
             //is there overTouringhour site?
             if(isEnd && overTourSiteNum>0)
             {
-                //check timeUnit of overTouringHour
-
-                //check any of them has date(and that date == today)
-
                 //check num of overTour
                 Site overSite = null;
                 int overSiteIdx = -1;
                 int overTimeUnit = 0;
-				/*
-				if(overTourSiteNum<=(numOfDay-today))
-				{
-					//choose site which has smallest visit time
-					overSite = overTouringHour.removeLast();
-				}
-				else
-				{
-				*/
                 //choose site which has largest visit time
-                overSite = overTouringHour.removeFirst();
-                //	}
+                overSite = overHourSiteList.removeFirst();
                 overSiteIdx = siteList.indexOf(overSite);
                 isSelected[overSiteIdx] = true;
                 fixedSiteNum++;
                 overTourList.add(overSiteIdx);
 
                 //get difference between tourEnd and tourOver
-                Time diff = getTimeDiff(overSite.visitTime,tourEnd);
+                Time diff = getTimeDiff(overSite.getVisitTime(),tourEnd);
                 overTimeUnit = timeToUnit(diff)
-                        +timeToUnit(siteList.get(overSiteIdx).spendTime);
+                        +timeToUnit(siteList.get(overSiteIdx).getSpendTime());
                 limitUnit+=overTimeUnit;
                 //set initialTimeUnit of overtour
-                //overTourTimeUnit = timeUnitMat[overSiteIdx][endHotel];
-                overTourTimeUnit = timeUnitMat[endHotel][overSiteIdx];
+                overTourTimeUnit = unitMat[endHotel][overSiteIdx];
                 //set initial cost of overTour
-                //overTourCost = timeCostMat[overSiteIdx][endHotel];
-                overTourCost = timeCostMat[endHotel][overSiteIdx];
-                presentTime = overSite.visitTime;
+                overTourCost = costMat[endHotel][overSiteIdx];
+                presentTime = overSite.getVisitTime();
 
-                //	if(overTourSiteNum<=numOfDay)
-                //	{
-                //erase one per day
-                //enlarge totalTourHour
-                //add diff to totalTimeUnit(totalTourHour)
-                //	endSite = overSiteIdx;
-                //	}
-                //	else
-                //	{
                 int overTourMaxTimeUnit = overTimeUnit;
                 int presentOverTU = 0;
                 int minimumIdx =-1;
@@ -423,7 +388,7 @@ public class Schedule{
                     //reset minimumIdx
                     minimumIdx = -1;
                     minimumCost = -1;
-                    Iterator<Site> it = overTouringHour.iterator();
+                    Iterator<Site> it = overHourSiteList.iterator();
                     while(it.hasNext())
                     {
                         Site prev = it.next();
@@ -433,15 +398,15 @@ public class Schedule{
                         {
                             if(minimumCost==-1)
                             {
-                                //minimumCost = timeCostMat[prevIdx][curIdx];
-                                minimumCost = timeCostMat[curIdx][prevIdx];
+                                //minimumCost = costMat[prevIdx][curIdx];
+                                minimumCost = costMat[curIdx][prevIdx];
                                 minimumIdx = prevIdx;
                             }
-                            //else if (minimumCost > timeCostMat[prevIdx][curIdx])
-                            else if (minimumCost > timeCostMat[curIdx][prevIdx])
+                            //else if (minimumCost > costMat[prevIdx][curIdx])
+                            else if (minimumCost > costMat[curIdx][prevIdx])
                             {
-                                //minimumCost = timeCostMat[prevIdx][curIdx];
-                                minimumCost = timeCostMat[curIdx][prevIdx];
+                                //minimumCost = costMat[prevIdx][curIdx];
+                                minimumCost = costMat[curIdx][prevIdx];
                                 minimumIdx = prevIdx;
                             }
                         }
@@ -453,51 +418,42 @@ public class Schedule{
                         isSelected[minimumIdx] = true;
                         overTourList.add(minimumIdx);
                         fixedSiteNum++;
-                        presentTime.sub(unitToTime(minimumCost).add(minimumSite.spendTime));
+                        presentTime.sub(unitToTime(minimumCost).add(minimumSite.getSpendTime()));
                         //update OverTU
-                        //presentOverTU +=timeUnitMat[minimumIdx][curIdx];
-                        presentOverTU +=timeUnitMat[curIdx][minimumIdx];
+                        presentOverTU +=unitMat[curIdx][minimumIdx];
                         //update cost
-                        overTourCost += minimumCost; //timeCostMat[minimumIdx][curIdx];
+                        overTourCost += minimumCost; //costMat[minimumIdx][curIdx];
                         //prepare for next loop
                         curIdx = minimumIdx;
                         //erase from unselected overTour
-                        overTouringHour.remove(minimumSite);
+                        overHourSiteList.remove(minimumSite);
                     }
                     else//minimumIdx is -1 (none of Site is Ok)
                     {
                         break;
                     }
                 }
-                //add time diff
-                //endSite = curIdx;
                 overTourTimeUnit += presentOverTU;
                 //	}//end of else (overTourSiteNum<=numOfDay)
 
             }//end of else (is there overTourSite)
-
-            // course.add(siteList.indexOf(end));
-            for (int start = 0, idx = 0; start < numOfSite; start++) {
+            for (int start = 0, idx = 0; start < numOfSites; start++) {
                 if (!isSelected[start]&&!isInSpecialList(start)) {
                     LinkedList<Integer> list = course.get(idx);
                     int initialTU = 0;
                     if(overTourList.size()<=0)
                     {
                         // add end hotel
-                        //initialTU = timeUnitMat[start][endHotel];
-                        //initialTU = timeUnitMat[endHotel][start];
-                        initialTU = timeUnitMat[endHotel][start];
-                        initialTU-=timeToUnit(siteList.get(endHotel).spendTime);
-                        initialTU+=timeToUnit(siteList.get(start).spendTime);
+                        initialTU = unitMat[endHotel][start];
+                        initialTU-=timeToUnit(siteList.get(endHotel).getSpendTime());
+                        initialTU+=timeToUnit(siteList.get(start).getSpendTime());
 
                         list.add(endHotel);
-                        //costs[idx] = timeCostMat[start][endHotel];
-                        costs[idx] = timeCostMat[endHotel][start];
+                        costs[idx] = costMat[endHotel][start];
                     }
                     else//should change
                     {
                         list.add(endHotel);
-
                         //get cost between site and endHotel
                         Iterator<Integer> it = overTourList.iterator();
                         while(it.hasNext())
@@ -505,12 +461,8 @@ public class Schedule{
                             Integer s = it.next();
                             list.add(s);
                         }
-
-                        //initialTU = overTourTimeUnit+timeUnitMat[start][list.getLast()];//
-                        initialTU = overTourTimeUnit+timeUnitMat[list.getLast()][start];//
-
-                        //costs[idx] = overTourCost+timeCostMat[start][list.getLast()];
-                        costs[idx] = overTourCost+timeCostMat[list.getLast()][start];
+                        initialTU = overTourTimeUnit+unitMat[list.getLast()][start];//
+                        costs[idx] = overTourCost+costMat[list.getLast()][start];
                     }
 
                     //check initialTU and limitUnit
@@ -528,35 +480,28 @@ public class Schedule{
                         }
                         costs[idx] += result.cost;
                         int presentTU = result.timeUnit;
-
                         // add start hotel
                         int last = list.getLast();
-                        //while (presentTU + timeUnitMat[last][startHotel] > limitUnit)
-                        while (presentTU + timeUnitMat[startHotel][last] > limitUnit){
+                        //while (presentTU + unitMat[last][startHotel] > limitUnit)
+                        while (presentTU + unitMat[startHotel][last] > limitUnit){
                             list.removeLast();
-                            //presentTU -= timeUnitMat[course.get(idx).getLast()][last];
-                            presentTU -= timeUnitMat[last][course.get(idx).getLast()];
+                            presentTU -= unitMat[last][course.get(idx).getLast()];
                             last = list.getLast();
                         }
-                        //costs[idx] += timeCostMat[startHotel][list.getLast()];
-                        costs[idx] += timeCostMat[list.getLast()][startHotel];
+                        costs[idx] += costMat[list.getLast()][startHotel];
                         //updatePresentTimeUnit
                         list.add(startHotel);
-
                         course.set(idx, list);
                         idx++;
                     }//end of if(initialTU>limitTU)
-
                 }//end of if(isSelected & isInSpecial)
             }//end of for
             double minimumCost = -1;
             int minimumStart = -1;
             // find the smallest cost
             for (int i = 0; i < costs.length; i++) {
-                // Log("getCourse::loopStart","cost="+String.valueOf(costs[i])+"\nminimumCost="+String.valueOf(minimumCost));
                 double cost = Integer.valueOf(costs[i]).doubleValue()
                         / (Integer.valueOf(course.get(i).size()).doubleValue()-fixedSiteNum);
-                // Log("getCourse::loopStart","cost="+String.valueOf(costs[i])+"\nsize="+String.valueOf(course.get(i).size()));
                 if(minimumCost==-1)
                 {
                     minimumCost = cost;
@@ -578,7 +523,6 @@ public class Schedule{
                         minimumStart=1;
                     }
                 }
-                // Log("getCourse::loopEnd","cost="+String.valueOf(costs[i])+"\nminimumCost="+String.valueOf(minimumCost));
             }
             // set boolean
             if(minimumStart!=-1)
@@ -589,59 +533,39 @@ public class Schedule{
                 {
                     isSelected[minimum.get(i)] = true;
                 }
-
-                // for checking costs of each plan
-                for (int i = 0; i < costs.length; i++) {
-                    System.out.println("Course " + i + " =");
-                    LinkedList<Integer> c = course.get(i);
-                    Iterator<Integer> it = c.iterator();
-                    while (it.hasNext()) {
-                        System.out.println("\t" + siteList.get(it.next()).placeName);
-                    }
-                    System.out.println("cost=" + costs[i]);
-                    System.out.println("evaluation cost = "+(Integer.valueOf(costs[i]).doubleValue()
-                            / (Integer.valueOf(course.get(i).size()).doubleValue()-fixedSiteNum)));
-
-                }
-
                 Collections.reverse(minimum);
-
                 return minimum;
             }
             return null;
-
         }
 
         public CourseCostResult caculateCourseNN(int start, LinkedList<Integer> course, int presentTimeUnit, int maxTimeUnit) {
             int totalCost = 0;
-            // int presentTimeUnit = TU;
-            //int tempIndex = (start + 1 < numOfSite) ? start + 1 : 0;
-            //int presentTimeUnit = initialTimeUnit;
             boolean[] curSelected = isSelected.clone();
 
             course.add(start);
             curSelected[start] = true;
 
-            for (int i = 0; i < numOfSite; i++) {
+            for (int i = 0; i < numOfSites; i++) {
                 int current = course.getLast();
                 int minimumIdx = -1;
                 int minimumCost = -1;// num of node
 
-                for (int prev = 0; prev < numOfSite; prev++) {
+                for (int prev = 0; prev < numOfSites; prev++) {
                     if (current != prev
                             && isOk(current, prev, presentTimeUnit,maxTimeUnit, curSelected)
                             &&!isInSpecialList(prev))
                     {
                         if(minimumCost==-1)
                         {
-                            //minimumCost = timeCostMat[prev][current];
-                            minimumCost = timeCostMat[current][prev];
+                            //minimumCost = costMat[prev][current];
+                            minimumCost = costMat[current][prev];
                             minimumIdx = prev;
                         }
-                        //else if (minimumCost > timeCostMat[prev][current])
-                        else if (minimumCost > timeCostMat[current][prev]){
-                            //minimumCost = timeCostMat[prev][current];
-                            minimumCost = timeCostMat[current][prev];
+                        //else if (minimumCost > costMat[prev][current])
+                        else if (minimumCost > costMat[current][prev]){
+                            //minimumCost = costMat[prev][current];
+                            minimumCost = costMat[current][prev];
                             minimumIdx = prev;
                         }
                     }
@@ -653,20 +577,18 @@ public class Schedule{
                 else if(!curSelected[minimumIdx]) {
                     course.add(minimumIdx);
                     totalCost += minimumCost;
-                    //presentTimeUnit += timeUnitMat[minimumIdx][current];
-                    presentTimeUnit += timeUnitMat[current][minimumIdx];
+                    //presentTimeUnit += unitMat[minimumIdx][current];
+                    presentTimeUnit += unitMat[current][minimumIdx];
                     curSelected[minimumIdx] = true;
                 }
 
             }
-            //initialTimeUnit = new Integer(presentTimeUnit);
             CourseCostResult result = new CourseCostResult(totalCost,presentTimeUnit);
             return result;
         }
 
         public boolean isOk(int current, int prev, int presentTimeUnit, int maxTU, boolean[] isSelected) {
-            //int nextTimeUnit = presentTimeUnit + timeUnitMat[prev][current];
-            int nextTimeUnit = presentTimeUnit + timeUnitMat[current][prev];
+            int nextTimeUnit = presentTimeUnit + unitMat[current][prev];
             int maxTimeUnit = maxTU;
 
             if (maxTimeUnit < nextTimeUnit) {
@@ -678,21 +600,21 @@ public class Schedule{
             return true;
         }
 
-        public static boolean isInSpecialList(int idx)
+        public boolean isInSpecialList(int idx)
         {
-            int overTourSize = overTouringHour.size();
-            int fixedVisitSize = fixedVisitHour.size();
+            int overTourSize = overHourSiteList.size();
+            int fixedVisitSize = fixedHourSiteList.size();
             if(overTourSize<=0 && fixedVisitSize<=0)
             {
                 return false;
             }
             else
             {
-                if(overTourSize>0 && overTouringHour.contains(siteList.get(idx)))
+                if(overTourSize>0 && overHourSiteList.contains(siteList.get(idx)))
                 {
                     return true;
                 }
-                else if(fixedVisitSize>0 &&fixedVisitHour.contains(siteList.get(idx)))
+                else if(fixedVisitSize>0 &&fixedHourSiteList.contains(siteList.get(idx)))
                 {
                     return true;
                 }
@@ -703,31 +625,28 @@ public class Schedule{
             }
         }
 
-        public static boolean scheduleConflictCheck(Time presentTime, int prev, int current)
+        public boolean scheduleConflictCheck(Time presentTime, int prev, int current)
         {
             //true = ok false = conflict
             //check inTime
             Site prevSite = siteList.get(prev);
-            if(prevSite.visitTime==null)
+            if(prevSite.getVisitTime()==null)
             {
                 return true;
             }
-            else if(presentTime.compareTo(prevSite.visitTime)>0)
+            else if(presentTime.compareTo(prevSite.getVisitTime())>0)
             {
                 //check conflict
-                Time endOfPrevVisit = new Time(prevSite.visitTime);
-                endOfPrevVisit = endOfPrevVisit.add(prevSite.spendTime);
+                Time endOfPrevVisit = new Time(prevSite.getVisitTime());
+                endOfPrevVisit = endOfPrevVisit.add(prevSite.getSpendTime());
                 if(endOfPrevVisit.compareTo(presentTime)!=-1)
                 {
                     return false;
                 }
 
-                //int cost = timeCostMat[prev][current];
-                int cost = timeCostMat[current][prev];
+                int cost = costMat[current][prev];
                 Time costTime = unitToTime(cost);
                 endOfPrevVisit = endOfPrevVisit.add(costTime);
-                //futureTime = futureTime.sub(costTime);
-                //futureTime = futureTime.sub(prevSite.spendTime);
                 //should change
                 if(timeToUnit(presentTime.sub(endOfPrevVisit))>=0)
                 {
@@ -738,9 +657,9 @@ public class Schedule{
             return false;
         }
 
-        public static LinkedList<Integer> getSelectedFixedVisit()
+        public LinkedList<Integer> getSelectedFixedVisit()
         {
-            int iteration = fixedVisitHour.size();
+            int iteration = fixedHourSiteList.size();
             int curIt = 0;
             LinkedList<Integer> selected = new LinkedList<Integer>();
 
@@ -748,9 +667,9 @@ public class Schedule{
             {
                 return selected;
             }
-            Site pivot = fixedVisitHour.getFirst();
+            Site pivot = fixedHourSiteList.getFirst();
             int pivotIdx = siteList.indexOf(pivot);
-            Iterator<Site> it = fixedVisitHour.listIterator();
+            Iterator<Site> it = fixedHourSiteList.listIterator();
 
             //initialize
             selected.add(pivotIdx);
@@ -768,11 +687,11 @@ public class Schedule{
                     if(pivot!=visitSite && true)
                     {
                         //check having later visit Time
-                        if(pivot.visitTime.compareTo(visitSite.visitTime)<0)
+                        if(pivot.getVisitTime().compareTo(visitSite.getVisitTime())<0)
                         {
-                            if(scheduleConflictCheck(visitSite.visitTime,pivotIdx,siteIdx))//if do not conflict
+                            if(scheduleConflictCheck(visitSite.getVisitTime(),pivotIdx,siteIdx))//if do not conflict
                             {
-                                int cost = timeCostMat[siteIdx][pivotIdx];
+                                int cost = costMat[siteIdx][pivotIdx];
                                 //set minimum
                                 if(minimumIdx==-1 || minimumCost > cost)
                                 {
@@ -799,7 +718,7 @@ public class Schedule{
             }
             return selected;
         }
-        public static class CourseCostResult
+        public class CourseCostResult
         {
             public int cost;
             public int timeUnit;
