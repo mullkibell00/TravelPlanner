@@ -187,7 +187,7 @@ public class Schedule{
     }
 
 
-    public void getSchedule(int tu, JSONObject json)
+    public LinkedList<LinkedList<Integer>> getSchedule(int tu, JSONObject json)
     {
         //set datas
         int touringHourInUnit =0;
@@ -240,9 +240,11 @@ public class Schedule{
             }
 
             //return result
+            return result;
         } catch (JSONException e) {
             e.printStackTrace();
             //return error
+            return null;
         }
     }
 
