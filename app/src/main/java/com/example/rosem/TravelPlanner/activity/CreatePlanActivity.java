@@ -32,6 +32,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.Places;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedList;
@@ -386,6 +388,11 @@ public class CreatePlanActivity extends AppCompatActivity {
 
     public void setOverHourSiteList(LinkedList<Site> overHourSiteList) {
         schedule.setOverHourSiteList(overHourSiteList);
+    }
+
+    public LinkedList<LinkedList<Integer>> getSchedule(int tu, JSONObject json)
+    {
+        return schedule.getSchedule(tu, json);
     }
 
     public Site setSiteFromPlace(Place place)

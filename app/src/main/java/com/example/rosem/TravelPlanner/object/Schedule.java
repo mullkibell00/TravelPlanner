@@ -41,6 +41,7 @@ public class Schedule{
     private long [][] timeMat = null;
     private int [][] costMat = null;
     private int [][] unitMat= null;
+    private int [][] fareMat = null;
     private int TIMEUNIT = 0;
     private int HOUR_IN_TIMEUNIT=0;
     private boolean [] isSelected= null;
@@ -229,18 +230,23 @@ public class Schedule{
         try {
             JSONArray response = json.getJSONArray("results");
             //set matrix
-            for(int i =0; i<response.length();i++)
+            for(int dest =0; dest<response.length();dest++)
             {
-                JSONObject obj = response.getJSONObject(i);
+                JSONObject obj = response.getJSONObject(dest);
                 JSONArray rows = obj.getJSONArray("rows");
-                for(int j = 0; j<rows.length();j++)
+                for(int origin = 0; origin<rows.length();origin++)
                 {
-                    JSONObject rowObj = rows.getJSONObject(j);
+                    JSONObject rowObj = rows.getJSONObject(dest);
                     JSONArray elements = rowObj.getJSONArray("elements");
                     JSONObject elementObj = elements.getJSONObject(0);
                     JSONObject duration = elementObj.getJSONObject("duration");
 
-                    timeMat[j][i] = duration.getLong("value");
+                    timeMat[dest][origin] = duration.getLong("value");
+                    if(elementObj.has("fare"))
+                    {
+                        JSONObject fare = elementObj.getJSONObject("fare");
+                        fareMat[dest][origin] = fare.getInt("fare");
+                    }
                     //j = dest
                     // i = start
                 }

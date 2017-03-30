@@ -13,8 +13,6 @@ import android.widget.Button;
 
 import com.example.rosem.TravelPlanner.R;
 import com.example.rosem.TravelPlanner.activity.CreatePlanActivity;
-import com.example.rosem.TravelPlanner.object.Day;
-import com.example.rosem.TravelPlanner.object.Local;
 import com.example.rosem.TravelPlanner.object.Site;
 import com.example.rosem.TravelPlanner.object.Time;
 
@@ -32,6 +30,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.LinkedList;
 
 /**
  * Created by rosem on 2017-03-07.
@@ -50,27 +49,14 @@ public class SchedulingFragment extends Fragment {
     private final int FINISH = 6323;
 
     //var
-    int numOfDays;
-    Calendar arrival;
-    Calendar depart;
-    ArrayList<Calendar> checkInList = null;
-    ArrayList<Calendar> checkOutList = null;
     ArrayList<Site> hotel = null;
-    Calendar tourStart;
-    Calendar tourEnd;
-    Time touringHour;
     ArrayList<Site> siteList = new ArrayList<Site>();
+    LinkedList<LinkedList<Integer>> resultSchedule = null;
 
     //using in this fragment
-    ArrayList<Local> locals = new ArrayList<Local>();
-    Day [] schedule;
-
-    int numOfSite;
-    int numOfHotel;
     int totalNodeNum;
     int timeUnit;
     int timeUnitSecond;
-    int touringHourInUnit;
     long [][] timeMatrix;
     long [][] fareMatrix;
 
@@ -97,25 +83,11 @@ public class SchedulingFragment extends Fragment {
         progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage(messages[0]);
 
-        //set vars
-        numOfDays = ((CreatePlanActivity)getActivity()).getNumOfDays();
-        arrival = ((CreatePlanActivity)getActivity()).getArrived();
-        depart= ((CreatePlanActivity)getActivity()).getDeparture();
-        checkInList = ((CreatePlanActivity)getActivity()).getCheckInList();
-        checkOutList = ((CreatePlanActivity)getActivity()).getCheckOutList();
-        hotel = ((CreatePlanActivity)getActivity()).getHotel();
-        //tourStart= ((CreatePlanActivity)getActivity()).getTourStart();
-        //tourEnd = ((CreatePlanActivity)getActivity()).getTourEnd();
-        siteList = ((CreatePlanActivity)getActivity()).getSiteList();
-        schedule = new Day[numOfDays];
 
         timeUnit = getResources().getInteger(R.integer.time_unit);
         timeUnitSecond = timeUnit*60;
-        touringHour = Time.getTimeDiff(new Time(tourStart),new Time(tourEnd));
-        touringHourInUnit = timeToUnit(touringHour);
-        numOfSite = siteList.size();
-        numOfHotel = hotel.size();
-        totalNodeNum = numOfSite+numOfHotel;
+
+        totalNodeNum = siteList.size()+hotel.size();
 
         timeMatrix = new long[totalNodeNum][totalNodeNum];
         fareMatrix = new long[totalNodeNum][totalNodeNum];
@@ -127,23 +99,33 @@ public class SchedulingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup view = (ViewGroup)inflater.inflate(R.layout.plan_schedule,container,false);
 
-        Scheduling getPlan = new Scheduling();
-        getPlan.run();
-
+        if(resultSchedule==null)
+        {
+            Scheduling getPlan = new Scheduling();
+            progressDialog.show();
+            getPlan.run();
+        }
 
         Button nextButton = (Button)getActivity().findViewById(R.id.create_plan_next);
         Button prevButton = (Button)getActivity().findViewById(R.id.create_plan_prev);
         prevButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveData();
+                if(resultSchedule!=null)
+                {
+                    saveData();
+                }
                 ((CreatePlanActivity)getActivity()).movePrev();
             }
         });
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveData();
+                //saveData();
+                if(resultSchedule!=null)
+                {
+                    saveData();
+                }
                 ((CreatePlanActivity)getActivity()).moveNext();
             }
         });
@@ -218,6 +200,7 @@ public class SchedulingFragment extends Fragment {
        String headStr = getString(R.string.google_http_matrix_head);
        String tailStr = "&mode=transit&language=ko&key="+getString(R.string.google_http_api_key);
        String requestUrl;
+       JSONArray results = new JSONArray();
        @Override
        public void run() {
            //super.run();
@@ -226,107 +209,35 @@ public class SchedulingFragment extends Fragment {
            String separator="%7C";
            String originData="origins=";
            String destData="&destinations=";
-           if(totalNodeNum>limit)
-           {
 
+           String originBody =siteList.get(0).getLatLngStr();
+           for(int i= 1; i< totalNodeNum; i++)
+           {
+               originBody+=separator;
+               originBody=originBody+siteList.get(i).getLatLngStr();
            }
-           else
-           {
-               String bodyData = siteList.get(0).getLatLngStr();
-               for(int i =1; i<totalNodeNum;i++)
-               {
-                   bodyData+=separator;
-                   bodyData=bodyData+siteList.get(i).getLatLngStr();
-               }
 
-               requestUrl = headStr+originData+bodyData+destData+bodyData+tailStr;
-               if(!request(requestUrl,0,0))
+           for(int i =0; i<totalNodeNum; i++)
+           {
+               String destBody = siteList.get(i).getLatLngStr();
+               requestUrl = headStr+originData+originBody+destData+destBody+tailStr;
+               if(!request(requestUrl))
                {
                    //show toast failed
                    return;
                }
            }
-           //processing start
-           isSelected = new boolean[numOfSite];
-           for(int i = 0; i<numOfSite;i++)
-           {
-               isSelected[i] = false;
+
+           JSONObject inputData = new JSONObject();
+           try {
+               inputData.put("results",results);
+               resultSchedule = ((CreatePlanActivity)getActivity()).getSchedule(timeUnit,inputData);
+           } catch (JSONException e) {
+               e.printStackTrace();
            }
        }
 
-       private class DayScheduling
-       {
-           int day;
-           Site start;
-           Site end;
-           int fareOrDuration;
-           int totalTimeUnit;
-           int presentTimeUnit;
-           int presentCost;
-           boolean [] isSelected;
-           ArrayList<Integer> dayCourse = new ArrayList<Integer>();
-
-           public DayScheduling(int day, Site start, Site end, int fareOrDuration, boolean [] isSelected)
-           {
-               this.day = day;
-               this.start = start;
-               this.end = end;
-               this.fareOrDuration = fareOrDuration;
-               this.isSelected = new boolean[isSelected.length];
-               for(int i =0; i<isSelected.length;i++)
-               {
-                   this.isSelected[i] = isSelected[i];
-               }
-               if(day!=1 && day !=numOfDays)
-               {
-                   totalTimeUnit = touringHourInUnit;
-               }
-               else
-               {
-                   //calculate
-                   totalTimeUnit = 0;
-               }
-               presentTimeUnit = 0;
-               presentCost = 0;
-           }
-
-           public ArrayList<Integer> getDay()//input은 몇 번째 날인지, start지점과 end 지점
-           {
-
-               dayCourse.add(numOfSite+hotel.indexOf(start));
-               for(int i = 0; i<numOfSite;i++)
-               {
-                   getDayCourseByDuration(0);
-               }
-
-
-               return null;
-           }
-
-           public void getDayCourseByFare(int idx)
-           {
-
-           }
-           public void getDayCourseByDuration(int nodeNum)
-           {
-                if(isPromising(nodeNum))
-                {
-
-                }
-           }
-
-           public boolean isPromising(int idx)
-           {
-               //is In TimeTable
-              // int nextTimeUnit = presentTimeUnit+
-               return false;
-               //fix here
-           }
-
-       }
-
-
-       public boolean request(String data, int rowStart, int colStart )
+       public boolean request(String data)
        {
            InputStream inputStream = null;
            BufferedReader rd = null;
@@ -350,48 +261,16 @@ public class SchedulingFragment extends Fragment {
                Log.v("Schedule::Request","result:"+response.toString());
 
                //parsing
-               JSONObject result = null;
-               JSONArray rows = null;
+               JSONObject responseObj = null;
                try
                {
-                   int rowSize = 0;
-                   result = new JSONObject(response.toString());
-                   if(result!=null && result.has("rows"))
-                   {
-                       rows = result.getJSONArray("rows");
-                       rowSize = rows.length();
-                   }
-                   for(int row = 0, i =rowStart ; row<rowSize;row++, i++)
-                   {
-                       JSONObject columns = rows.getJSONObject(row);
-                       JSONArray elements = null;
-
-                       int colSize = 0;
-
-                       if(columns!=null&&columns.has("elements"))
-                       {
-                           elements = columns.getJSONArray("elements");
-                           colSize = elements.length();
-                       }
-                       for(int col= 0, j = colStart; col<colSize;col++,j++)
-                       {
-                           JSONObject matrixObj = elements.getJSONObject(col);
-                           JSONObject fare = null; JSONObject duration = null;
-                           if(matrixObj!=null&&matrixObj.has("duration"))
-                           {
-                               duration = matrixObj.getJSONObject("duration");
-                               timeMatrix[i][j] = duration.getLong("value");
-                           }
-                           if(matrixObj!=null&&matrixObj.has("fare"))
-                           {
-                               fare = matrixObj.getJSONObject("fare");
-                               fareMatrix[i][j] = fare.getInt("fare");
-                           }
-                       }
-                   }
+                   responseObj = new JSONObject(response.toString());
+                   results.put(responseObj);
                }
                catch (JSONException e)
                {
+                   JSONObject empty = new JSONObject();
+                   results.put(empty);
                    e.printStackTrace();
                    return false;
                }//end of parsing try/ catch
@@ -408,5 +287,6 @@ public class SchedulingFragment extends Fragment {
        }
 
    }
+
 
 }
