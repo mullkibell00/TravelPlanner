@@ -34,6 +34,7 @@ import com.google.android.gms.location.places.Places;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.LinkedList;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -361,6 +362,30 @@ public class CreatePlanActivity extends AppCompatActivity {
     public void setRecommendHotelList(ArrayList<Site> list)
     {
         schedule.setRecommendHotelList(list);
+    }
+
+    public LinkedList<Site> getFixedDateSiteList() {
+        return schedule.getFixedDateSiteList();
+    }
+
+    public void setFixedDateSiteList(LinkedList<Site> fixedDateSiteList) {
+        schedule.setFixedDateSiteList(fixedDateSiteList);
+    }
+
+    public LinkedList<Site> getFixedHourSiteList() {
+        return schedule.getFixedHourSiteList();
+    }
+
+    public void setFixedHourSiteList(LinkedList<Site> fixedHourSiteList) {
+        schedule.setFixedHourSiteList(fixedHourSiteList);
+    }
+
+    public LinkedList<Site> getOverHourSiteList() {
+        return schedule.getOverHourSiteList();
+    }
+
+    public void setOverHourSiteList(LinkedList<Site> overHourSiteList) {
+        schedule.setOverHourSiteList(overHourSiteList);
     }
 
     public Site setSiteFromPlace(Place place)

@@ -32,6 +32,7 @@ public class Schedule{
     private ArrayList<Site> siteList = new ArrayList<Site>();
     private LinkedList<Site> fixedHourSiteList = new LinkedList<Site>();
     private LinkedList<Site> overHourSiteList = new LinkedList<Site>();
+    private LinkedList<Site> fixedDateSiteList = new LinkedList<Site>();
     //for calculation
     private int touringHourInUnit =0;
     private int numOfSites = 0;
@@ -137,6 +138,30 @@ public class Schedule{
         return this.tourEnd;
     }
 
+    public LinkedList<Site> getFixedDateSiteList() {
+        return fixedDateSiteList;
+    }
+
+    public void setFixedDateSiteList(LinkedList<Site> fixedDateSiteList) {
+        this.fixedDateSiteList = fixedDateSiteList;
+    }
+
+    public LinkedList<Site> getFixedHourSiteList() {
+        return fixedHourSiteList;
+    }
+
+    public void setFixedHourSiteList(LinkedList<Site> fixedHourSiteList) {
+        this.fixedHourSiteList = fixedHourSiteList;
+    }
+
+    public LinkedList<Site> getOverHourSiteList() {
+        return overHourSiteList;
+    }
+
+    public void setOverHourSiteList(LinkedList<Site> overHourSiteList) {
+        this.overHourSiteList = overHourSiteList;
+    }
+
     public void setTourEnd(Time tourEnd) {
         this.tourEnd = tourEnd;
     }
@@ -220,6 +245,10 @@ public class Schedule{
                     // i = start
                 }
             }
+
+            Collections.sort(overHourSiteList,sortByVisitTimeLate);
+            Collections.sort(fixedHourSiteList,sortByVisitTimeEarly);
+            //Collections.sort(fixedDateSiteList, sortByVisitDateEarly);
 
             for (int dest = 0; dest < totalNum; dest++) {
                 for (int start = 0; start < totalNum; start++) {

@@ -29,6 +29,7 @@ import com.example.rosem.TravelPlanner.R;
 import com.example.rosem.TravelPlanner.activity.CreatePlanActivity;
 import com.example.rosem.TravelPlanner.adapter.SiteListAdapter;
 import com.example.rosem.TravelPlanner.object.Site;
+import com.example.rosem.TravelPlanner.object.Time;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
@@ -48,6 +49,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Iterator;
+import java.util.LinkedList;
 
 /**
  * Created by rosem on 2017-03-06.
@@ -59,10 +62,15 @@ public class InputSiteFragment extends Fragment {
     RecyclerView siteListView;
     TextView addSiteButton;
     ArrayList<Site> siteList = null;
+    LinkedList<Site> fixedHourSiteList = new LinkedList<Site>();
+    LinkedList<Site> overHourSiteList = new LinkedList<Site>();
+    LinkedList<Site> fixedDateSiteList = new LinkedList<>();
     SiteListAdapter mAdapter;
 
     InputInfoDialog siteInfoDialog;
     InputSpendTimeDialog timeDialog;
+    boolean isDateSet = false;
+    boolean isTimeSet = false;
 
     private final int PLACE_PICK_REQUEST = 1213;
     private final int SET_PLACE_INFO =1215;
@@ -190,6 +198,32 @@ public class InputSiteFragment extends Fragment {
     public void saveData()
     {
         ((CreatePlanActivity)getActivity()).setSiteList(mAdapter.getSiteList());
+        ArrayList<Site> list = mAdapter.getSiteList();
+        Iterator<Site> it = list.iterator();
+        while(it.hasNext())
+        {
+            Site site = it.next();
+            if(site.getVisitDay()!=null)
+            {
+                fixedDateSiteList.add(site);
+            }
+            if(site.getVisitTime()!=null)
+            {
+                Time time = site.getVisitTime().add(site.getSpendTime());
+                Time endTime = ((CreatePlanActivity)getActivity()).getTourEnd();
+                if(time.compareTo(endTime)<=0)
+                {
+                    fixedHourSiteList.add(site);
+                }
+                else
+                {
+                    overHourSiteList.add(site);
+                }
+            }
+        }//end of while iteration of list
+        ((CreatePlanActivity)getActivity()).setFixedDateSiteList(fixedDateSiteList);
+        ((CreatePlanActivity)getActivity()).setFixedHourSiteList(fixedHourSiteList);
+        ((CreatePlanActivity)getActivity()).setOverHourSiteList(overHourSiteList);
     }
 
     private class SendRequest extends AsyncTask<String,String,String>
@@ -357,8 +391,16 @@ public class InputSiteFragment extends Fragment {
                 public void onClick(DialogInterface dialogInterface, int i) {
                     if(siteInfoDialog.isShowing())
                     {
-                        mAdapter.setVisitTime(idx, visitTime);
-                        mAdapter.setVisitDay(idx, visitDay);
+                        if(isDateSet)
+                        {
+                            mAdapter.setVisitDay(idx, visitDay);
+                        }
+                        if(isTimeSet)
+                        {
+                            mAdapter.setVisitTime(idx, visitTime);
+                        }
+                        isDateSet = false;
+                        isTimeSet = false;
                         siteInfoDialog.dismiss();
                     }
                 }
@@ -370,6 +412,8 @@ public class InputSiteFragment extends Fragment {
                     if(siteInfoDialog.isShowing())
                     {
                         siteInfoDialog.dismiss();
+                        isDateSet = false;
+                        isTimeSet= false;
                     }
                 }
             });
@@ -422,6 +466,7 @@ public class InputSiteFragment extends Fragment {
                 visitDay.set(Calendar.MONTH, month);
                 visitDay.set(Calendar.DAY_OF_MONTH,day);
                 setVisitDayBtn(visitDay);
+                isDateSet = true;
             }
         }
 
@@ -432,6 +477,7 @@ public class InputSiteFragment extends Fragment {
                 visitTime.set(Calendar.HOUR_OF_DAY,hour);
                 visitTime.set(Calendar.MINUTE,min);
                 setVisitTimeBtn(visitTime);
+                isTimeSet = true;
             }
         }
     }
