@@ -39,16 +39,19 @@ public class PlanAdapter extends FragmentPagerAdapter {
 
     public void setCourse(Plan plan)
     {
-        for(int i = 0; i<plan.getNumOfDays();i++)
+        if(plan!=null)
         {
-            int curDay = i+1;
-            String title = "Day"+Integer.toString(curDay);
+            for(int i = 0; i<plan.getNumOfDays();i++)
+            {
+                int curDay = i+1;
+                String title = "Day"+Integer.toString(curDay);
 
-            JSONArray day = plan.getDay(i);
-            mFragments.add(PlanListFragment.newInstance(day));
-            mFragmentTitles.add(title);
-            Log.v("Adapter",title+"\n"+day);
-            Log.v("Adapter::","mFragment size::"+mFragments.size());
+                JSONArray day = plan.getDay(i);
+                mFragments.add(PlanListFragment.newInstance(day));
+                mFragmentTitles.add(title);
+                Log.v("Adapter",title+"\n"+day);
+                Log.v("Adapter::","mFragment size::"+mFragments.size());
+            }
         }
     }
 

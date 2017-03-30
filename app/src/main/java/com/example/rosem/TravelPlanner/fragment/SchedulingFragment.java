@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +21,7 @@ import com.example.rosem.TravelPlanner.course.Course;
 import com.example.rosem.TravelPlanner.object.Site;
 import com.example.rosem.TravelPlanner.object.Time;
 import com.example.rosem.TravelPlanner.plan.Plan;
+import com.example.rosem.TravelPlanner.plan.PlanAdapter;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -67,6 +70,7 @@ public class SchedulingFragment extends Fragment {
     Time tourEnd;
 
     Plan plan = null;
+    PlanAdapter mAdapter;
 
     //using in this fragment
     int totalNodeNum;
@@ -124,6 +128,15 @@ public class SchedulingFragment extends Fragment {
             handler.sendEmptyMessage(START);
             getPlan.run();
         }
+
+        TabLayout tabs=(TabLayout)view.findViewById(R.id.plan_tabs);
+        ViewPager pager = (ViewPager)view.findViewById(R.id.plan_pager);
+        mAdapter = new PlanAdapter(getChildFragmentManager());
+        mAdapter.setCourse(plan);
+        pager.setAdapter(mAdapter);
+
+        tabs.setupWithViewPager(pager);
+
 
         Button nextButton = (Button)getActivity().findViewById(R.id.create_plan_next);
         Button prevButton = (Button)getActivity().findViewById(R.id.create_plan_prev);
@@ -248,6 +261,7 @@ public class SchedulingFragment extends Fragment {
         Log.v("Main:::","plan\n"+plan.toString());
 
         //update recylerView list
+        mAdapter.setCourse(plan);
 
         handler.sendEmptyMessage(FINISH);
     }
