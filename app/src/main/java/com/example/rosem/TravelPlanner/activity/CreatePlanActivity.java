@@ -395,6 +395,21 @@ public class CreatePlanActivity extends AppCompatActivity {
         return schedule.getSchedule(tu, json);
     }
 
+    public int[][] getCostMat()
+    {
+        return schedule.getCostMat();
+    }
+
+    public int[][] getFareMat()
+    {
+        return schedule.getFareMat();
+    }
+
+    public String[][] getFareStringMat()
+    {
+        return schedule.getFareStringMat();
+    }
+
     public Site setSiteFromPlace(Place place)
     {
         Site site = new Site();

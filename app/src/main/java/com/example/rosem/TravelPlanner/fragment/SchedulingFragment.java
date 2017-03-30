@@ -3,6 +3,8 @@ package com.example.rosem.TravelPlanner.fragment;
 import android.app.ProgressDialog;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -13,8 +15,10 @@ import android.widget.Button;
 
 import com.example.rosem.TravelPlanner.R;
 import com.example.rosem.TravelPlanner.activity.CreatePlanActivity;
+import com.example.rosem.TravelPlanner.course.Course;
 import com.example.rosem.TravelPlanner.object.Site;
 import com.example.rosem.TravelPlanner.object.Time;
+import com.example.rosem.TravelPlanner.plan.Plan;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -32,6 +36,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedList;
 
+import io.realm.Realm;
+
 /**
  * Created by rosem on 2017-03-07.
  */
@@ -43,20 +49,29 @@ public class SchedulingFragment extends Fragment {
 
     Typeface fontType;
     ProgressDialog progressDialog;
+    ProgressHandler handler;
 
     //about handler message
     private final int UPDATE_UI = 1231;
+    private final int SCHEDULE_DONE = 1466;
     private final int FINISH = 6323;
+    private final int START = 3256;
 
     //var
     ArrayList<Site> hotel = null;
-    ArrayList<Site> siteList = new ArrayList<Site>();
+    ArrayList<Site> siteList;
     LinkedList<LinkedList<Integer>> resultSchedule = null;
+    Calendar departure = Calendar.getInstance();
+    Calendar arrival = Calendar.getInstance();
+    Time tourStart;
+    Time tourEnd;
+
+    Plan plan = null;
 
     //using in this fragment
     int totalNodeNum;
     int timeUnit;
-    int timeUnitSecond;
+    int hourTimeUnit;
     long [][] timeMatrix;
     long [][] fareMatrix;
 
@@ -71,21 +86,25 @@ public class SchedulingFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         fontType = ((CreatePlanActivity)getActivity()).getFontType();
+        siteList = ((CreatePlanActivity)getActivity()).getSiteList();
+        arrival = ((CreatePlanActivity)getActivity()).getArrived();
+        departure = ((CreatePlanActivity)getActivity()).getDeparture();
+        tourStart = ((CreatePlanActivity)getActivity()).getTourStart();
+        tourEnd = ((CreatePlanActivity)getActivity()).getTourEnd();
 
         STEP_NUM = getResources().getInteger(R.integer.scheduling_steps);
         messages = new String[STEP_NUM];
         messages[0] = getString(R.string.schedule_step_0);
-        messages[1] = getString(R.string.schedule_step_1);
-        messages[2] = getString(R.string.schedule_step_2);
-        messages[3] = getString(R.string.schedule_step_3);
-        messages[4] = getString(R.string.schedule_step_4);
+       // messages[1] = getString(R.string.schedule_step_1);
+        messages[1] = getString(R.string.schedule_step_2);
+        //messages[3] = getString(R.string.schedule_step_3);
+        messages[2] = getString(R.string.schedule_step_4);
 
         progressDialog = new ProgressDialog(getContext());
-        progressDialog.setMessage(messages[0]);
-
+        handler = new ProgressHandler();
 
         timeUnit = getResources().getInteger(R.integer.time_unit);
-        timeUnitSecond = timeUnit*60;
+        hourTimeUnit = 60/timeUnit;
 
         totalNodeNum = siteList.size()+hotel.size();
 
@@ -102,7 +121,7 @@ public class SchedulingFragment extends Fragment {
         if(resultSchedule==null)
         {
             Scheduling getPlan = new Scheduling();
-            progressDialog.show();
+            handler.sendEmptyMessage(START);
             getPlan.run();
         }
 
@@ -111,10 +130,7 @@ public class SchedulingFragment extends Fragment {
         prevButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(resultSchedule!=null)
-                {
-                    saveData();
-                }
+                saveData(-1);
                 ((CreatePlanActivity)getActivity()).movePrev();
             }
         });
@@ -122,61 +138,153 @@ public class SchedulingFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 //saveData();
-                if(resultSchedule!=null)
-                {
-                    saveData();
-                }
+                saveData(1);
                 ((CreatePlanActivity)getActivity()).moveNext();
             }
         });
         return view;
     }
 
-    private void saveData()
+    private void saveData(int order)
     {
-        //save plan
+
+        if(order==1 && plan!=null)
+        {
+            //save plan
+            Realm realm = Realm.getDefaultInstance();
+            realm.beginTransaction();
+            //만약 코드에서 생성한 객체를 집어넣으려면 copyTo를!
+            realm.copyToRealmOrUpdate(plan);
+            realm.commitTransaction();
+            if(realm!=null)
+            {
+                realm.close();
+            }
+        }
+       else if(order==0)
+        {
+            //save plan temporarily
+        }
     }
 
-    private Time getTime(long sec)
+    private void updateList()
+    {
+        handler.sendEmptyMessage(UPDATE_UI);
+       //
+        plan = new Plan();
+
+        String [][] fareStringMat = ((CreatePlanActivity)getActivity()).getFareStringMat();
+        int [][] costMat = ((CreatePlanActivity)getActivity()).getCostMat();
+
+        int totalDay = resultSchedule.size();
+        for(int dayIdx =0; dayIdx<totalDay;dayIdx++)
+        {
+            LinkedList<Integer> daySchedule = resultSchedule.get(dayIdx);
+            int courseNum = daySchedule.size();
+            JSONArray day = new JSONArray();
+            Time presentTime = new Time();
+            if(dayIdx == 0 || dayIdx == totalDay)
+            {
+                if(dayIdx==0)
+                {
+                    presentTime.hour = arrival.get(Calendar.HOUR_OF_DAY);
+                    presentTime.min = arrival.get(Calendar.MINUTE);
+                }
+                else
+                {
+                    presentTime.hour = departure.get(Calendar.HOUR_OF_DAY);
+                    presentTime.min = departure.get(Calendar.MINUTE);
+                }
+            }
+            else
+            {
+                presentTime.hour = tourStart.hour;
+                presentTime.min = tourStart.min;
+            }
+
+            int prevSiteIdx = -1;
+            for(int courseIdx = 0; courseIdx<courseNum;courseIdx++)
+            {
+                Course c = new Course();
+                int curSiteIdx = daySchedule.get(courseIdx);
+                Site site = siteList.get(curSiteIdx);
+                Time startTime = new Time();
+                Time costTime = new Time();
+                Time endTime = new Time();
+                String fare = null;
+                if(courseIdx == 0)
+                {
+                    startTime.hour = presentTime.hour;
+                    startTime.min = presentTime.min;
+                }
+                else
+                {
+                    costTime = unitToTime(costMat[curSiteIdx][prevSiteIdx]);
+                    fare = fareStringMat[curSiteIdx][prevSiteIdx];
+                    if(site.getVisitTime()!=null)
+                    {
+                        startTime = site.getVisitTime();
+                    }
+                    else
+                    {
+                        startTime = presentTime.add(costTime);
+                    }
+                }
+                endTime = startTime.add(site.getSpendTime());
+                c.setName(site.getPlaceName());
+                c.setTime(startTime.toString()+"~"+endTime.toString());
+                c.setCostTime(costTime.toStringInText());
+                c.setCostMoney(fare);
+                c.setAddr(site.getAddress());
+                day.put(c);
+                prevSiteIdx = curSiteIdx;
+            }
+            plan.addDay(day);
+        }
+
+        plan.setPlanName(((CreatePlanActivity)getActivity()).getPlanName());
+        plan.setFavorite(false);
+        plan.setPlanFromPlanArray();
+        Log.v("Main:::","plan\n"+plan.toString());
+
+        //update recylerView list
+
+        handler.sendEmptyMessage(FINISH);
+    }
+
+    private int minToUnit(int min) {
+        int unit = min / timeUnit;
+        if (min % timeUnit != 0) {
+            if(unit>=0)
+            {
+                unit++;
+            }
+            else
+            {
+                unit--;
+            }
+        }
+        return unit;
+    }
+
+    private int timeToUnit(Time t) {
+        return ((t.hour * 60) / timeUnit )+ minToUnit(t.min);
+    }
+    private Time unitToTime(int unit)
     {
         Time t = new Time();
-        //int hour = 3600;
-        //int min = 60;
-
-        t.hour = Long.valueOf(sec/3600).intValue();
-        t.min = Long.valueOf((sec-Integer.valueOf(t.hour*3600).longValue())/60).intValue();
-
+        while(unit > hourTimeUnit)
+        {
+            t.hour++;
+            unit -= hourTimeUnit;
+        }
+        t.min = unit*timeUnit;
         return t;
     }
 
-    private int hourToUnit(int hour)
+    private Time getTimeDiff(Time t1, Time t2)
     {
-        return  (60/timeUnit)*hour;
-    }
-    private int minuteToUnit(int min)
-    {
-        return (min/timeUnit);
-    }
-    private int timeToUnit(Time time)
-    {
-        return (60/timeUnit)*time.hour+(time.min/timeUnit);
-    }
-
-    private Time getTimeDiff(Calendar start, Calendar end)
-    {
-        Time diff = new Time();
-        diff.hour = end.get(Calendar.HOUR_OF_DAY)-start.get(Calendar.HOUR_OF_DAY);
-        int minS = start.get(Calendar.MINUTE); int minE = end.get(Calendar.MINUTE);
-        if(minE<minS)
-        {
-            diff.min = minS-minE;
-            diff.hour--;
-        }
-        else
-        {
-            diff.min = minE-minS;
-        }
-        return diff;
+        return t1.sub(t2);
     }
 
     private long intToLong(int i)
@@ -228,10 +336,13 @@ public class SchedulingFragment extends Fragment {
                }
            }
 
+           handler.sendEmptyMessage(UPDATE_UI);
+
            JSONObject inputData = new JSONObject();
            try {
                inputData.put("results",results);
                resultSchedule = ((CreatePlanActivity)getActivity()).getSchedule(timeUnit,inputData);
+               handler.sendEmptyMessage(SCHEDULE_DONE);
            } catch (JSONException e) {
                e.printStackTrace();
            }
@@ -288,5 +399,34 @@ public class SchedulingFragment extends Fragment {
 
    }
 
+    private class ProgressHandler extends Handler
+    {
+        int step = 0;
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
 
+            switch (msg.what)
+            {
+                case START:
+                    progressDialog.setMessage(messages[step]);
+                    progressDialog.show();
+                    break;
+                case UPDATE_UI:
+                    step++;
+                    if(step==STEP_NUM)
+                    {
+                        step--;
+                    }
+                    progressDialog.setMessage(messages[step]);
+                    progressDialog.invalidateOptionsMenu();
+                    break;
+                case SCHEDULE_DONE:
+                    updateList();
+                case FINISH:
+                    progressDialog.dismiss();
+                    break;
+            }
+        }
+    }
 }

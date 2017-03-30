@@ -42,6 +42,7 @@ public class Schedule{
     private int [][] costMat = null;
     private int [][] unitMat= null;
     private int [][] fareMat = null;
+    private String [][] fareStringMat = null;
     private int TIMEUNIT = 0;
     private int HOUR_IN_TIMEUNIT=0;
     private boolean [] isSelected= null;
@@ -185,6 +186,20 @@ public class Schedule{
         return this.siteList.size();
     }
 
+    public int[][] getCostMat()
+    {
+        return costMat;
+    }
+
+    public int[][] getFareMat()
+    {
+        return fareMat;
+    }
+
+    public String[][] getFareStringMat()
+    {
+        return fareStringMat;
+    }
 
     public ArrayList<Calendar> getCheckInList() {
         return this.checkInList;
@@ -223,6 +238,7 @@ public class Schedule{
         timeMat = new long[totalNum][totalNum];
         costMat = new int[totalNum][totalNum];
         unitMat = new int[totalNum][totalNum];
+        fareMat = new int[totalNum][totalNum];
         TIMEUNIT = tu;
         HOUR_IN_TIMEUNIT = 60/tu;
         isSelected = new boolean[numOfSites];
@@ -245,7 +261,8 @@ public class Schedule{
                     if(elementObj.has("fare"))
                     {
                         JSONObject fare = elementObj.getJSONObject("fare");
-                        fareMat[dest][origin] = fare.getInt("fare");
+                        fareMat[dest][origin] = fare.getInt("value");
+                        fareStringMat[dest][origin] = fare.getString("text");
                     }
                     //j = dest
                     // i = start
@@ -841,23 +858,4 @@ public class Schedule{
         return t1.sub(t2);
     }
 
-
-
-    class CourseCostResult
-    {
-        public int cost;
-        public int timeUnit;
-
-        public CourseCostResult()
-        {
-            cost = 0;
-            timeUnit=0;
-        }
-
-        public CourseCostResult(int c, int t)
-        {
-            cost = c;
-            timeUnit= t;
-        }
-    }
 }

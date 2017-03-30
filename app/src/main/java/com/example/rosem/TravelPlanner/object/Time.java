@@ -87,7 +87,24 @@ public class Time {
         return result;
 
     }
-
+    public String toString()
+    {
+        String str = Integer.toString(hour)+":"+Integer.toString(min);
+        return str;
+    }
+    public String toStringInText()
+    {
+        String str = null;
+        if(hour==0)
+        {
+            str = Integer.toString(min)+"min";
+        }
+        else
+        {
+            str = Integer.toString(hour)+"hour "+Integer.toString(min)+"min";
+        }
+        return str;
+    }
     public int compareTo(Time t)
     {
         Time sub = this.sub(t);
