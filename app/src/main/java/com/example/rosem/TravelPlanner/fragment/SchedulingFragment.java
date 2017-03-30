@@ -104,8 +104,8 @@ public class SchedulingFragment extends Fragment {
         checkInList = ((CreatePlanActivity)getActivity()).getCheckInList();
         checkOutList = ((CreatePlanActivity)getActivity()).getCheckOutList();
         hotel = ((CreatePlanActivity)getActivity()).getHotel();
-        tourStart= ((CreatePlanActivity)getActivity()).getTourStart();
-        tourEnd = ((CreatePlanActivity)getActivity()).getTourEnd();
+        //tourStart= ((CreatePlanActivity)getActivity()).getTourStart();
+        //tourEnd = ((CreatePlanActivity)getActivity()).getTourEnd();
         siteList = ((CreatePlanActivity)getActivity()).getSiteList();
         schedule = new Day[numOfDays];
 
