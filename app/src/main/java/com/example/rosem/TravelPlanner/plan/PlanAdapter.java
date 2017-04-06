@@ -52,6 +52,7 @@ public class PlanAdapter extends FragmentPagerAdapter {
                 Log.v("Adapter",title+"\n"+day);
                 Log.v("Adapter::","mFragment size::"+mFragments.size());
             }
+            notifyDataSetChanged();
         }
     }
 

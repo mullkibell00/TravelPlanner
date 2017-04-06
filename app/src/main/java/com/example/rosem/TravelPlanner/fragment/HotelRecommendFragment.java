@@ -69,7 +69,7 @@ public class HotelRecommendFragment extends Fragment {
 
         if(recommendedList==null)
         {
-            ArrayList<Site> sites = ((CreatePlanActivity)getActivity()).getSiteList();
+            ArrayList<Site> sites = ((CreatePlanActivity)getActivity()).getSite();
             for(int i = 0; i < sites.size();i++)
             {
                 midpoint.lat += sites.get(i).getLat();

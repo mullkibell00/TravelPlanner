@@ -29,12 +29,13 @@ public class Schedule{
     private String country;
     private Time tourStart = null;
     private Time tourEnd = null;
-    private ArrayList<Site> siteList = new ArrayList<Site>();
+    private ArrayList<Site> site = new ArrayList<Site>();
+    private ArrayList<Site> siteList= null;
     private LinkedList<Site> fixedHourSiteList = new LinkedList<Site>();
     private LinkedList<Site> overHourSiteList = new LinkedList<Site>();
     private LinkedList<Site> fixedDateSiteList = new LinkedList<Site>();
     //for calculation
-    private int touringHourInUnit =0;
+   // private int touringHourInUnit =0;
     private int numOfSites = 0;
     private int numOfHotels = 0;
     private int totalNum = 0;
@@ -126,6 +127,14 @@ public class Schedule{
 
     public void setSiteList(ArrayList<Site> siteList) {
         this.siteList = siteList;
+    }
+
+    public ArrayList<Site> getSite() {
+        return this.site;
+    }
+
+    public void setSite(ArrayList<Site> siteList) {
+        this.site = siteList;
     }
 
     public String getPlanName() {
@@ -231,8 +240,8 @@ public class Schedule{
     public LinkedList<LinkedList<Integer>> getSchedule(int tu, JSONObject json)
     {
         //set datas
-        int touringHourInUnit =0;
-        numOfSites = siteList.size();
+        //int touringHourInUnit =0;
+        numOfSites = site.size();
         numOfHotels = hotel.size();
         totalNum = numOfHotels+numOfSites;
         timeMat = new long[totalNum][totalNum];
@@ -243,6 +252,14 @@ public class Schedule{
         HOUR_IN_TIMEUNIT = 60/tu;
         isSelected = new boolean[numOfSites];
 
+        siteList = new ArrayList<>(site);
+        for(int i = 0; i<numOfHotels;i++)
+        {
+            Site site = hotel.get(i);
+            site.setSpendTime(new Time());
+            siteList.add(site);
+        }
+
         try {
             JSONArray response = json.getJSONArray("results");
             //set matrix
@@ -252,12 +269,19 @@ public class Schedule{
                 JSONArray rows = obj.getJSONArray("rows");
                 for(int origin = 0; origin<rows.length();origin++)
                 {
-                    JSONObject rowObj = rows.getJSONObject(dest);
+                    JSONObject rowObj = rows.getJSONObject(origin);
                     JSONArray elements = rowObj.getJSONArray("elements");
                     JSONObject elementObj = elements.getJSONObject(0);
-                    JSONObject duration = elementObj.getJSONObject("duration");
-
-                    timeMat[dest][origin] = duration.getLong("value");
+                    JSONObject duration = null;
+                    if(elementObj.has("duration"))
+                    {
+                        duration = elementObj.getJSONObject("duration");
+                        timeMat[dest][origin] = duration.getLong("value");
+                    }
+                    else
+                    {
+                        timeMat[dest][origin] = 9999;// 9999 == infinity
+                    }
                     if(elementObj.has("fare"))
                     {
                         JSONObject fare = elementObj.getJSONObject("fare");
@@ -275,7 +299,6 @@ public class Schedule{
 
             for (int dest = 0; dest < totalNum; dest++) {
                 for (int start = 0; start < totalNum; start++) {
-
                     unitMat[dest][start] = timeToUnit(durationToTime(timeMat[dest][start])) + timeToUnit(siteList.get(dest).getSpendTime());
                     costMat[dest][start] = timeToUnit(durationToTime(timeMat[dest][start]));
                     //System.out.print(+unitMat[dest][start]+",");
@@ -284,11 +307,15 @@ public class Schedule{
             }
 
             LinkedList<LinkedList<Integer>> result = new LinkedList<>();
-            for(int i =0; i<numOfDays;i++)
+            for(int i =0, hotelIdx = 0; i<numOfDays;i++)
             {
+                int touringHourInUnit = timeToUnit(tourEnd.sub(tourStart));
+                //or touringHourInUnit = timeToUnit(tourEnd) - timeToUnit(tourStart)
                 CalculateDailySchedule dailySchedule =
-                        new CalculateDailySchedule(siteList.get(numOfSites),siteList.get(numOfSites),i,isSelected);
+                        new CalculateDailySchedule(hotel.get(hotelIdx),hotel.get(hotelIdx),i,isSelected, touringHourInUnit);
                 result.add(dailySchedule.getCourse());
+                //if need to change hotel
+                //change value of htelIdx
             }
 
             //return result
@@ -308,11 +335,11 @@ public class Schedule{
         int totalTimeUnit;
         int today;
 
-        public CalculateDailySchedule(Site start, Site end,int nthDay, boolean[] presentSelected)
+        public CalculateDailySchedule(Site start, Site end,int nthDay, boolean[] presentSelected, int tourHour)
         {
             this.startSite = start;
             this.endSite = end;
-            totalTimeUnit = touringHourInUnit;
+            totalTimeUnit = tourHour;
             isSelected = presentSelected;
             today = nthDay;
         }
@@ -363,7 +390,7 @@ public class Schedule{
                 int lowerHalfUnit = timeToUnit(getTimeDiff(tourEnd,fixedVisit.getVisitTime()));
                 //get lower course
                 course = getCourseBetween(fixedVisitIdx,siteList.indexOf(endSite),lowerHalfUnit,true);
-                if(course!=null)
+                if(course!=null && course.size()>0)
                 {
                     //erase duplicate(fixed visit)
                     course.removeFirst();

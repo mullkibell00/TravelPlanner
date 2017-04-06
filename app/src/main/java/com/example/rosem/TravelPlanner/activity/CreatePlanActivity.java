@@ -297,14 +297,17 @@ public class CreatePlanActivity extends AppCompatActivity {
         schedule.setNumOfDays(numOfDays);
     }
 
+    public ArrayList<Site> getSite() {
+        return schedule.getSite();
+    }
+
+    public void setSite(ArrayList<Site> siteList) {
+        schedule.setSite(siteList);
+    }
+
     public ArrayList<Site> getSiteList() {
         return schedule.getSiteList();
     }
-
-    public void setSiteList(ArrayList<Site> siteList) {
-        schedule.setSiteList(siteList);
-    }
-
     public String getPlanName() {
         return schedule.getPlanName();
     }

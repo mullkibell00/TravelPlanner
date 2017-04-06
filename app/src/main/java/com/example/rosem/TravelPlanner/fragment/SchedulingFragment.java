@@ -73,6 +73,8 @@ public class SchedulingFragment extends Fragment {
     PlanAdapter mAdapter;
 
     //using in this fragment
+    int numOfSite;
+    int numOfHotel;
     int totalNodeNum;
     int timeUnit;
     int hourTimeUnit;
@@ -90,7 +92,8 @@ public class SchedulingFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         fontType = ((CreatePlanActivity)getActivity()).getFontType();
-        siteList = ((CreatePlanActivity)getActivity()).getSiteList();
+        siteList = ((CreatePlanActivity)getActivity()).getSite();
+        hotel = ((CreatePlanActivity)getActivity()).getHotel();
         arrival = ((CreatePlanActivity)getActivity()).getArrived();
         departure = ((CreatePlanActivity)getActivity()).getDeparture();
         tourStart = ((CreatePlanActivity)getActivity()).getTourStart();
@@ -110,7 +113,9 @@ public class SchedulingFragment extends Fragment {
         timeUnit = getResources().getInteger(R.integer.time_unit);
         hourTimeUnit = 60/timeUnit;
 
-        totalNodeNum = siteList.size()+hotel.size();
+        numOfSite = siteList.size();
+        numOfHotel = hotel.size();
+        totalNodeNum = numOfSite+numOfHotel;
 
         timeMatrix = new long[totalNodeNum][totalNodeNum];
         fareMatrix = new long[totalNodeNum][totalNodeNum];
@@ -122,12 +127,12 @@ public class SchedulingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup view = (ViewGroup)inflater.inflate(R.layout.plan_schedule,container,false);
 
-        if(resultSchedule==null)
-        {
+      //  if(resultSchedule==null)
+      //  {
             Scheduling getPlan = new Scheduling();
             handler.sendEmptyMessage(START);
             getPlan.run();
-        }
+      //  }
 
         TabLayout tabs=(TabLayout)view.findViewById(R.id.plan_tabs);
         ViewPager pager = (ViewPager)view.findViewById(R.id.plan_pager);
@@ -185,6 +190,7 @@ public class SchedulingFragment extends Fragment {
         handler.sendEmptyMessage(UPDATE_UI);
        //
         plan = new Plan();
+        ArrayList<Site> sites = ((CreatePlanActivity)getActivity()).getSiteList();
 
         String [][] fareStringMat = ((CreatePlanActivity)getActivity()).getFareStringMat();
         int [][] costMat = ((CreatePlanActivity)getActivity()).getCostMat();
@@ -220,20 +226,29 @@ public class SchedulingFragment extends Fragment {
             {
                 Course c = new Course();
                 int curSiteIdx = daySchedule.get(courseIdx);
-                Site site = siteList.get(curSiteIdx);
+                Site site = sites.get(curSiteIdx);
                 Time startTime = new Time();
                 Time costTime = new Time();
-                Time endTime = new Time();
+                Time endTime = null;
                 String fare = null;
+
+                startTime.hour = presentTime.hour;
+                startTime.min = presentTime.min;
+
                 if(courseIdx == 0)
                 {
-                    startTime.hour = presentTime.hour;
-                    startTime.min = presentTime.min;
+                    //do nothing
                 }
                 else
                 {
-                    costTime = unitToTime(costMat[curSiteIdx][prevSiteIdx]);
-                    fare = fareStringMat[curSiteIdx][prevSiteIdx];
+                    if(costMat!=null)
+                    {
+                        costTime = unitToTime(costMat[curSiteIdx][prevSiteIdx]);
+                    }
+                    if(fareStringMat!=null)
+                    {
+                        fare = fareStringMat[curSiteIdx][prevSiteIdx];
+                    }
                     if(site.getVisitTime()!=null)
                     {
                         startTime = site.getVisitTime();
@@ -249,8 +264,11 @@ public class SchedulingFragment extends Fragment {
                 c.setCostTime(costTime.toStringInText());
                 c.setCostMoney(fare);
                 c.setAddr(site.getAddress());
+                Log.v("Main:::","course\n"+c.toString());
+
                 day.put(c);
                 prevSiteIdx = curSiteIdx;
+                presentTime = presentTime.add(costTime.add(site.getSpendTime()));
             }
             plan.addDay(day);
         }
@@ -333,15 +351,30 @@ public class SchedulingFragment extends Fragment {
            String destData="&destinations=";
 
            String originBody =siteList.get(0).getLatLngStr();
-           for(int i= 1; i< totalNodeNum; i++)
+           for(int i= 1; i< numOfSite ; i++)
            {
                originBody+=separator;
                originBody=originBody+siteList.get(i).getLatLngStr();
            }
+           for(int i =0; i< numOfHotel;i++)
+           {
+               originBody+=separator;
+               originBody=originBody+hotel.get(i).getLatLngStr();
+           }
 
-           for(int i =0; i<totalNodeNum; i++)
+           for(int i =0; i<numOfSite; i++)
            {
                String destBody = siteList.get(i).getLatLngStr();
+               requestUrl = headStr+originData+originBody+destData+destBody+tailStr;
+               if(!request(requestUrl))
+               {
+                   //show toast failed
+                   return;
+               }
+           }
+           for(int i =0; i<numOfHotel; i++)
+           {
+               String destBody = hotel.get(i).getLatLngStr();
                requestUrl = headStr+originData+originBody+destData+destBody+tailStr;
                if(!request(requestUrl))
                {

@@ -99,7 +99,7 @@ public class InputSiteFragment extends Fragment {
         addSiteButton = (TextView)view.findViewById(R.id.plan_site_add);
         addSiteButton.setTypeface(fontType);
 
-        siteList = ((CreatePlanActivity)getActivity()).getSiteList();
+        siteList = ((CreatePlanActivity)getActivity()).getSite();
         SiteListAdapter.ShowDialog showEditDialog = new SiteListAdapter.ShowDialog()
         {
             @Override
@@ -197,7 +197,7 @@ public class InputSiteFragment extends Fragment {
 
     public void saveData()
     {
-        ((CreatePlanActivity)getActivity()).setSiteList(mAdapter.getSiteList());
+        ((CreatePlanActivity)getActivity()).setSite(mAdapter.getSiteList());
         ArrayList<Site> list = mAdapter.getSiteList();
         Iterator<Site> it = list.iterator();
         while(it.hasNext())
