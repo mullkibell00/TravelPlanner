@@ -52,6 +52,22 @@ public class Time {
         c.set(Calendar.MINUTE, this.min);
         return c;
     }
+
+    public Time copyOf()
+    {
+        Time copy = new Time();
+        copy.hour = this.hour;
+        copy.min = this.min;
+        return copy;
+    }
+
+    public Time copyOf(Time t)
+    {
+        Time copy = new Time();
+        copy.hour = t.hour;
+        copy.min = t.min;
+        return copy;
+    }
     public Time sub(Time t)
     {
         Time result = new Time();

@@ -202,6 +202,7 @@ public class SchedulingFragment extends Fragment {
             int courseNum = daySchedule.size();
             JSONArray day = new JSONArray();
             Time presentTime = new Time();
+
             if(dayIdx == 0 || dayIdx == totalDay)
             {
                 if(dayIdx==0)
@@ -225,15 +226,18 @@ public class SchedulingFragment extends Fragment {
             for(int courseIdx = 0; courseIdx<courseNum;courseIdx++)
             {
                 Course c = new Course();
+                Course travel = null;
                 int curSiteIdx = daySchedule.get(courseIdx);
                 Site site = sites.get(curSiteIdx);
                 Time startTime = new Time();
                 Time costTime = new Time();
                 Time endTime = null;
+                Time freeStartTime = null;
+                Time freeEndTime = null;
+                Course freeTimeCourse = null;
                 String fare = null;
 
-                startTime.hour = presentTime.hour;
-                startTime.min = presentTime.min;
+                startTime = presentTime.copyOf();
 
                 if(courseIdx == 0)
                 {
@@ -244,6 +248,11 @@ public class SchedulingFragment extends Fragment {
                     if(costMat!=null)
                     {
                         costTime = unitToTime(costMat[curSiteIdx][prevSiteIdx]);
+                        //traveling time setting
+                        travel = new Course();
+                        travel.setName("Travel Time");
+                        travel.setTime(presentTime.toString(), presentTime.add(costTime).toString());
+                        travel.setSpendTime(costTime.toString());
                     }
                     if(fareStringMat!=null)
                     {
@@ -252,6 +261,12 @@ public class SchedulingFragment extends Fragment {
                     if(site.getVisitTime()!=null)
                     {
                         startTime = site.getVisitTime();
+                        freeStartTime = presentTime.add(costTime);
+                        freeEndTime = startTime.copyOf();
+                        freeTimeCourse = new Course();
+                        freeTimeCourse.setName("Free Time");
+                        freeTimeCourse.setTime(freeStartTime.toString(), freeEndTime.toString());
+                        freeTimeCourse.setSpendTime(freeEndTime.sub(freeStartTime).toStringInText());
                     }
                     else
                     {
@@ -259,16 +274,33 @@ public class SchedulingFragment extends Fragment {
                     }
                 }
                 endTime = startTime.add(site.getSpendTime());
+
+                if(travel!=null)
+                {
+                    day.put(travel);
+                }
+                if(freeTimeCourse!=null)
+                {
+                    day.put(freeTimeCourse);
+                }
                 c.setName(site.getPlaceName());
-                c.setTime(startTime.toString()+"~"+endTime.toString());
-                c.setCostTime(costTime.toStringInText());
+                if(courseIdx == 0 || courseIdx == (courseNum-1))
+                {
+                    c.setTime(endTime.toString());
+                }
+                else
+                {
+                    c.setTime(startTime.toString(), endTime.toString());
+                }
+                c.setSpendTime(costTime.toStringInText());
                 c.setCostMoney(fare);
                 c.setAddr(site.getAddress());
                 Log.v("Main:::","course\n"+c.toString());
 
                 day.put(c);
                 prevSiteIdx = curSiteIdx;
-                presentTime = presentTime.add(costTime.add(site.getSpendTime()));
+                //presentTime = presentTime.add(costTime.add(site.getSpendTime()));
+                presentTime = endTime.copyOf();
             }
             plan.addDay(day);
         }

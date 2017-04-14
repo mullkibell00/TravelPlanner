@@ -16,7 +16,7 @@ public class CourseView extends RelativeLayout {
     private TextView mName;
     private TextView mAddr;
     private TextView mTime;
-    private TextView mCostTime;
+    private TextView mSpendTime;
     private TextView mCostMoney;
 
     public CourseView(Context context, Course course)
@@ -34,8 +34,8 @@ public class CourseView extends RelativeLayout {
         mTime = (TextView)findViewById(R.id.time);
         mTime.setText(course.getTime());
 
-        mCostTime = (TextView)findViewById(R.id.cost_time);
-        mCostTime.setText(course.getCostTime());
+        mSpendTime = (TextView)findViewById(R.id.cost_time);
+        mSpendTime.setText(course.getSpendTime());
 
         mCostMoney = (TextView)findViewById(R.id.cost_money);
         mCostMoney.setText(course.getCostMoney());
@@ -54,7 +54,7 @@ public class CourseView extends RelativeLayout {
 
         mTime = (TextView)findViewById(R.id.time);
 
-        mCostTime = (TextView)findViewById(R.id.cost_time);
+        mSpendTime = (TextView)findViewById(R.id.cost_time);
 
         mCostMoney = (TextView)findViewById(R.id.cost_money);
 
@@ -75,9 +75,9 @@ public class CourseView extends RelativeLayout {
         {
             mTime.setText(data);
         }
-        else if(key.equals("costTime"))
+        else if(key.equals("spendTime"))
         {
-            mCostTime.setText(data);
+            mSpendTime.setText(data);
         }
         else
         {
@@ -90,7 +90,7 @@ public class CourseView extends RelativeLayout {
         mName.setText(c.getName());
         mAddr.setText(c.getAddr());
         mTime.setText(c.getTime());
-        mCostTime.setText(c.getCostTime());
+        mSpendTime.setText(c.getSpendTime());
         mCostMoney.setText(c.getCostMoney());
     }
 
@@ -100,6 +100,6 @@ public class CourseView extends RelativeLayout {
         mAddr.setTypeface(fontType);
         mTime.setTypeface(fontType);
         mCostMoney.setTypeface(fontType);
-        mCostTime.setTypeface(fontType);
+        mSpendTime.setTypeface(fontType);
     }
 }

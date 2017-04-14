@@ -6,8 +6,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Calendar;
-
 /**
  * Created by rosem on 2017-01-30.
  */
@@ -16,52 +14,14 @@ public class Course {
     private String mName;
     private String mAddr;
     private String mTime;
-    private String mCostTime;
+    private String mSpendTime;
     private String mCostMoney;
-    private Calendar mArrival;
-    private Calendar mDepart;
-    private int mSpendTime; //unit = minute or timeunit
-    private long mCostTimeVal;
-    private long mCostMoneyVal;
-    private int startIdx = 0;
-    private int endIdx=0;
+    public static final int START=0;
+    public static final int END = 1;
 
     public Course()
     {
 
-    }
-
-    public int getStartIdx(){ return  startIdx; }
-    public int getEndIdx() { return endIdx; }
-    public void setStartIdx(int i) { startIdx = i; }
-    public void setEndIdx(int i ){endIdx = i; }
-
-    public Calendar getArrival() { return mArrival; }
-    public Calendar getDepart() {return mDepart;}
-    public void setArrival(Calendar c)
-    {
-        mArrival = c;
-    }
-    public void setDepart(Calendar c)
-    {
-        mDepart = c;
-    }
-
-    public int getSpendTime() { return mSpendTime; }
-    public void setSpendTime(int t)
-    {
-        mSpendTime = t;
-    }
-
-    public long getCostTimeVal() {return mCostTimeVal; }
-    public long getCostMoneyVal() { return  mCostMoneyVal; }
-    public void setCostTimeVal(long c)
-    {
-        mCostTimeVal = c;
-    }
-    public void setCostMoneyVal(long c)
-    {
-        mCostMoneyVal = c;
     }
 
     public String getName()
@@ -76,9 +36,9 @@ public class Course {
     {
         return mTime;
     }
-    public String getCostTime()
+    public String getSpendTime()
     {
-        return mCostTime;
+        return mSpendTime;
     }
     public String getCostMoney()
     {
@@ -97,9 +57,10 @@ public class Course {
     {
         mTime = time;
     }
-    public void setCostTime(String time)
+    public void setTime(String start, String end){ mTime = start+"~"+end; }
+    public void setSpendTime(String time)
     {
-        mCostTime = time;
+        mSpendTime = time;
     }
     public void setCostMoney(String money)
     {
@@ -129,9 +90,9 @@ public class Course {
             {
                 c.setCostMoney(courseJson.getString("mCostMoney"));
             }
-            if(courseJson.has("mCostTime"))
+            if(courseJson.has("mSpendTime"))
             {
-                c.setCostTime(courseJson.getString("mCostTime"));
+                c.setSpendTime(courseJson.getString("mSpendTime"));
             }
             if(courseJson.has("mTime"))
             {

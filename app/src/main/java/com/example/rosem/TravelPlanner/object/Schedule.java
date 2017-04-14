@@ -299,7 +299,8 @@ public class Schedule{
 
             for (int dest = 0; dest < totalNum; dest++) {
                 for (int start = 0; start < totalNum; start++) {
-                    unitMat[dest][start] = timeToUnit(durationToTime(timeMat[dest][start])) + timeToUnit(siteList.get(dest).getSpendTime());
+                    //unitMat[dest][start] = timeToUnit(durationToTime(timeMat[dest][start])) + timeToUnit(siteList.get(dest).getSpendTime());
+                    unitMat[dest][start] = timeToUnit(durationToTime(timeMat[dest][start])) + timeToUnit(siteList.get(start).getSpendTime());
                     costMat[dest][start] = timeToUnit(durationToTime(timeMat[dest][start]));
                     //System.out.print(+unitMat[dest][start]+",");
                 }
@@ -361,10 +362,13 @@ public class Schedule{
                 int upperHalfUnit = timeToUnit(getTimeDiff(fixedVisit.getVisitTime(),tourStart));
                 //get upper course
                 course = getCourseBetween(siteList.indexOf(startSite),fixedVisitIdx, upperHalfUnit,false);
-                if(course!=null)
+                if(course!=null && course.size()>0)
                 {
                     finalCourse.addAll(course);
                     course.clear();
+                }else if(course!=null && course.size()==0)
+                {
+                    finalCourse.add(siteList.indexOf(startSite));
                 }
                 int iterationNum = selectedFixedVisit.size();
                 //iterate
@@ -377,12 +381,21 @@ public class Schedule{
                     int unit = timeToUnit(getTimeDiff(site.getVisitTime(),fixedVisit.getVisitTime()));
 
                     course = getCourseBetween(fixedVisitIdx,siteIdx,unit,false);
-                    if(course!=null)
+                    if(course!=null && course.size()>0)
                     {
-                        course.removeFirst();
+                        if(finalCourse.contains(course.getFirst()))
+                        {
+                            //erase duplicate(fixed visit)
+                            course.removeFirst();
+                        }
                         finalCourse.addAll(course);
                         course.clear();
                     }
+                    else if(course!=null&& course.size()==0)
+                    {
+                        finalCourse.add(fixedVisitIdx);
+                    }
+
                     fixedVisit = site;
                     fixedVisitIdx = siteIdx;
                 }
@@ -392,10 +405,18 @@ public class Schedule{
                 course = getCourseBetween(fixedVisitIdx,siteList.indexOf(endSite),lowerHalfUnit,true);
                 if(course!=null && course.size()>0)
                 {
-                    //erase duplicate(fixed visit)
-                    course.removeFirst();
+                    if(finalCourse.contains(course.getFirst()))
+                    {
+                        //erase duplicate(fixed visit)
+                        course.removeFirst();
+                    }
                     finalCourse.addAll(course);
                     course.clear();
+                }
+                else if(course!=null && course.size()==0)
+                {
+                    finalCourse.add(fixedVisitIdx);
+                    finalCourse.add(siteList.indexOf(endSite));
                 }
             }
             else
