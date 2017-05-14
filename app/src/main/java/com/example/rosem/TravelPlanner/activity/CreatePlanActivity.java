@@ -115,10 +115,11 @@ public class CreatePlanActivity extends AppCompatActivity {
         stepFragments = new Fragment[STEP_NUM];
         stepFragments[0] = InputTitleFragment.newInstance();
         stepFragments[1] = InputPlanInfoFragment.newInstance();
-        stepFragments[2] = InputHotelInfoFragment.newInstance();
-        stepFragments[3] = InputSiteFragment.newInstance();
-        stepFragments[4] = HotelRecommendFragment.newInstance();
-        stepFragments[5] = SchedulingFragment.newInstance();
+        stepFragments[2] = InputDailyInfoFragment.newInstance();
+        stepFragments[3] = InputHotelInfoFragment.newInstance();
+        stepFragments[4] = InputSiteFragment.newInstance();
+        stepFragments[5] = HotelRecommendFragment.newInstance();
+        stepFragments[6] = SchedulingFragment.newInstance();
 
         changeStep(getSupportFragmentManager(),currentStep);
     }
