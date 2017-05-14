@@ -22,6 +22,8 @@ public class Schedule{
     private Calendar departure = null;
     private Calendar arrived = null;
     private boolean isHotelReserved;
+    private Site endPoint = null;
+    private Site startPoint = null;
     private ArrayList<Calendar> checkInList = null;
     private ArrayList<Calendar> checkOutList = null;
     private ArrayList<Site> hotel = null;
@@ -75,6 +77,24 @@ public class Schedule{
     };
 
     //about schedule class
+
+
+    public Site getEndPoint() {
+        return endPoint;
+    }
+
+    public void setEndPoint(Site endPoint) {
+        this.endPoint = endPoint;
+    }
+
+    public Site getStartPoint() {
+        return startPoint;
+    }
+
+    public void setStartPoint(Site startPoint) {
+        this.startPoint = startPoint;
+    }
+
     public Calendar getArrived() {
         return this.arrived;
     }

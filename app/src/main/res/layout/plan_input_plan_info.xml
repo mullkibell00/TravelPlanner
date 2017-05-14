@@ -112,6 +112,47 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/plan_info_txt_arrival_place"
+                android:textColor="@color/colorFontDark"
+                android:textSize="17sp"
+                android:layout_marginRight="20dp"
+                android:text="@string/txt_arrival_place"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="41dp"
+                android:background="@drawable/selectable_textview_background"
+                android:text="@string/txt_select_place"
+                android:textSize="15sp"
+                android:textColor="@color/selectable_textview_font"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:id="@+id/plan_info_arrival_place"
+                android:textIsSelectable="true"
+                android:focusableInTouchMode="false"
+                android:focusable="false"
+                />
+        </LinearLayout>
+
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="@drawable/list_line_divider"
+            android:backgroundTint="@color/colorFontLightGrey"
+            android:layout_marginTop="23dp"
+            android:layout_marginBottom="23dp"
+            ></View>
         <!--text view about departure time-->
         <LinearLayout
             android:layout_width="match_parent"
@@ -142,6 +183,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="16dp"
+            android:paddingBottom="16dp"
             >
             <TextView
                 android:layout_width="match_parent"
@@ -173,19 +215,37 @@
                 />
 
         </LinearLayout>
-        <View
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="2px"
-            android:background="@drawable/list_line_divider"
-            android:backgroundTint="@color/colorFontLightGrey"
-            android:layout_marginTop="23dp"
-            android:layout_marginBottom="23dp"
-            ></View>
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/plan_info_txt_departure_place"
+                android:textColor="@color/colorFontDark"
+                android:textSize="17sp"
+                android:layout_marginRight="20dp"
+                android:text="@string/txt_departure_place"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="41dp"
+                android:background="@drawable/selectable_textview_background"
+                android:text="@string/txt_select_place"
+                android:textSize="15sp"
+                android:textColor="@color/selectable_textview_font"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:id="@+id/plan_info_departure_place"
+                android:textIsSelectable="true"
+                android:focusableInTouchMode="false"
+                android:focusable="false"
+                />
+        </LinearLayout>
 
-        <!--space for button-->
-        <android.support.v4.widget.Space
-            android:layout_width="match_parent"
-            android:layout_height="81dp" />
 
     </LinearLayout>
 </ScrollView>

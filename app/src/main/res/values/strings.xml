@@ -31,6 +31,11 @@
     <string name="txt_input_departure_time">에서 출발하는 시간</string>
     <string name="txt_select_traveling_date">날짜 선택</string>
     <string name="txt_select_traveling_time">시간 선택</string>
+    <string name="txt_arrival_place">도착지</string>
+    <string name="txt_departure_place">출발지</string>
+    <string name="txt_select_place">장소 선택</string>
+
+    <!--create plan - input daily tour info-->
     <string name="txt_tour_time_explain">하루 일정의 시작 및 종료 시간을 정합니다.</string>
     <string name="txt_tour_start_time">시작 시간</string>
     <string name="txt_tour_end_time">종료 시간</string>
