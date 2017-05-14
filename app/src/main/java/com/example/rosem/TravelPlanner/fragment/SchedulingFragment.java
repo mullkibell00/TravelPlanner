@@ -306,7 +306,10 @@ public class SchedulingFragment extends Fragment {
                 //presentTime = presentTime.add(costTime.add(site.getSpendTime()));
                 presentTime = endTime.copyOf();
             }
-            plan.addDay(day);
+            if(courseNum!=0)
+            {
+                plan.addDay(day);
+            }
         }
 
         plan.setPlanName(((CreatePlanActivity)getActivity()).getPlanName());

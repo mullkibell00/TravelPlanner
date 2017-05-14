@@ -1,4 +1,4 @@
-package com.example.rosem.TravelPlanner.activity;
+package com.example.rosem.TravelPlanner.Activity;
 
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
@@ -17,12 +17,12 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.example.rosem.TravelPlanner.R;
-import com.example.rosem.TravelPlanner.fragment.HotelRecommendFragment;
-import com.example.rosem.TravelPlanner.fragment.InputHotelInfoFragment;
-import com.example.rosem.TravelPlanner.fragment.InputPlanInfoFragment;
-import com.example.rosem.TravelPlanner.fragment.InputSiteFragment;
-import com.example.rosem.TravelPlanner.fragment.InputTitleFragment;
-import com.example.rosem.TravelPlanner.fragment.SchedulingFragment;
+import com.example.rosem.TravelPlanner.Fragment.HotelRecommendFragment;
+import com.example.rosem.TravelPlanner.Fragment.InputHotelInfoFragment;
+import com.example.rosem.TravelPlanner.Fragment.InputPlanInfoFragment;
+import com.example.rosem.TravelPlanner.Fragment.InputSiteFragment;
+import com.example.rosem.TravelPlanner.Fragment.InputTitleFragment;
+import com.example.rosem.TravelPlanner.Fragment.SchedulingFragment;
 import com.example.rosem.TravelPlanner.object.Schedule;
 import com.example.rosem.TravelPlanner.object.Site;
 import com.example.rosem.TravelPlanner.object.Time;

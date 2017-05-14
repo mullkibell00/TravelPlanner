@@ -15,10 +15,10 @@ import android.widget.TextView;
 
 import com.example.rosem.TravelPlanner.R;
 import com.example.rosem.TravelPlanner.course.Course;
-import com.example.rosem.TravelPlanner.fragment.FavoriteFragment;
-import com.example.rosem.TravelPlanner.fragment.ManageFragment;
-import com.example.rosem.TravelPlanner.fragment.SettingFragment;
-import com.example.rosem.TravelPlanner.fragment.ShareFragment;
+import com.example.rosem.TravelPlanner.Fragment.FavoriteFragment;
+import com.example.rosem.TravelPlanner.Fragment.ManageFragment;
+import com.example.rosem.TravelPlanner.Fragment.SettingFragment;
+import com.example.rosem.TravelPlanner.Fragment.ShareFragment;
 import com.example.rosem.TravelPlanner.plan.Plan;
 
 import org.json.JSONArray;

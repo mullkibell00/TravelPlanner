@@ -1,4 +1,4 @@
-package com.example.rosem.TravelPlanner.fragment;
+package com.example.rosem.TravelPlanner.Fragment;
 
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.rosem.TravelPlanner.R;
-import com.example.rosem.TravelPlanner.activity.CreatePlanActivity;
+import com.example.rosem.TravelPlanner.Activity.CreatePlanActivity;
 import com.example.rosem.TravelPlanner.adapter.RecommendListAdapter;
 import com.example.rosem.TravelPlanner.object.Site;
 import com.google.android.gms.location.places.Place;

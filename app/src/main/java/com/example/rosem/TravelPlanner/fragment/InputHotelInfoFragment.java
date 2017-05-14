@@ -1,4 +1,4 @@
-package com.example.rosem.TravelPlanner.fragment;
+package com.example.rosem.TravelPlanner.Fragment;
 
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -20,7 +20,7 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.example.rosem.TravelPlanner.R;
-import com.example.rosem.TravelPlanner.activity.CreatePlanActivity;
+import com.example.rosem.TravelPlanner.Activity.CreatePlanActivity;
 import com.example.rosem.TravelPlanner.adapter.HotelListAdapter;
 import com.example.rosem.TravelPlanner.object.Site;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;

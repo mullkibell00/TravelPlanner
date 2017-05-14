@@ -1,4 +1,4 @@
-package com.example.rosem.TravelPlanner.fragment;
+package com.example.rosem.TravelPlanner.Fragment;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -26,7 +26,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.example.rosem.TravelPlanner.R;
-import com.example.rosem.TravelPlanner.activity.CreatePlanActivity;
+import com.example.rosem.TravelPlanner.Activity.CreatePlanActivity;
 import com.example.rosem.TravelPlanner.adapter.SiteListAdapter;
 import com.example.rosem.TravelPlanner.object.Site;
 import com.example.rosem.TravelPlanner.object.Time;

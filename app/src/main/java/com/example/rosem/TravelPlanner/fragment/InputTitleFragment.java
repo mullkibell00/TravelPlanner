@@ -1,4 +1,4 @@
-package com.example.rosem.TravelPlanner.fragment;
+package com.example.rosem.TravelPlanner.Fragment;
 
 import android.graphics.Rect;
 import android.graphics.Typeface;
@@ -16,7 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.rosem.TravelPlanner.R;
-import com.example.rosem.TravelPlanner.activity.CreatePlanActivity;
+import com.example.rosem.TravelPlanner.Activity.CreatePlanActivity;
 
 /**
  * Created by rosem on 2017-02-26.
