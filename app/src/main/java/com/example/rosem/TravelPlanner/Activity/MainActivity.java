@@ -1,4 +1,4 @@
-package com.example.rosem.TravelPlanner.activity;
+package com.example.rosem.TravelPlanner.Activity;
 
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
