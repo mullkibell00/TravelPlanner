@@ -10,7 +10,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.example.rosem.TravelPlanner.Activity.CreatePlanActivity;
 import com.example.rosem.TravelPlanner.R;
@@ -49,7 +51,7 @@ public class InputDailyInfoFragment extends Fragment {
     Calendar tourStartTime;
     Calendar tourEndTime;
 
-    public InputDailyInfoFragment newInstance()
+    static public InputDailyInfoFragment newInstance()
     {
         InputDailyInfoFragment fragment = new InputDailyInfoFragment();
         return fragment;
@@ -58,17 +60,84 @@ public class InputDailyInfoFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        fontType = ((CreatePlanActivity)getActivity()).getFontType();
+
+        tourStartSetListener = new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int hour, int minute) {
+                texts[mSelectedTourStart].setSelected(true);
+                ((CreatePlanActivity)getActivity()).setTimeText(texts[mSelectedTourStart],hour,minute);
+                //texts[mSelectedTourStart].setText(hour+"시 "+minute+"분");
+                tourStartTime.set(Calendar.HOUR_OF_DAY,hour);
+                tourStartTime.set(Calendar.MINUTE,minute);
+            }
+        };
+        tourEndSetListener = new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int hour, int minute) {
+                texts[mSelectedTourEnd].setSelected(true);
+                ((CreatePlanActivity)getActivity()).setTimeText(texts[mSelectedTourEnd],hour,minute);
+                //texts[mSelectedTourEnd].setText(hour+"시 "+minute+"분");
+                tourEndTime.set(Calendar.HOUR_OF_DAY,hour);
+                tourEndTime.set(Calendar.MINUTE,minute);
+            }
+        };
+
+        tourStartTime = Calendar.getInstance();
+        tourEndTime = Calendar.getInstance();
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
+        //return super.onCreateView(inflater, container, savedInstanceState);
+
+        ViewGroup view = (ViewGroup)inflater.inflate(R.layout.plan_input_daily_info,container,false);
+
+        settingTextView(view);
+
+        Time tourS = ((CreatePlanActivity)getActivity()).getTourStart();
+        Time tourE = ((CreatePlanActivity)getActivity()).getTourEnd();
+
+        if(tourS!=null)
+        {
+            tourStartTime.set(Calendar.HOUR_OF_DAY,tourS.hour);
+            tourStartTime.set(Calendar.MINUTE,tourS.min);
+        }
+        if(tourE!=null)
+        {
+            tourEndTime.set(Calendar.HOUR_OF_DAY,tourE.hour);
+            tourEndTime.set(Calendar.MINUTE, tourE.min);
+        }
+
+        Button prevButton = (Button)getActivity().findViewById(R.id.create_plan_prev);
+        Button nextButton = (Button)getActivity().findViewById(R.id.create_plan_next);
+        prevButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveData();
+                ((CreatePlanActivity)getActivity()).movePrev();
+            }
+        });
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveData();
+                ((CreatePlanActivity)getActivity()).moveNext();
+            }
+        });
+
+
+        return view;
     }
 
     public void saveData()
     {
-
+        Time startTime = new Time(tourStartTime.get(Calendar.HOUR_OF_DAY),tourStartTime.get(Calendar.MINUTE));
+        ((CreatePlanActivity)getActivity()).setTourStart(startTime);
+        Time endTime = new Time(tourEndTime.get(Calendar.HOUR_OF_DAY),tourEndTime.get(Calendar.MINUTE));
+        ((CreatePlanActivity)getActivity()).setTourEnd(endTime);
     }
 
     public void settingTextView(ViewGroup view)
