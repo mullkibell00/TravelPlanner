@@ -1,4 +1,4 @@
-package com.example.rosem.TravelPlanner.fragment;
+package com.example.rosem.TravelPlanner.Fragment;
 
 import android.content.Intent;
 import android.graphics.PorterDuff;
@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.example.rosem.TravelPlanner.R;
-import com.example.rosem.TravelPlanner.activity.CreatePlanActivity;
+import com.example.rosem.TravelPlanner.Activity.CreatePlanActivity;
 import com.example.rosem.TravelPlanner.adapter.ManageListAdapter;
 import com.example.rosem.TravelPlanner.plan.Plan;
 

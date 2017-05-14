@@ -1,4 +1,4 @@
-package com.example.rosem.TravelPlanner.fragment;
+package com.example.rosem.TravelPlanner.Fragment;
 
 import android.app.ProgressDialog;
 import android.graphics.Typeface;
@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.rosem.TravelPlanner.R;
-import com.example.rosem.TravelPlanner.activity.CreatePlanActivity;
+import com.example.rosem.TravelPlanner.Activity.CreatePlanActivity;
 import com.example.rosem.TravelPlanner.course.Course;
 import com.example.rosem.TravelPlanner.object.Site;
 import com.example.rosem.TravelPlanner.object.Time;
@@ -252,21 +252,25 @@ public class SchedulingFragment extends Fragment {
                         travel = new Course();
                         travel.setName("Travel Time");
                         travel.setTime(presentTime.toString(), presentTime.add(costTime).toString());
-                        travel.setSpendTime(costTime.toString());
+                        travel.setSpendTime(costTime.toStringInText());
                     }
                     if(fareStringMat!=null)
                     {
                         fare = fareStringMat[curSiteIdx][prevSiteIdx];
+                        travel.setCostMoney(fare);
                     }
                     if(site.getVisitTime()!=null)
                     {
                         startTime = site.getVisitTime();
                         freeStartTime = presentTime.add(costTime);
                         freeEndTime = startTime.copyOf();
-                        freeTimeCourse = new Course();
-                        freeTimeCourse.setName("Free Time");
-                        freeTimeCourse.setTime(freeStartTime.toString(), freeEndTime.toString());
-                        freeTimeCourse.setSpendTime(freeEndTime.sub(freeStartTime).toStringInText());
+                        if(freeEndTime.compareTo(freeStartTime)==1)
+                        {
+                            freeTimeCourse = new Course();
+                            freeTimeCourse.setName("Free Time");
+                            freeTimeCourse.setTime(freeStartTime.toString(), freeEndTime.toString());
+                            freeTimeCourse.setSpendTime(freeEndTime.sub(freeStartTime).toStringInText());
+                        }
                     }
                     else
                     {
@@ -291,9 +295,9 @@ public class SchedulingFragment extends Fragment {
                 else
                 {
                     c.setTime(startTime.toString(), endTime.toString());
+                    c.setSpendTime(site.getSpendTime().toStringInText());
                 }
-                c.setSpendTime(costTime.toStringInText());
-                c.setCostMoney(fare);
+                //c.setCostMoney(fare);
                 c.setAddr(site.getAddress());
                 Log.v("Main:::","course\n"+c.toString());
 

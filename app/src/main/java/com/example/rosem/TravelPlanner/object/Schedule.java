@@ -19,8 +19,8 @@ public class Schedule{
 
     private String planName;
     private int numOfDays = 0;
-    private Calendar departure;
-    private Calendar arrived;
+    private Calendar departure = null;
+    private Calendar arrived = null;
     private boolean isHotelReserved;
     private ArrayList<Calendar> checkInList = null;
     private ArrayList<Calendar> checkOutList = null;
@@ -47,6 +47,8 @@ public class Schedule{
     private int TIMEUNIT = 0;
     private int HOUR_IN_TIMEUNIT=0;
     private boolean [] isSelected= null;
+    private int totalTravelingTimeUnit = 0;
+    private int totalSpendTimeUnit = 0;
 
     private Comparator<Site> sortByVisitTimeLate = new Comparator<Site>()
     {
@@ -252,12 +254,28 @@ public class Schedule{
         HOUR_IN_TIMEUNIT = 60/tu;
         isSelected = new boolean[numOfSites];
 
+        Time firstDayStart = new Time(arrived.get(Calendar.HOUR_OF_DAY),arrived.get(Calendar.MINUTE));
+        Time lastDayEnd = new Time(departure.get(Calendar.HOUR_OF_DAY),departure.get(Calendar.MINUTE));
+        //for time to spend in air port
+        lastDayEnd.sub(new Time(3,0));
+        int firstDayTimeUnit = timeToUnit(tourEnd.sub(firstDayStart));
+        int lastDayTimeUnit = timeToUnit(lastDayEnd.sub(tourStart));
+
+        int normalDayTimeUit = timeToUnit(tourEnd.sub(tourStart));
+        totalTravelingTimeUnit = timeToUnit(tourEnd.sub(tourStart))*(numOfDays-2)
+                +firstDayTimeUnit+lastDayTimeUnit;
+
         siteList = new ArrayList<>(site);
         for(int i = 0; i<numOfHotels;i++)
         {
             Site site = hotel.get(i);
             site.setSpendTime(new Time());
             siteList.add(site);
+        }
+        for(int i =0; i<numOfSites;i++)
+        {
+            Site s = site.get(i);
+            totalSpendTimeUnit += timeToUnit(s.getSpendTime());
         }
 
         try {
@@ -308,17 +326,38 @@ public class Schedule{
             }
 
             LinkedList<LinkedList<Integer>> result = new LinkedList<>();
-            for(int i =0, hotelIdx = 0; i<numOfDays;i++)
+            int lastDay = numOfDays-1;
+            Time startTime = null;
+            Time endTime = null;
+            for(int i =0, hotelIdx = 0; i<=lastDay;i++)
             {
-                int touringHourInUnit = timeToUnit(tourEnd.sub(tourStart));
-                //or touringHourInUnit = timeToUnit(tourEnd) - timeToUnit(tourStart)
+                int touringHourInUnit = 0;
+                if(i == 0) //first day
+                {
+                    touringHourInUnit = firstDayTimeUnit;
+                    startTime = firstDayStart;
+                    endTime = tourEnd;
+                }
+                else if(i == lastDay) //last day
+                {
+                    touringHourInUnit = lastDayTimeUnit;
+                    startTime = tourStart;
+                    endTime = lastDayEnd;
+                }
+                else
+                {
+                    touringHourInUnit = normalDayTimeUit;
+                    startTime = tourStart;
+                    endTime = tourEnd;
+                    //or touringHourInUnit = timeToUnit(tourEnd) - timeToUnit(tourStart)
+                }
+
                 CalculateDailySchedule dailySchedule =
-                        new CalculateDailySchedule(hotel.get(hotelIdx),hotel.get(hotelIdx),i,isSelected, touringHourInUnit);
-                result.add(dailySchedule.getCourse());
+                        new CalculateDailySchedule(hotel.get(hotelIdx), hotel.get(hotelIdx), i, isSelected, touringHourInUnit);
+                result.add(dailySchedule.getCourse(startTime, endTime));
                 //if need to change hotel
                 //change value of htelIdx
             }
-
             //return result
             return result;
         } catch (JSONException e) {
@@ -345,11 +384,11 @@ public class Schedule{
             today = nthDay;
         }
 
-        private LinkedList<Integer> getCourse()
+        private LinkedList<Integer> getCourse(Time startTime, Time endTime)
         {
             LinkedList<Integer> finalCourse = new LinkedList<Integer>();
             LinkedList<Integer> course = new LinkedList<Integer>();
-            LinkedList<Integer> selectedFixedVisit = getSelectedFixedVisit();
+            LinkedList<Integer> selectedFixedVisit = getSelectedFixedVisit(startTime);
             //fixed visit hour는 이른 순부터 sort되어있다 가정
             if(selectedFixedVisit.size()>0)
             {
@@ -359,7 +398,7 @@ public class Schedule{
                 isSelected[fixedVisitIdx] = true;
                 fixedHourSiteList.remove(fixedVisit);
                 //get diff from tourStart to fixed hour
-                int upperHalfUnit = timeToUnit(getTimeDiff(fixedVisit.getVisitTime(),tourStart));
+                int upperHalfUnit = timeToUnit(getTimeDiff(fixedVisit.getVisitTime(),startTime));
                 //get upper course
                 course = getCourseBetween(siteList.indexOf(startSite),fixedVisitIdx, upperHalfUnit,false);
                 if(course!=null && course.size()>0)
@@ -378,7 +417,7 @@ public class Schedule{
                     Site site = siteList.get(siteIdx);
                     isSelected[siteIdx] = true;
                     fixedHourSiteList.remove(site);
-                    int unit = timeToUnit(getTimeDiff(site.getVisitTime(),fixedVisit.getVisitTime()));
+                    int unit = timeToUnit(getTimeDiff(site.getVisitTime(),fixedVisit.getVisitTime().add(fixedVisit.getSpendTime())));
 
                     course = getCourseBetween(fixedVisitIdx,siteIdx,unit,false);
                     if(course!=null && course.size()>0)
@@ -393,14 +432,14 @@ public class Schedule{
                     }
                     else if(course!=null&& course.size()==0)
                     {
-                        finalCourse.add(fixedVisitIdx);
+                        finalCourse.add(siteIdx);
                     }
 
                     fixedVisit = site;
                     fixedVisitIdx = siteIdx;
                 }
                 //get diff from fixed hour to tourEnd
-                int lowerHalfUnit = timeToUnit(getTimeDiff(tourEnd,fixedVisit.getVisitTime()));
+                int lowerHalfUnit = timeToUnit(getTimeDiff(endTime,fixedVisit.getVisitTime().add(fixedVisit.getSpendTime())));
                 //get lower course
                 course = getCourseBetween(fixedVisitIdx,siteList.indexOf(endSite),lowerHalfUnit,true);
                 if(course!=null && course.size()>0)
@@ -415,7 +454,7 @@ public class Schedule{
                 }
                 else if(course!=null && course.size()==0)
                 {
-                    finalCourse.add(fixedVisitIdx);
+                    //finalCourse.add(fixedVisitIdx);
                     finalCourse.add(siteList.indexOf(endSite));
                 }
             }
@@ -546,9 +585,9 @@ public class Schedule{
                     if(overTourList.size()<=0)
                     {
                         // add end hotel
-                        initialTU = unitMat[endHotel][start];
-                        initialTU-=timeToUnit(siteList.get(endHotel).getSpendTime());
-                        initialTU+=timeToUnit(siteList.get(start).getSpendTime());
+                        initialTU = unitMat[endHotel][start];//travel time btw end and start + spend time of start
+                        //initialTU-=timeToUnit(siteList.get(endHotel).getSpendTime());
+                        //initialTU+=timeToUnit(siteList.get(start).getSpendTime());
 
                         list.add(endHotel);
                         costs[idx] = costMat[endHotel][start];
@@ -693,11 +732,21 @@ public class Schedule{
             int nextTimeUnit = presentTimeUnit + unitMat[current][prev];
             int maxTimeUnit = maxTU;
 
+            //하루 일정시간 넘은 건 제외
             if (maxTimeUnit < nextTimeUnit) {
                 return false;
             }
+            //이미 선택된 거는 제외
             if (isSelected[prev]) {
                 return false;
+            }
+            //하루에 너무 많이 일정이 잡히지 않도록
+            if(today!=(numOfDays-1))
+            {
+                if((nextTimeUnit/totalSpendTimeUnit) > (maxTU / totalTravelingTimeUnit))
+                {
+                    return false;
+                }
             }
             return true;
         }
@@ -759,7 +808,7 @@ public class Schedule{
             return false;
         }
 
-        public LinkedList<Integer> getSelectedFixedVisit()
+        public LinkedList<Integer> getSelectedFixedVisit(Time startTime)
         {
             int iteration = fixedHourSiteList.size();
             int curIt = 0;
@@ -769,7 +818,17 @@ public class Schedule{
             {
                 return selected;
             }
-            Site pivot = fixedHourSiteList.getFirst();
+            Site pivot = null;
+            //set pivot which visit after starttime
+            for(int i = 0; i<iteration;i++)
+            {
+                Site tmp = fixedHourSiteList.get(i);
+                if(startTime.compareTo(tmp.getVisitTime())<0)
+                {
+                    pivot = tmp;
+                    break;
+                }
+            }
             int pivotIdx = siteList.indexOf(pivot);
             Iterator<Site> it = fixedHourSiteList.listIterator();
 
@@ -785,25 +844,21 @@ public class Schedule{
                 {
                     Site visitSite = it.next();
                     int siteIdx = siteList.indexOf(visitSite);
-                    //check same local
-                    if(pivot!=visitSite && true)
+                    //check having later visit Time
+                    if(pivot.getVisitTime().compareTo(visitSite.getVisitTime())<0)
                     {
-                        //check having later visit Time
-                        if(pivot.getVisitTime().compareTo(visitSite.getVisitTime())<0)
+                        if(scheduleConflictCheck(visitSite.getVisitTime(),pivotIdx,siteIdx))//if do not conflict
                         {
-                            if(scheduleConflictCheck(visitSite.getVisitTime(),pivotIdx,siteIdx))//if do not conflict
+                            int cost = costMat[siteIdx][pivotIdx];
+                            //set minimum
+                            if(minimumIdx==-1 || minimumCost > cost)
                             {
-                                int cost = costMat[siteIdx][pivotIdx];
-                                //set minimum
-                                if(minimumIdx==-1 || minimumCost > cost)
-                                {
-                                    minimum = visitSite;
-                                    minimumIdx = siteIdx;
-                                    minimumCost = cost ;
-                                }
-                            }//end of if (check conflict)
-                        }//end of if(check visit Time)
-                    }//end of if(check in same local)
+                                minimum = visitSite;
+                                minimumIdx = siteIdx;
+                                minimumCost = cost ;
+                            }
+                        }//end of if (check conflict)
+                    }//end of if(check visit Time)
                 }//end of while(it)//get minimum
                 if(minimumIdx!=-1)
                 {

@@ -1,4 +1,4 @@
-package com.example.rosem.TravelPlanner.fragment;
+package com.example.rosem.TravelPlanner.Fragment;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -18,7 +18,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.example.rosem.TravelPlanner.R;
-import com.example.rosem.TravelPlanner.activity.CreatePlanActivity;
+import com.example.rosem.TravelPlanner.Activity.CreatePlanActivity;
 import com.example.rosem.TravelPlanner.object.Time;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -186,7 +186,27 @@ public class InputPlanInfoFragment extends Fragment {
 
         settingTextView(view);
 
+        Time tourS = ((CreatePlanActivity)getActivity()).getTourStart();
+        Time tourE = ((CreatePlanActivity)getActivity()).getTourEnd();
 
+        if(tourS!=null)
+        {
+            tourStartTime.set(Calendar.HOUR_OF_DAY,tourS.hour);
+            tourStartTime.set(Calendar.MINUTE,tourS.min);
+        }
+        if(tourE!=null)
+        {
+            tourEndTime.set(Calendar.HOUR_OF_DAY,tourE.hour);
+            tourEndTime.set(Calendar.MINUTE, tourE.min);
+        }
+        if(((CreatePlanActivity)getActivity()).getArrived()!=null)
+        {
+            selectedArrival = ((CreatePlanActivity)getActivity()).getArrived();
+        }
+        if(((CreatePlanActivity)getActivity()).getDeparture()!=null)
+        {
+            selectedDepart = ((CreatePlanActivity)getActivity()).getDeparture();
+        }
         Button prevButton = (Button)getActivity().findViewById(R.id.create_plan_prev);
         Button nextButton = (Button)getActivity().findViewById(R.id.create_plan_next);
         prevButton.setOnClickListener(new View.OnClickListener() {

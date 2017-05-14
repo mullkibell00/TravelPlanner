@@ -1,6 +1,7 @@
 package com.example.rosem.TravelPlanner.application;
 
 import android.app.Application;
+import android.support.multidex.MultiDexApplication;
 import android.widget.TextView;
 
 import io.realm.Realm;
@@ -10,7 +11,7 @@ import io.realm.RealmConfiguration;
  * Created by rosem on 2017-02-18.
  */
 
-public class TravelPlanner extends Application {
+public class TravelPlanner extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
