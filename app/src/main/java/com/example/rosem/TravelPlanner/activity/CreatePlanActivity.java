@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.example.rosem.TravelPlanner.Fragment.InputDailyInfoFragment;
 import com.example.rosem.TravelPlanner.R;
 import com.example.rosem.TravelPlanner.Fragment.HotelRecommendFragment;
 import com.example.rosem.TravelPlanner.Fragment.InputHotelInfoFragment;
@@ -368,6 +369,26 @@ public class CreatePlanActivity extends AppCompatActivity {
     public void setRecommendHotelList(ArrayList<Site> list)
     {
         schedule.setRecommendHotelList(list);
+    }
+
+    public Site getStartPoint()
+    {
+        return schedule.getStartPoint();
+    }
+
+    public Site getEndPoint()
+    {
+        return schedule.getEndPoint();
+    }
+
+    public void setStartPoint(Site sp)
+    {
+        schedule.setStartPoint(sp);
+    }
+
+    public void setEndPoint(Site ep)
+    {
+        schedule.setEndPoint(ep);
     }
 
     public LinkedList<Site> getFixedDateSiteList() {

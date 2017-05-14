@@ -19,6 +19,7 @@ import android.widget.TimePicker;
 
 import com.example.rosem.TravelPlanner.R;
 import com.example.rosem.TravelPlanner.Activity.CreatePlanActivity;
+import com.example.rosem.TravelPlanner.object.Site;
 import com.example.rosem.TravelPlanner.object.Time;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -48,25 +49,26 @@ public class InputPlanInfoFragment extends Fragment {
     private final int mTxtArrival = 0;
     private final int mTxtDeparture=1;
     private final int mTxtTravelingCountry=2;
-    private final int mTxtExplain = 3;
-    private final int mTxtTourStart =4;
-    private final int mTxtTourEnd = 5;
-    private final int mSelectedCountry=6;
-    private final int mSelectedCountryShowArrival = 7;
-    private final int mSelectedCountryShowDepart = 8;
-    private final int mSelectedArrivalDate=9;
-    private final int mSelectedArrivalTime=10;
+    private final int mTxtArrivalPlace = 3;
+    private final int mTxtDeparturePlace= 4;
+    private final int mSelectedCountry=5;
+    private final int mSelectedCountryShowArrival = 6;
+    private final int mSelectedCountryShowDepart = 7;
+    private final int mSelectedArrivalDate=8;
+    private final int mSelectedArrivalTime=9;
+    private final int mSelectedArrivalPlace=10;
     private final int mSelectedDepartDate=11;
     private final int mSelectedDepartTime=12;
-    private final int mSelectedTourStart=13;
-    private final int mSelectedTourEnd = 14;
+    private final int mSelectedDepartPlace = 13;
 
 
 
-    private final int planInfoTextNum=15;
+    private final int planInfoTextNum=14;
     Typeface fontType;
 
-    private final int PLACE_PICK_REQUEST = 1213;
+    private final int COUNTRY_PICK_REQUEST = 1213;
+    private final int ARRIVAL_PICK_REQUEST = 1214;
+    private final int DEPART_PICK_REQUEST = 1215;
 
     TextView[] texts = new TextView[planInfoTextNum];
     private DatePickerDialog.OnDateSetListener arrivalDateSetListener;
@@ -79,14 +81,8 @@ public class InputPlanInfoFragment extends Fragment {
     Calendar selectedArrival;
     Calendar selectedDepart;
     int travelingPeriod;
-
-    //newly added(About tour info)
-    private TimePickerDialog.OnTimeSetListener tourStartSetListener;
-    private TimePickerDialog.OnTimeSetListener tourEndSetListener;
-
-    //data
-    Calendar tourStartTime;
-    Calendar tourEndTime;
+    Site arrivalPlace = null;
+    Site departPlace = null;
 
     public static InputPlanInfoFragment newInstance()
     {
@@ -101,27 +97,6 @@ public class InputPlanInfoFragment extends Fragment {
         fontType = ((CreatePlanActivity)getActivity()).getFontType();
         selectedArrival = Calendar.getInstance();
         selectedDepart = Calendar.getInstance();
-
-        tourStartSetListener = new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-                texts[mSelectedTourStart].setSelected(true);
-                ((CreatePlanActivity)getActivity()).setTimeText(texts[mSelectedTourStart],hour,minute);
-                //texts[mSelectedTourStart].setText(hour+"시 "+minute+"분");
-                tourStartTime.set(Calendar.HOUR_OF_DAY,hour);
-                tourStartTime.set(Calendar.MINUTE,minute);
-            }
-        };
-        tourEndSetListener = new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-                texts[mSelectedTourEnd].setSelected(true);
-                ((CreatePlanActivity)getActivity()).setTimeText(texts[mSelectedTourEnd],hour,minute);
-                //texts[mSelectedTourEnd].setText(hour+"시 "+minute+"분");
-                tourEndTime.set(Calendar.HOUR_OF_DAY,hour);
-                tourEndTime.set(Calendar.MINUTE,minute);
-            }
-        };
 
         arrivalDateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -175,8 +150,6 @@ public class InputPlanInfoFragment extends Fragment {
         selectedArrival.set(Calendar.YEAR,curYear); selectedArrival.set(Calendar.MONTH,curMonth);
         selectedArrival.set(Calendar.DAY_OF_MONTH,curDay); selectedArrival.set(Calendar.HOUR_OF_DAY,curHour);
         selectedArrival.set(Calendar.MINUTE,curMinute);
-        tourStartTime = Calendar.getInstance();
-        tourEndTime = Calendar.getInstance();
     }
 
     @Nullable
@@ -184,21 +157,6 @@ public class InputPlanInfoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup view = (ViewGroup)inflater.inflate(R.layout.plan_input_plan_info,container,false);
 
-        settingTextView(view);
-
-        Time tourS = ((CreatePlanActivity)getActivity()).getTourStart();
-        Time tourE = ((CreatePlanActivity)getActivity()).getTourEnd();
-
-        if(tourS!=null)
-        {
-            tourStartTime.set(Calendar.HOUR_OF_DAY,tourS.hour);
-            tourStartTime.set(Calendar.MINUTE,tourS.min);
-        }
-        if(tourE!=null)
-        {
-            tourEndTime.set(Calendar.HOUR_OF_DAY,tourE.hour);
-            tourEndTime.set(Calendar.MINUTE, tourE.min);
-        }
         if(((CreatePlanActivity)getActivity()).getArrived()!=null)
         {
             selectedArrival = ((CreatePlanActivity)getActivity()).getArrived();
@@ -207,6 +165,17 @@ public class InputPlanInfoFragment extends Fragment {
         {
             selectedDepart = ((CreatePlanActivity)getActivity()).getDeparture();
         }
+        if(((CreatePlanActivity)getActivity()).getStartPoint()!=null)
+        {
+            arrivalPlace = ((CreatePlanActivity)getActivity()).getStartPoint();
+        }
+        if(((CreatePlanActivity)getActivity()).getEndPoint()!=null)
+        {
+            departPlace = ((CreatePlanActivity)getActivity()).getEndPoint();
+        }
+
+        settingTextView(view);
+
         Button prevButton = (Button)getActivity().findViewById(R.id.create_plan_prev);
         Button nextButton = (Button)getActivity().findViewById(R.id.create_plan_next);
         prevButton.setOnClickListener(new View.OnClickListener() {
@@ -234,10 +203,8 @@ public class InputPlanInfoFragment extends Fragment {
         ((CreatePlanActivity)getActivity()).setArrived(selectedArrival);
         ((CreatePlanActivity)getActivity()).setDeparture(selectedDepart);
         ((CreatePlanActivity)getActivity()).setCountry(texts[mSelectedCountry].getText().toString());
-        Time startTime = new Time(tourStartTime.get(Calendar.HOUR_OF_DAY),tourStartTime.get(Calendar.MINUTE));
-        ((CreatePlanActivity)getActivity()).setTourStart(startTime);
-        Time endTime = new Time(tourEndTime.get(Calendar.HOUR_OF_DAY),tourEndTime.get(Calendar.MINUTE));
-        ((CreatePlanActivity)getActivity()).setTourEnd(endTime);
+        ((CreatePlanActivity)getActivity()).setStartPoint(arrivalPlace);
+        ((CreatePlanActivity)getActivity()).setEndPoint(departPlace);
 
         travelingPeriod = 0;
         if(selectedArrival.get(Calendar.MONTH)==selectedDepart.get(Calendar.MONTH))
@@ -265,18 +232,17 @@ public class InputPlanInfoFragment extends Fragment {
         texts[mTxtTravelingCountry] = (TextView)view.findViewById(R.id.plan_info_txt_travel_country);
         texts[mTxtArrival] = (TextView)view.findViewById(R.id.plan_info_txt_arrival_time);
         texts[mTxtDeparture] = (TextView)view.findViewById(R.id.plan_info_txt_departure_time);
-        texts[mTxtExplain] = (TextView)view.findViewById(R.id.plan_info_explain);
-        texts[mTxtTourStart] =(TextView)view.findViewById(R.id.plan_info_txt_tour_start);
-        texts[mTxtTourEnd] = (TextView)view.findViewById(R.id.plan_info_txt_tour_end);
+        texts[mTxtArrivalPlace] = (TextView)view.findViewById(R.id.plan_info_txt_arrival_place);
+        texts[mTxtDeparturePlace] = (TextView)view.findViewById(R.id.plan_info_txt_departure_place);
         texts[mSelectedCountry] = (TextView)view.findViewById(R.id.plan_info_txt_selected_country);
         texts[mSelectedCountryShowArrival] = (TextView)view.findViewById(R.id.plan_info_country_name1);
         texts[mSelectedCountryShowDepart] = (TextView)view.findViewById(R.id.plan_info_country_name2);
         texts[mSelectedArrivalDate] = (TextView)view.findViewById(R.id.plan_info_txt_select_arrival_date);
         texts[mSelectedArrivalTime] = (TextView)view.findViewById(R.id.plan_info_txt_select_arrival_time);
+        texts[mSelectedArrivalPlace] = (TextView)view.findViewById(R.id.plan_info_arrival_place);
+        texts[mSelectedDepartPlace] = (TextView)view.findViewById(R.id.plan_info_departure_place);
         texts[mSelectedDepartDate] = (TextView)view.findViewById(R.id.plan_info_txt_select_departure_date);
         texts[mSelectedDepartTime] = (TextView)view.findViewById(R.id.plan_info_txt_select_departure_time);
-        texts[mSelectedTourStart]=(TextView)view.findViewById(R.id.plan_info_selected_tour_start);
-        texts[mSelectedTourEnd]= (TextView)view.findViewById(R.id.plan_info_selected_tour_end);
 
         for(int i =0; i<planInfoTextNum;i++)
         {
@@ -292,7 +258,7 @@ public class InputPlanInfoFragment extends Fragment {
                     PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
 
                     Intent intent = builder.build(getActivity());
-                    startActivityForResult(intent,PLACE_PICK_REQUEST);
+                    startActivityForResult(intent,COUNTRY_PICK_REQUEST);
                 }
                 catch (GooglePlayServicesRepairableException e)
                 {
@@ -303,6 +269,45 @@ public class InputPlanInfoFragment extends Fragment {
                     e.printStackTrace();
                 }
 
+            }
+        });
+        texts[mSelectedArrivalPlace].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+
+                    Intent intent = builder.build(getActivity());
+                    startActivityForResult(intent,ARRIVAL_PICK_REQUEST);
+                }
+                catch (GooglePlayServicesRepairableException e)
+                {
+                    e.printStackTrace();
+                }
+                catch (GooglePlayServicesNotAvailableException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        texts[mSelectedDepartPlace].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+
+                    Intent intent = builder.build(getActivity());
+                    startActivityForResult(intent,DEPART_PICK_REQUEST);
+                }
+                catch (GooglePlayServicesRepairableException e)
+                {
+                    e.printStackTrace();
+                }
+                catch (GooglePlayServicesNotAvailableException e)
+                {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -332,19 +337,6 @@ public class InputPlanInfoFragment extends Fragment {
                 new TimePickerDialog(getContext(),departTimeSetListener,
                         selectedArrival.get(Calendar.HOUR_OF_DAY),
                         selectedArrival.get(Calendar.MINUTE),false).show();
-            }
-        });
-        //set onClickListener
-        texts[mSelectedTourStart].setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new TimePickerDialog(getContext(),tourStartSetListener,9,0,false).show();
-            }
-        });
-        texts[mSelectedTourEnd].setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new TimePickerDialog(getContext(),tourEndSetListener,22,0,false).show();
             }
         });
 
@@ -388,38 +380,20 @@ public class InputPlanInfoFragment extends Fragment {
             //        .setText(depart.get(Calendar.HOUR_OF_DAY)+"시 "
             //                +depart.get(Calendar.MINUTE)+"분");
         }
-        Time tourS = null;
-        if((tourS=((CreatePlanActivity)getActivity()).getTourStart())!=null)
+        if(arrivalPlace!=null)
         {
-            Calendar tourSCal = Calendar.getInstance();
-            tourSCal.set(Calendar.HOUR_OF_DAY,tourS.hour);
-            tourSCal.set(Calendar.MINUTE,tourS.min);
-            texts[mSelectedTourStart].setSelected(true);
-            //texts[mSelectedTourStart].setText(
-            //        tourS.get(Calendar.HOUR_OF_DAY)+"시 "+
-            //                tourS.get(Calendar.MINUTE)+"분");
-            ((CreatePlanActivity)getActivity()).setTimeText(texts[mSelectedTourStart]
-                    ,tourSCal.get(Calendar.HOUR_OF_DAY),tourSCal.get(Calendar.MINUTE));
+            texts[mSelectedArrivalPlace].setText(arrivalPlace.getPlaceName());
         }
-        Time tourE = null;
-        if((tourE=((CreatePlanActivity)getActivity()).getTourEnd())!=null)
+        if(departPlace!=null)
         {
-            Calendar tourECal = Calendar.getInstance();
-            tourECal.set(Calendar.HOUR_OF_DAY,tourS.hour);
-            tourECal.set(Calendar.MINUTE,tourS.min);
-            texts[mSelectedTourEnd].setSelected(true);
-            //texts[mSelectedTourEnd].setText(
-            //        tourE.get(Calendar.HOUR_OF_DAY)+"시 "+
-            //                tourE.get(Calendar.MINUTE)+"분");
-            ((CreatePlanActivity)getActivity()).setTimeText(texts[mSelectedTourEnd]
-                    ,tourECal.get(Calendar.HOUR_OF_DAY),tourECal.get(Calendar.MINUTE));
+            texts[mSelectedDepartPlace].setText(departPlace.getPlaceName());
         }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
        // super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==PLACE_PICK_REQUEST)
+        if(requestCode==COUNTRY_PICK_REQUEST)
         {
             if(resultCode == getActivity().RESULT_OK)
             {
@@ -427,6 +401,22 @@ public class InputPlanInfoFragment extends Fragment {
                 SendRequest request = new SendRequest(selectedPlace.getId());
                 request.postData(null);
             }
+        }
+        else if(requestCode==ARRIVAL_PICK_REQUEST)
+        {
+            if(resultCode == getActivity().RESULT_OK)
+            {
+                Place selectedPlace = PlacePicker.getPlace(getContext(),data);
+                arrivalPlace = ((CreatePlanActivity)getActivity()).setSiteFromPlace(selectedPlace);
+                texts[mSelectedArrivalPlace].setText(arrivalPlace.getPlaceName());
+
+            }
+        }
+        else if(requestCode==DEPART_PICK_REQUEST)
+        {
+            Place selectedPlace = PlacePicker.getPlace(getContext(),data);
+            departPlace = ((CreatePlanActivity)getActivity()).setSiteFromPlace(selectedPlace);
+            texts[mSelectedDepartPlace].setText(departPlace.getPlaceName());
         }
     }
 

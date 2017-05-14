@@ -9,6 +9,7 @@
         android:gravity="center"
         android:paddingLeft="23dp"
         android:paddingRight="23dp"
+        android:paddingBottom="81dp"
         >
         <!--about selecting country-->
         <LinearLayout
