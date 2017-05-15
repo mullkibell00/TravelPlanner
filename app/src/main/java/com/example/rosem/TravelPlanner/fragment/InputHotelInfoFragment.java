@@ -244,10 +244,37 @@ public class InputHotelInfoFragment extends Fragment {
 
     private void saveData()
     {
-        ((CreatePlanActivity)getActivity()).setCheckInList(mAdapter.getCheckInList());
+        int iteration = mAdapter.getHotelList().size();
+        ArrayList<Calendar> checkin = mAdapter.getCheckInList();
+        ArrayList<Calendar> checkout = mAdapter.getCheckOutList();
+        ArrayList<Site> selectedHotels = mAdapter.getHotelList();
+        ArrayList<Site> hotels = new ArrayList<>();
+        for(int i = 0; i<iteration; i++)
+        {
+            int numOfDay = calendarToNumOfDay(checkin.get(i),checkout.get(i));
+            Site h = selectedHotels.get(i);
+            for(int j = 0; j<numOfDay;j++)
+            {
+                hotels.add(h);
+            }
+        }
         ((CreatePlanActivity)getActivity()).setCheckOutList(mAdapter.getCheckOutList());
         ((CreatePlanActivity)getActivity()).setHotel(mAdapter.getHotelList());
         ((CreatePlanActivity)getActivity()).setHotelReserved(isHotelReserved);
+    }
+
+    public int calendarToNumOfDay(Calendar start, Calendar end)
+    {
+        int numOfDay = 0;
+        if(start.get(Calendar.MONTH)==end.get(Calendar.MONTH))
+        {
+            numOfDay = end.get(Calendar.DAY_OF_MONTH) - start.get(Calendar.DAY_OF_MONTH);
+        }
+        else
+        {
+            numOfDay = start.getActualMaximum(Calendar.DAY_OF_MONTH)-start.get(Calendar.DAY_OF_MONTH)+end.get(Calendar.DAY_OF_MONTH);
+        }
+        return numOfDay;
     }
 
     @Override

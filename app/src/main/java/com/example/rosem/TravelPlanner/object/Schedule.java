@@ -24,8 +24,6 @@ public class Schedule{
     private boolean isHotelReserved;
     private Site endPoint = null;
     private Site startPoint = null;
-    private ArrayList<Calendar> checkInList = null;
-    private ArrayList<Calendar> checkOutList = null;
     private ArrayList<Site> hotel = null;
     private ArrayList<Site> recommendHotelList = null;
     private String country;
@@ -230,22 +228,6 @@ public class Schedule{
     public String[][] getFareStringMat()
     {
         return fareStringMat;
-    }
-
-    public ArrayList<Calendar> getCheckInList() {
-        return this.checkInList;
-    }
-
-    public void setCheckInList(ArrayList<Calendar> checkInList) {
-        this.checkInList = checkInList;
-    }
-
-    public ArrayList<Calendar> getCheckOutList() {
-        return this.checkOutList;
-    }
-
-    public void setCheckOutList(ArrayList<Calendar> checkOutList) {
-        this.checkOutList = checkOutList;
     }
 
     public ArrayList<Site> getRecommendHotelList()
