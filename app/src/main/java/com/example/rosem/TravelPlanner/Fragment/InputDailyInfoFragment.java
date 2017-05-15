@@ -30,11 +30,11 @@ import java.util.Calendar;
 public class InputDailyInfoFragment extends Fragment {
 
 
-    private final int mTxtExplain = 3;
-    private final int mTxtTourStart =4;
-    private final int mTxtTourEnd = 5;
-    private final int mSelectedTourStart=13;
-    private final int mSelectedTourEnd = 14;
+    private final int mTxtExplain = 0;
+    private final int mTxtTourStart =1;
+    private final int mTxtTourEnd = 2;
+    private final int mSelectedTourStart=3;
+    private final int mSelectedTourEnd = 4;
 
 
 

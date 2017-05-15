@@ -349,6 +349,8 @@ public class Schedule{
             int lastDay = numOfDays-1;
             Time startTime = null;
             Time endTime = null;
+            Site origin = null;
+            Site dest = null;
             for(int i =0, hotelIdx = 0; i<=lastDay;i++)
             {
                 int touringHourInUnit = 0;
@@ -357,23 +359,29 @@ public class Schedule{
                     touringHourInUnit = firstDayTimeUnit;
                     startTime = firstDayStart;
                     endTime = tourEnd;
+                    origin = startPoint;
+                    dest = hotel.get(i);
                 }
                 else if(i == lastDay) //last day
                 {
                     touringHourInUnit = lastDayTimeUnit;
                     startTime = tourStart;
                     endTime = lastDayEnd;
+                    origin = hotel.get(i-1);
+                    dest = endPoint;
                 }
                 else
                 {
                     touringHourInUnit = normalDayTimeUit;
                     startTime = tourStart;
                     endTime = tourEnd;
+                    origin = hotel.get(i-1);
+                    dest = hotel.get(i);
                     //or touringHourInUnit = timeToUnit(tourEnd) - timeToUnit(tourStart)
                 }
 
                 CalculateDailySchedule dailySchedule =
-                        new CalculateDailySchedule(hotel.get(hotelIdx), hotel.get(hotelIdx), i, isSelected, touringHourInUnit);
+                        new CalculateDailySchedule(origin, dest, i, isSelected, touringHourInUnit);
                 result.add(dailySchedule.getCourse(startTime, endTime));
                 //if need to change hotel
                 //change value of htelIdx
