@@ -251,12 +251,17 @@ public class Schedule{
         HOUR_IN_TIMEUNIT = 60/tu;
         isSelected = new boolean[numOfSites];
 
+        //calendar로 입력받은 값 바꿔주기 (도착, 출발 시간)
         Time firstDayStart = new Time(arrived.get(Calendar.HOUR_OF_DAY),arrived.get(Calendar.MINUTE));
         Time lastDayEnd = new Time(departure.get(Calendar.HOUR_OF_DAY),departure.get(Calendar.MINUTE));
-        //for time to spend in air port
-        lastDayEnd.sub(new Time(3,0));
-        int firstDayTimeUnit = timeToUnit(tourEnd.sub(firstDayStart));
-        int lastDayTimeUnit = timeToUnit(lastDayEnd.sub(tourStart));
+        //for time to spend in air port //마지막날은 공항에 3시간 정도 일찍 도착해야하니까
+        lastDayEnd = lastDayEnd.sub(new Time(3,0));
+        int firstDayTimeUnit = tourEnd.compareTo(firstDayStart)==-1?0:timeToUnit(tourEnd.sub(firstDayStart));
+        int lastDayTimeUnit = lastDayEnd.compareTo(tourStart)==-1?0:timeToUnit(lastDayEnd.sub(tourStart));
+
+        //나중에 일정 산출을 위해 도착, 출발지 시간설정
+        startPoint.setVisitTime(firstDayStart);
+        endPoint.setVisitTime(lastDayEnd);
 
         int normalDayTimeUit = timeToUnit(tourEnd.sub(tourStart));
         totalTravelingTimeUnit = timeToUnit(tourEnd.sub(tourStart))*(numOfDays-2)
@@ -396,6 +401,14 @@ public class Schedule{
             LinkedList<Integer> finalCourse = new LinkedList<Integer>();
             LinkedList<Integer> course = new LinkedList<Integer>();
             LinkedList<Integer> selectedFixedVisit = getSelectedFixedVisit(startTime);
+
+            //만일 여행할 시간이 부족한 경우(첫날, 마지막날 대비)
+            if(totalTimeUnit<=0)
+            {
+                finalCourse.add(siteList.indexOf(startSite));
+                finalCourse.add(siteList.indexOf(endSite));
+            }
+
             //fixed visit hour는 이른 순부터 sort되어있다 가정
             if(selectedFixedVisit.size()>0)
             {
