@@ -23,6 +23,7 @@ import com.example.rosem.TravelPlanner.R;
 import com.example.rosem.TravelPlanner.Activity.CreatePlanActivity;
 import com.example.rosem.TravelPlanner.adapter.HotelListAdapter;
 import com.example.rosem.TravelPlanner.object.Site;
+import com.example.rosem.TravelPlanner.object.Time;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
@@ -69,6 +70,8 @@ public class InputHotelInfoFragment extends Fragment {
     RecyclerView selectedHotelView;
     HotelListAdapter mAdapter;
     ArrayList<Site> mSelectedHotels;
+    ArrayList<Calendar> checkInList;
+    ArrayList<Calendar> checkOutList;
 
     private final int PLACE_PICK_REQUEST = 1213;
 
@@ -83,6 +86,8 @@ public class InputHotelInfoFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         fontType = ((CreatePlanActivity)getActivity()).getFontType();
+        checkInList = new ArrayList<>();
+        checkOutList = new ArrayList<>();
 
     }
 
@@ -153,8 +158,8 @@ public class InputHotelInfoFragment extends Fragment {
         }
         else
         {
-            ArrayList<Calendar> checkIn = ((CreatePlanActivity)getActivity()).getCheckInList();
-            ArrayList<Calendar> checkOut = ((CreatePlanActivity)getActivity()).getCheckOutList();
+            ArrayList<Calendar> checkIn = checkInList;
+            ArrayList<Calendar> checkOut = checkOutList;
             mAdapter = new HotelListAdapter(getContext(),mSelectedHotels,checkIn,checkOut);
         }
 
@@ -249,17 +254,22 @@ public class InputHotelInfoFragment extends Fragment {
         ArrayList<Calendar> checkout = mAdapter.getCheckOutList();
         ArrayList<Site> selectedHotels = mAdapter.getHotelList();
         ArrayList<Site> hotels = new ArrayList<>();
-        for(int i = 0; i<iteration; i++)
+        if(checkin.size() == selectedHotels.size() && checkout.size() == selectedHotels.size())
         {
-            int numOfDay = calendarToNumOfDay(checkin.get(i),checkout.get(i));
-            Site h = selectedHotels.get(i);
-            for(int j = 0; j<numOfDay;j++)
+            for(int i = 0; i<iteration; i++)
             {
-                hotels.add(h);
+                int numOfDay = calendarToNumOfDay(checkin.get(i),checkout.get(i));
+                Site h = selectedHotels.get(i);
+                for(int j = 0; j<numOfDay;j++)
+                {
+                    hotels.add(h);
+                }
             }
         }
-        ((CreatePlanActivity)getActivity()).setCheckOutList(mAdapter.getCheckOutList());
-        ((CreatePlanActivity)getActivity()).setHotel(mAdapter.getHotelList());
+        checkInList = mAdapter.getCheckInList();
+        checkOutList = mAdapter.getCheckOutList();
+        ((CreatePlanActivity)getActivity()).setNumOfHotels(selectedHotels.size());
+        ((CreatePlanActivity)getActivity()).setHotel(hotels);
         ((CreatePlanActivity)getActivity()).setHotelReserved(isHotelReserved);
     }
 

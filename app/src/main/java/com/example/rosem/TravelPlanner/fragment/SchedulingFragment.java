@@ -339,6 +339,10 @@ public class SchedulingFragment extends Fragment {
     }
 
     private int timeToUnit(Time t) {
+        if(t==null)
+        {
+            return 0;
+        }
         return ((t.hour * 60) / timeUnit )+ minToUnit(t.min);
     }
     private Time unitToTime(int unit)
@@ -395,10 +399,12 @@ public class SchedulingFragment extends Fragment {
                originBody+=separator;
                originBody=originBody+siteList.get(i).getLatLngStr();
            }
-           for(int i =0; i< numOfHotel;i++)
+           for(int i =0; i< numOfHotel;)
            {
+               Site s = hotel.get(i);
                originBody+=separator;
-               originBody=originBody+hotel.get(i).getLatLngStr();
+               originBody=originBody+s.getLatLngStr();
+               i = hotel.lastIndexOf(s)+1;
            }
 
            for(int i =0; i<numOfSite; i++)
@@ -411,15 +417,17 @@ public class SchedulingFragment extends Fragment {
                    return;
                }
            }
-           for(int i =0; i<numOfHotel; i++)
+           for(int i =0; i<numOfHotel;)
            {
-               String destBody = hotel.get(i).getLatLngStr();
+               Site s = hotel.get(i);
+               String destBody = s.getLatLngStr();
                requestUrl = headStr+originData+originBody+destData+destBody+tailStr;
                if(!request(requestUrl))
                {
                    //show toast failed
                    return;
                }
+               i = hotel.lastIndexOf(s)+1;
            }
 
            handler.sendEmptyMessage(UPDATE_UI);

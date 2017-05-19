@@ -199,6 +199,7 @@ public class InputPlanInfoFragment extends Fragment {
 
     public void saveData()
     {
+        //setting arrivalPlace, departPlace
         //numofDays, arrival,departure,country
         ((CreatePlanActivity)getActivity()).setArrived(selectedArrival);
         ((CreatePlanActivity)getActivity()).setDeparture(selectedDepart);

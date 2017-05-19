@@ -34,15 +34,24 @@ public class Time {
     }
     public Time add(Time t)
     {
-        Time result = new Time();
-        result.hour = this.hour + t.hour;
-        result.min = this.min+t.min;
-        if(result.min >= 60)
+        if(t==null)
         {
-            result.min = result.min- 60;
-            result.hour++;
+            Time result = new Time(this.hour, this.min);
+            return result;
         }
-        return result;
+        else
+        {
+            Time result = new Time();
+            result.hour = this.hour + t.hour;
+            result.min = this.min+t.min;
+            if(result.min >= 60)
+            {
+                result.min = result.min- 60;
+                result.hour++;
+            }
+            return result;
+        }
+
     }
 
     public Calendar getCalendar()
@@ -70,6 +79,11 @@ public class Time {
     }
     public Time sub(Time t)
     {
+        if(t==null)
+        {
+            Time result = new Time(this.hour, this.min);
+            return result;
+        }
         Time result = new Time();
         result.hour = this.hour - t.hour;
         if(this.hour == t.hour)

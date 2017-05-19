@@ -19,11 +19,11 @@ import java.util.ArrayList;
 public class RecommendListAdapter extends RecyclerView.Adapter<RecommendListAdapter.ViewHolder> {
 
     ArrayList<Site> mList;
-    ArrayList<Site> mSelected;
+    Site mSelected;
     Context mContext;
     RecommendView.NotifyMapReady notifyMapReady = null;
 
-    public RecommendListAdapter(Context context, ArrayList<Site> list, ArrayList<Site> selected)
+    public RecommendListAdapter(Context context, ArrayList<Site> list)
     {
         mContext = context;
         if(list==null)
@@ -34,14 +34,7 @@ public class RecommendListAdapter extends RecyclerView.Adapter<RecommendListAdap
         {
             mList = list;
         }
-        if(selected==null)
-        {
-            mSelected = new ArrayList<Site>();
-        }
-        else
-        {
-            mSelected = selected;
-        }
+        mSelected = null;
 
         notifyMapReady = new RecommendView.NotifyMapReady() {
             @Override
@@ -69,7 +62,7 @@ public class RecommendListAdapter extends RecyclerView.Adapter<RecommendListAdap
     @Override
     public void onBindViewHolder(RecommendListAdapter.ViewHolder holder, int position) {
         holder.hotel.setSite(mList.get(position));
-        if(mSelected.contains(mList.get(position)))
+        if(mList.get(position).equals(mSelected))
         {
             holder.hotel.setSelectionVisibility(View.VISIBLE);
         }
@@ -85,7 +78,7 @@ public class RecommendListAdapter extends RecyclerView.Adapter<RecommendListAdap
         return mList.size();
     }
 
-    public ArrayList<Site> getSelectedList()
+    public Site getSelected()
     {
         return mSelected;
     }
@@ -104,18 +97,20 @@ public class RecommendListAdapter extends RecyclerView.Adapter<RecommendListAdap
             viewLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(hotel.toggleVisibility())
+                    if(hotel.toggleVisibility()) // check표시 한 경우
                     {
-                        if(!(mSelected.contains(hotel.getSite())))
+                        //mSelected가 이미 있는 경우, 토글해주고 세팅하기
+                        if(mSelected!=null &&!(hotel.getSite().equals(mSelected)))
                         {
-                            mSelected.add(hotel.getSite());
+                            notifyItemChanged(mList.indexOf(mSelected));
                         }
+                        mSelected= hotel.getSite();
                     }
                     else
                     {
-                        if(mSelected.contains(hotel.getSite()))
+                        if(hotel.getSite().equals(mSelected))
                         {
-                            mSelected.remove(hotel.getSite());
+                            mSelected= null;
                         }
                     }
                     notifyDataSetChanged();

@@ -291,10 +291,6 @@ public class CreatePlanActivity extends AppCompatActivity {
         schedule.setHotelReserved(hotelReserved);
     }
 
-    public int getNumOfDays() {
-        return schedule.getNumOfDays();
-    }
-
     public void setNumOfDays(int numOfDays) {
         schedule.setNumOfDays(numOfDays);
     }
@@ -339,36 +335,19 @@ public class CreatePlanActivity extends AppCompatActivity {
         schedule.addSite(p);
     }
 
+    public int getNumOfDay()
+    {
+        return schedule.getNumOfDays();
+    }
+
     public int getScheduleSize()
     {
         return schedule.getScheduleSize();
     }
 
-
-    public ArrayList<Calendar> getCheckInList() {
-        return schedule.getCheckInList();
-    }
-
-    public void setCheckInList(ArrayList<Calendar> checkInList) {
-        schedule.setCheckInList(checkInList);
-    }
-
-    public ArrayList<Calendar> getCheckOutList() {
-        return schedule.getCheckOutList();
-    }
-
-    public void setCheckOutList(ArrayList<Calendar> checkOutList) {
-        schedule.setCheckOutList(checkOutList);
-    }
-
-    public ArrayList<Site> getRecommendHotelList()
+    public void setNumOfHotels(int num)
     {
-        return schedule.getRecommendHotelList();
-    }
-
-    public void setRecommendHotelList(ArrayList<Site> list)
-    {
-        schedule.setRecommendHotelList(list);
+        schedule.setNumOfHotels(num);
     }
 
     public Site getStartPoint()
@@ -391,24 +370,12 @@ public class CreatePlanActivity extends AppCompatActivity {
         schedule.setEndPoint(ep);
     }
 
-    public LinkedList<Site> getFixedDateSiteList() {
-        return schedule.getFixedDateSiteList();
-    }
-
     public void setFixedDateSiteList(LinkedList<Site> fixedDateSiteList) {
         schedule.setFixedDateSiteList(fixedDateSiteList);
     }
 
-    public LinkedList<Site> getFixedHourSiteList() {
-        return schedule.getFixedHourSiteList();
-    }
-
     public void setFixedHourSiteList(LinkedList<Site> fixedHourSiteList) {
         schedule.setFixedHourSiteList(fixedHourSiteList);
-    }
-
-    public LinkedList<Site> getOverHourSiteList() {
-        return schedule.getOverHourSiteList();
     }
 
     public void setOverHourSiteList(LinkedList<Site> overHourSiteList) {
@@ -423,11 +390,6 @@ public class CreatePlanActivity extends AppCompatActivity {
     public int[][] getCostMat()
     {
         return schedule.getCostMat();
-    }
-
-    public int[][] getFareMat()
-    {
-        return schedule.getFareMat();
     }
 
     public String[][] getFareStringMat()

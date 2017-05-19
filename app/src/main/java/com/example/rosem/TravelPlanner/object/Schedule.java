@@ -25,7 +25,6 @@ public class Schedule{
     private Site endPoint = null;
     private Site startPoint = null;
     private ArrayList<Site> hotel = null;
-    private ArrayList<Site> recommendHotelList = null;
     private String country;
     private Time tourStart = null;
     private Time tourEnd = null;
@@ -76,6 +75,14 @@ public class Schedule{
 
     //about schedule class
 
+
+    public int getNumOfHotels() {
+        return numOfHotels;
+    }
+
+    public void setNumOfHotels(int numOfHotels) {
+        this.numOfHotels = numOfHotels;
+    }
 
     public Site getEndPoint() {
         return endPoint;
@@ -230,24 +237,12 @@ public class Schedule{
         return fareStringMat;
     }
 
-    public ArrayList<Site> getRecommendHotelList()
-    {
-        return this.recommendHotelList;
-    }
-
-    public void setRecommendHotelList(ArrayList<Site> list)
-    {
-        this.recommendHotelList =list;
-    }
-
-
     public LinkedList<LinkedList<Integer>> getSchedule(int tu, JSONObject json)
     {
         //set datas
         //int touringHourInUnit =0;
         numOfSites = site.size();
-        numOfHotels = hotel.size();
-        totalNum = numOfHotels+numOfSites;
+        totalNum = numOfHotels+numOfSites+2;
         timeMat = new long[totalNum][totalNum];
         costMat = new int[totalNum][totalNum];
         unitMat = new int[totalNum][totalNum];
@@ -268,12 +263,14 @@ public class Schedule{
                 +firstDayTimeUnit+lastDayTimeUnit;
 
         siteList = new ArrayList<>(site);
-        for(int i = 0; i<numOfHotels;i++)
+        siteList.add(startPoint);
+        for(int i = 0; i<hotel.size();)
         {
             Site site = hotel.get(i);
-            site.setSpendTime(new Time());
             siteList.add(site);
+            i= hotel.lastIndexOf(site)+1;
         }
+        siteList.add(endPoint);
         for(int i =0; i<numOfSites;i++)
         {
             Site s = site.get(i);
@@ -952,7 +949,15 @@ public class Schedule{
     }
 
     private int timeToUnit(Time t) {
-        return (hourToUnit(t.hour)) + minToUnit(t.min);
+        if(t!=null)
+        {
+            return (hourToUnit(t.hour)) + minToUnit(t.min);
+        }
+        else
+        {
+            return 0;
+        }
+
     }
     private Time unitToTime(int unit)
     {
