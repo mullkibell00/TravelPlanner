@@ -42,13 +42,14 @@ public class Time {
         else
         {
             Time result = new Time();
-            result.hour = this.hour + t.hour;
+
             result.min = this.min+t.min;
             if(result.min >= 60)
             {
                 result.min = result.min- 60;
                 result.hour++;
             }
+            result.hour = (this.hour + t.hour)%24;
             return result;
         }
 
