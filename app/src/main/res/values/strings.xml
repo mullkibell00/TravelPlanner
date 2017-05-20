@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">TravelPlanner</string>
     <string name="font_name">IropkeBatangM.ttf</string>
-    <string name="google_api_key">AIzaSyAVP_0vf3IB8IVH3G7Ga38eH8KIeWhhw1E</string>
+    <string name="google_android_api_key">AIzaSyAVP_0vf3IB8IVH3G7Ga38eH8KIeWhhw1E</string>
     <string name="google_http_api_key">AIzaSyBrc43xV_1kSDrzfX-Nl8_Um3wnZpYjOow</string>
     <string name="google_wep_clinet_api_key">39263848410-0agn4mmm9r4msjf7dtfmkos6c6gec812.apps.googleusercontent.com</string>
 
