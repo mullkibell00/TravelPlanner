@@ -428,10 +428,12 @@ public class InputPlanInfoFragment extends Fragment {
         {
             if(resultCode == getActivity().RESULT_OK)
             {
-                Place selectedPlace = PlacePicker.getPlace(getContext(),data);
-                arrivalPlace = ((CreatePlanActivity)getActivity()).setSiteFromPlace(selectedPlace);
-                texts[mSelectedArrivalPlace].setText(arrivalPlace.getPlaceName());
-
+                if(resultCode == getActivity().RESULT_OK)
+                {
+                    Place selectedPlace = PlacePicker.getPlace(getContext(),data);
+                    arrivalPlace = ((CreatePlanActivity)getActivity()).setSiteFromPlace(selectedPlace);
+                    texts[mSelectedArrivalPlace].setText(arrivalPlace.getPlaceName());
+                }
             }
         }
         else if(requestCode==DEPART_PICK_REQUEST)
