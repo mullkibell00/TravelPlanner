@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.rosem.TravelPlanner.R;
 import com.example.rosem.TravelPlanner.Activity.CreatePlanActivity;
@@ -182,15 +183,20 @@ public class InputHotelInfoFragment extends Fragment {
         prevButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveData();
+                //saveData();
                 ((CreatePlanActivity)getActivity()).movePrev();
             }
         });
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveData();
-                ((CreatePlanActivity)getActivity()).moveNext();
+                if(checkInput())
+                {
+                    saveData();
+                    ((CreatePlanActivity)getActivity()).moveNext();
+                }
+
+
             }
         });
 
@@ -247,29 +253,51 @@ public class InputHotelInfoFragment extends Fragment {
         //if there is data -> load
     }
 
-    private void saveData()
+    private boolean checkInput()
     {
-        int iteration = mAdapter.getHotelList().size();
-        ArrayList<Calendar> checkin = mAdapter.getCheckInList();
-        ArrayList<Calendar> checkout = mAdapter.getCheckOutList();
-        ArrayList<Site> selectedHotels = mAdapter.getHotelList();
-        ArrayList<Site> hotels = new ArrayList<>();
-        if(checkin.size() == selectedHotels.size() && checkout.size() == selectedHotels.size())
+        if(isHotelReserved)
         {
-            for(int i = 0; i<iteration; i++)
+           int hotelNum = mAdapter.getHotelList().size();
+            if(hotelNum==0)
             {
-                int numOfDay = calendarToNumOfDay(checkin.get(i),checkout.get(i));
-                Site h = selectedHotels.get(i);
-                for(int j = 0; j<numOfDay;j++)
-                {
-                    hotels.add(h);
-                }
+                Toast.makeText(getContext(), getString(R.string.input_check_hotel_num), Toast.LENGTH_SHORT).show();
+                return false;
+            }
+            if(mAdapter.getCheckInList().size() != hotelNum || mAdapter.getCheckOutList().size()!=hotelNum)
+            {
+                Toast.makeText(getContext(), getString(R.string.input_check_checkin_checkout), Toast.LENGTH_SHORT).show();
+                return false;
             }
         }
-        checkInList = mAdapter.getCheckInList();
-        checkOutList = mAdapter.getCheckOutList();
-        ((CreatePlanActivity)getActivity()).setNumOfHotels(selectedHotels.size());
-        ((CreatePlanActivity)getActivity()).setHotel(hotels);
+        return true;
+    }
+
+    private void saveData()
+    {
+        if(isHotelReserved)
+        {
+            int iteration = mAdapter.getHotelList().size();
+            ArrayList<Calendar> checkin = mAdapter.getCheckInList();
+            ArrayList<Calendar> checkout = mAdapter.getCheckOutList();
+            ArrayList<Site> selectedHotels = mAdapter.getHotelList();
+            ArrayList<Site> hotels = new ArrayList<>();
+            if(checkin.size() == selectedHotels.size() && checkout.size() == selectedHotels.size())
+            {
+                for(int i = 0; i<iteration; i++)
+                {
+                    int numOfDay = calendarToNumOfDay(checkin.get(i),checkout.get(i));
+                    Site h = selectedHotels.get(i);
+                    for(int j = 0; j<numOfDay;j++)
+                    {
+                        hotels.add(h);
+                    }
+                }
+            }
+            checkInList = mAdapter.getCheckInList();
+            checkOutList = mAdapter.getCheckOutList();
+            ((CreatePlanActivity)getActivity()).setNumOfHotels(selectedHotels.size());
+            ((CreatePlanActivity)getActivity()).setHotel(hotels);
+        }
         ((CreatePlanActivity)getActivity()).setHotelReserved(isHotelReserved);
     }
 

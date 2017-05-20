@@ -57,6 +57,8 @@
     <string name="txt_lodging_multiple_selection">두 개 이상의 숙박 시설을 예약했습니다</string>
     <string name="txt_lodging_recommendation">숙박 시설 추천 기능을 이용합니다.</string>
     <string name="txt_lodging_add">예약한 숙박 시설 추가</string>
+    <string name="input_check_checkin_checkout">호텔 체크인 및 체크아웃 날짜를 입력해주세요.</string>
+    <string name="input_check_hotel_num">하나 이상의 호텔을 입력해주세요.</string>
 
     <!--create plan - input site-->
     <string name="txt_add_site">방문지 추가</string>

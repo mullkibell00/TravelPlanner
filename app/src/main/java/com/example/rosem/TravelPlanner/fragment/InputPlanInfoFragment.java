@@ -78,7 +78,7 @@ public class InputPlanInfoFragment extends Fragment {
     private TimePickerDialog.OnTimeSetListener departTimeSetListener;
 
     //current
-    int curYear, curMonth, curDay, curHour,curMinute;
+    int curYear, curMonth, curDay;
     Calendar selectedArrival;
     Calendar selectedDepart;
     int travelingPeriod;
@@ -146,8 +146,8 @@ public class InputPlanInfoFragment extends Fragment {
         curYear = curCalendar.get(Calendar.YEAR);
         curMonth = curCalendar.get(Calendar.MONTH);
         curDay = curCalendar.get(Calendar.DATE);
-        curHour = curCalendar.get(Calendar.HOUR_OF_DAY);
-        curMinute = curCalendar.get(Calendar.MINUTE);
+        int curHour = curCalendar.get(Calendar.HOUR_OF_DAY);
+        int curMinute = curCalendar.get(Calendar.MINUTE);
         selectedArrival.set(Calendar.YEAR,curYear); selectedArrival.set(Calendar.MONTH,curMonth);
         selectedArrival.set(Calendar.DAY_OF_MONTH,curDay); selectedArrival.set(Calendar.HOUR_OF_DAY,curHour);
         selectedArrival.set(Calendar.MINUTE,curMinute);
@@ -346,7 +346,7 @@ public class InputPlanInfoFragment extends Fragment {
         texts[mSelectedArrivalTime].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new TimePickerDialog(getContext(),arrivalTimeSetListener,curHour,curMinute,false).show();
+                new TimePickerDialog(getContext(),arrivalTimeSetListener,0,0,false).show();
             }
         });
         texts[mSelectedDepartDate].setOnClickListener(new View.OnClickListener() {
@@ -360,9 +360,7 @@ public class InputPlanInfoFragment extends Fragment {
         texts[mSelectedDepartTime].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new TimePickerDialog(getContext(),departTimeSetListener,
-                        selectedArrival.get(Calendar.HOUR_OF_DAY),
-                        selectedArrival.get(Calendar.MINUTE),false).show();
+                new TimePickerDialog(getContext(),departTimeSetListener, 0, 0,false).show();
             }
         });
 
