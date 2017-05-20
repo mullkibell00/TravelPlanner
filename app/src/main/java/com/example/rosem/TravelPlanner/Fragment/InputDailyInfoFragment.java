@@ -85,7 +85,9 @@ public class InputDailyInfoFragment extends Fragment {
         };
 
         tourStartTime = Calendar.getInstance();
+        tourStartTime.set(Calendar.HOUR_OF_DAY,9); tourStartTime.set(Calendar.MINUTE,0);
         tourEndTime = Calendar.getInstance();
+        tourEndTime.set(Calendar.HOUR_OF_DAY,22); tourEndTime.set(Calendar.MINUTE,0);
     }
 
     @Nullable
