@@ -3,6 +3,12 @@
     <string name="font_name">IropkeBatangM.ttf</string>
     <string name="google_api_key">AIzaSyAVP_0vf3IB8IVH3G7Ga38eH8KIeWhhw1E</string>
     <string name="google_http_api_key">AIzaSyBrc43xV_1kSDrzfX-Nl8_Um3wnZpYjOow</string>
+    <string name="google_wep_clinet_api_key">39263848410-0agn4mmm9r4msjf7dtfmkos6c6gec812.apps.googleusercontent.com</string>
+
+    <!--sign in releated-->
+    <string name="login_failed">로그인에 실패했습니다. 앱 재실행 후 다시 시도해주십시오. 에러코드 </string>
+    <string name="login_success">로그인 했습니다.</string>
+    <string name="logout_success">로그아웃 했습니다.</string>
 
     <string name="txt_yes">예</string>
     <string name="txt_no">아니오</string>
