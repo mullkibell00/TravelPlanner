@@ -61,13 +61,13 @@ public class SchedulingFragment extends Fragment {
     private final int START = 3256;
 
     //var
-    ArrayList<Site> hotel = null;
+    LinkedList<Site> hotel = null;
     ArrayList<Site> siteList;
     LinkedList<LinkedList<Integer>> resultSchedule = null;
-    Calendar departure = Calendar.getInstance();
-    Calendar arrival = Calendar.getInstance();
     Time tourStart;
     Time tourEnd;
+    Time departure;
+    Time arrival;
 
     Plan plan = null;
     PlanAdapter mAdapter;
@@ -93,11 +93,13 @@ public class SchedulingFragment extends Fragment {
 
         fontType = ((CreatePlanActivity)getActivity()).getFontType();
         siteList = ((CreatePlanActivity)getActivity()).getSite();
-        hotel = ((CreatePlanActivity)getActivity()).getHotel();
-        arrival = ((CreatePlanActivity)getActivity()).getArrived();
-        departure = ((CreatePlanActivity)getActivity()).getDeparture();
         tourStart = ((CreatePlanActivity)getActivity()).getTourStart();
         tourEnd = ((CreatePlanActivity)getActivity()).getTourEnd();
+        arrival = ((CreatePlanActivity)getActivity()).getFirstDayStart();
+        departure = ((CreatePlanActivity)getActivity()).getLastDayEnd();
+        hotel = new LinkedList<Site>(((CreatePlanActivity)getActivity()).getHotel());
+        hotel.addFirst(((CreatePlanActivity)getActivity()).getStartPoint());
+        hotel.addLast(((CreatePlanActivity)getActivity()).getEndPoint());
 
         STEP_NUM = getResources().getInteger(R.integer.scheduling_steps);
         messages = new String[STEP_NUM];
@@ -195,8 +197,8 @@ public class SchedulingFragment extends Fragment {
         String [][] fareStringMat = ((CreatePlanActivity)getActivity()).getFareStringMat();
         int [][] costMat = ((CreatePlanActivity)getActivity()).getCostMat();
 
-        int totalDay = resultSchedule.size();
-        for(int dayIdx =0; dayIdx<totalDay;dayIdx++)
+        int totalDay = resultSchedule.size()-1;
+        for(int dayIdx =0; dayIdx<=totalDay;dayIdx++)
         {
             LinkedList<Integer> daySchedule = resultSchedule.get(dayIdx);
             int courseNum = daySchedule.size();
@@ -207,19 +209,24 @@ public class SchedulingFragment extends Fragment {
             {
                 if(dayIdx==0)
                 {
-                    presentTime.hour = arrival.get(Calendar.HOUR_OF_DAY);
-                    presentTime.min = arrival.get(Calendar.MINUTE);
+                    presentTime = arrival.copyOf();
                 }
                 else
                 {
-                    presentTime.hour = departure.get(Calendar.HOUR_OF_DAY);
-                    presentTime.min = departure.get(Calendar.MINUTE);
+                    if(departure.compareTo(tourStart)==-1)
+                    {
+                        //일정 시작시간보다 마지막날 출발 시간이 더 빠른경우
+                        presentTime = departure.copyOf();
+                    }
+                    else
+                    {
+                        presentTime = tourStart.copyOf();
+                    }
                 }
             }
             else
             {
-                presentTime.hour = tourStart.hour;
-                presentTime.min = tourStart.min;
+                presentTime = tourStart.copyOf();
             }
 
             int prevSiteIdx = -1;

@@ -49,10 +49,25 @@ public class Time {
                 result.min = result.min- 60;
                 result.hour++;
             }
-            result.hour = (this.hour + t.hour)%24;
+            result.hour = (this.hour + t.hour)%25;
             return result;
         }
 
+    }
+
+    public void setTime(int hour, int min)
+    {
+        this.hour = hour;
+        this.min = min;
+    }
+
+    public void setHour(int hour)
+    {
+        this.hour = hour;
+    }
+    public void setMin(int min)
+    {
+        this.min = min;
     }
 
     public Calendar getCalendar()
@@ -140,13 +155,13 @@ public class Time {
     {
         Time sub = this.sub(t);
 
-        if(sub.min >0 || sub.hour>0)
-        {
-            return 1; //this > t (this - t >0)
-        }
-        else if(sub.min==0 && sub.hour ==0)
+        if(sub.min==0 && sub.hour ==0)
         {
             return 0; //this == t
+        }
+        else if(sub.hour>=0 || sub.min >0)
+        {
+            return 1; //this > t (this - t >0)
         }
         else
         {

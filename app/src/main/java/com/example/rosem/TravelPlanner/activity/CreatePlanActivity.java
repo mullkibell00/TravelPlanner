@@ -251,12 +251,12 @@ public class CreatePlanActivity extends AppCompatActivity {
     }
 
     //about schedule class
-    public Calendar getArrived() {
-        return schedule.getArrived();
+    public Time getFirstDayStart() {
+        return schedule.getFirstDayStart();
     }
 
-    public void setArrived(Calendar arrived) {
-        schedule.setArrived(arrived);
+    public void setFirstDayStart(Time arrived) {
+        schedule.setFirstDayStart(arrived);
     }
 
     public String getCountry() {
@@ -267,12 +267,12 @@ public class CreatePlanActivity extends AppCompatActivity {
         schedule.setCountry(country);
     }
 
-    public Calendar getDeparture() {
-        return schedule.getDeparture();
+    public Time getLastDayEnd() {
+        return schedule.getLastDayEnd();
     }
 
-    public void setDeparture(Calendar departure) {
-        schedule.setDeparture(departure);;
+    public void setLastDayEnd(Time departure) {
+        schedule.setLastDayEnd(departure);
     }
 
     public ArrayList<Site> getHotel() {

@@ -19,8 +19,8 @@ public class Schedule{
 
     private String planName;
     private int numOfDays = 0;
-    private Calendar departure = null;
-    private Calendar arrived = null;
+    private Time lastDayEnd = null;
+    private Time firstDayStart = null;
     private boolean isHotelReserved;
     private Site endPoint = null;
     private Site startPoint = null;
@@ -100,14 +100,6 @@ public class Schedule{
         this.startPoint = startPoint;
     }
 
-    public Calendar getArrived() {
-        return this.arrived;
-    }
-
-    public void setArrived(Calendar arrived) {
-        this.arrived = arrived;
-    }
-
     public String getCountry() {
         return this.country;
     }
@@ -116,12 +108,20 @@ public class Schedule{
         this.country = country;
     }
 
-    public Calendar getDeparture() {
-        return this.departure;
+    public Time getLastDayEnd() {
+        return lastDayEnd;
     }
 
-    public void setDeparture(Calendar departure) {
-        this.departure = departure;
+    public void setLastDayEnd(Time lastDayEnd) {
+        this.lastDayEnd = lastDayEnd;
+    }
+
+    public Time getFirstDayStart() {
+        return firstDayStart;
+    }
+
+    public void setFirstDayStart(Time firstDayStart) {
+        this.firstDayStart = firstDayStart;
     }
 
     public ArrayList<Site> getHotel() {
@@ -251,9 +251,6 @@ public class Schedule{
         HOUR_IN_TIMEUNIT = 60/tu;
         isSelected = new boolean[numOfSites];
 
-        //calendar로 입력받은 값 바꿔주기 (도착, 출발 시간)
-        Time firstDayStart = new Time(arrived.get(Calendar.HOUR_OF_DAY),arrived.get(Calendar.MINUTE));
-        Time lastDayEnd = new Time(departure.get(Calendar.HOUR_OF_DAY),departure.get(Calendar.MINUTE));
         //for time to spend in air port //마지막날은 공항에 3시간 정도 일찍 도착해야하니까
         lastDayEnd = lastDayEnd.sub(new Time(3,0));
         int firstDayTimeUnit = tourEnd.compareTo(firstDayStart)==-1?0:timeToUnit(tourEnd.sub(firstDayStart));

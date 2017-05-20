@@ -157,14 +157,6 @@ public class InputPlanInfoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup view = (ViewGroup)inflater.inflate(R.layout.plan_input_plan_info,container,false);
 
-        if(((CreatePlanActivity)getActivity()).getArrived()!=null)
-        {
-            selectedArrival = ((CreatePlanActivity)getActivity()).getArrived();
-        }
-        if(((CreatePlanActivity)getActivity()).getDeparture()!=null)
-        {
-            selectedDepart = ((CreatePlanActivity)getActivity()).getDeparture();
-        }
         if(((CreatePlanActivity)getActivity()).getStartPoint()!=null)
         {
             arrivalPlace = ((CreatePlanActivity)getActivity()).getStartPoint();
@@ -201,8 +193,8 @@ public class InputPlanInfoFragment extends Fragment {
     {
         //setting arrivalPlace, departPlace
         //numofDays, arrival,departure,country
-        ((CreatePlanActivity)getActivity()).setArrived(selectedArrival);
-        ((CreatePlanActivity)getActivity()).setDeparture(selectedDepart);
+        ((CreatePlanActivity)getActivity()).setFirstDayStart(new Time(selectedArrival.get(Calendar.HOUR_OF_DAY),selectedArrival.get(Calendar.MINUTE)));
+        ((CreatePlanActivity)getActivity()).setLastDayEnd(new Time(selectedDepart.get(Calendar.HOUR_OF_DAY),selectedDepart.get(Calendar.MINUTE)));
         ((CreatePlanActivity)getActivity()).setCountry(texts[mSelectedCountry].getText().toString());
         ((CreatePlanActivity)getActivity()).setStartPoint(arrivalPlace);
         ((CreatePlanActivity)getActivity()).setEndPoint(departPlace);
@@ -351,32 +343,30 @@ public class InputPlanInfoFragment extends Fragment {
             }
             texts[mSelectedCountry].setSelected(true);
         }
-        Calendar arrival = null;
-        if((arrival = ((CreatePlanActivity)getActivity()).getArrived())!=null)
+        if(selectedArrival!=null)
         {
             //texts[mSelectedArrivalDate].setText(arrival.get(Calendar.YEAR)+"년 "
             //        +(arrival.get(Calendar.MONTH)+1)+"월 "+arrival.get(Calendar.DAY_OF_MONTH)+"일");
             ((CreatePlanActivity)getActivity()).
-                    setDateText(texts[mSelectedArrivalDate],arrival.get(Calendar.YEAR),
-                            arrival.get(Calendar.MONTH),arrival.get(Calendar.DAY_OF_MONTH));
+                    setDateText(texts[mSelectedArrivalDate],selectedArrival.get(Calendar.YEAR),
+                            selectedArrival.get(Calendar.MONTH),selectedArrival.get(Calendar.DAY_OF_MONTH));
             texts[mSelectedArrivalTime].setSelected(true);
             ((CreatePlanActivity)getActivity())
-                    .setTimeText(texts[mSelectedArrivalTime],arrival.get(Calendar.HOUR_OF_DAY),arrival.get(Calendar.MINUTE));
+                    .setTimeText(texts[mSelectedArrivalTime],selectedArrival.get(Calendar.HOUR_OF_DAY),selectedArrival.get(Calendar.MINUTE));
             //texts[mSelectedArrivalTime]
             //        .setText(arrival.get(Calendar.HOUR_OF_DAY)+"시 "
             //                +arrival.get(Calendar.MINUTE)+"분");
         }
-        Calendar depart = null;
-        if((depart=((CreatePlanActivity)getActivity()).getDeparture())!=null)
+        if(selectedDepart!=null)
         {
            // texts[mSelectedDepartDate].setText(depart.get(Calendar.YEAR)+"년 "
            //         +(depart.get(Calendar.MONTH)+1)+"월 "+depart.get(Calendar.DAY_OF_MONTH)+"일");
             ((CreatePlanActivity)getActivity()).
-                    setDateText(texts[mSelectedDepartDate],arrival.get(Calendar.YEAR),
-                            arrival.get(Calendar.MONTH),arrival.get(Calendar.DAY_OF_MONTH));
+                    setDateText(texts[mSelectedDepartDate],selectedDepart.get(Calendar.YEAR),
+                            selectedDepart.get(Calendar.MONTH),selectedDepart.get(Calendar.DAY_OF_MONTH));
             texts[mSelectedDepartTime].setSelected(true);
             ((CreatePlanActivity)getActivity()).setTimeText(texts[mSelectedDepartTime]
-                    ,arrival.get(Calendar.HOUR_OF_DAY),arrival.get(Calendar.MINUTE));
+                    ,selectedDepart.get(Calendar.HOUR_OF_DAY),selectedDepart.get(Calendar.MINUTE));
             //texts[mSelectedDepartTime]
             //        .setText(depart.get(Calendar.HOUR_OF_DAY)+"시 "
             //                +depart.get(Calendar.MINUTE)+"분");
