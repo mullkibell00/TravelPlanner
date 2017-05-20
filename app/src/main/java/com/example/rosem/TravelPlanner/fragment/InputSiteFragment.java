@@ -24,6 +24,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.example.rosem.TravelPlanner.R;
 import com.example.rosem.TravelPlanner.Activity.CreatePlanActivity;
@@ -62,9 +63,7 @@ public class InputSiteFragment extends Fragment {
     RecyclerView siteListView;
     TextView addSiteButton;
     ArrayList<Site> siteList = null;
-    LinkedList<Site> fixedHourSiteList = new LinkedList<Site>();
-    LinkedList<Site> overHourSiteList = new LinkedList<Site>();
-    LinkedList<Site> fixedDateSiteList = new LinkedList<>();
+    //LinkedList<Site> fixedDateSiteList = new LinkedList<>();
     SiteListAdapter mAdapter;
 
     InputInfoDialog siteInfoDialog;
@@ -145,8 +144,12 @@ public class InputSiteFragment extends Fragment {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveData();
-                ((CreatePlanActivity)getActivity()).moveNext();
+                if(checkInput())
+                {
+                    saveData();
+                    ((CreatePlanActivity)getActivity()).moveNext();
+                }
+
             }
         });
 
@@ -195,18 +198,46 @@ public class InputSiteFragment extends Fragment {
         }
     }
 
-    public void saveData()
+    public boolean checkInput()
     {
-        ((CreatePlanActivity)getActivity()).setSite(mAdapter.getSiteList());
         ArrayList<Site> list = mAdapter.getSiteList();
+        if(list.size()==0)
+        {
+            Toast.makeText(getContext(), getString(R.string.input_check_num_of_site), Toast.LENGTH_SHORT).show();
+            return false;
+        }
         Iterator<Site> it = list.iterator();
-        while(it.hasNext())
+        int siteLoc = 1;
+        while(it.hasNext())//check spendTime
         {
             Site site = it.next();
+            if(site.getSpendTime()==null)
+            {
+                Toast.makeText(getContext(), siteLoc+getString(R.string.input_check_spend_time), Toast.LENGTH_SHORT).show();
+                return false;
+            }
+            siteLoc++;
+        }
+        return true;
+    }
+
+    public void saveData()
+    {
+
+        ((CreatePlanActivity)getActivity()).setSite(mAdapter.getSiteList());
+        ArrayList<Site> list = mAdapter.getSiteList();
+        LinkedList<Site> fixedHourSiteList = new LinkedList<>();
+        LinkedList<Site> overHourSiteList = new LinkedList<>();
+        Iterator<Site> it = list.iterator();
+        while(it.hasNext())//check visit Time
+        {
+            Site site = it.next();
+            /*
             if(site.getVisitDay()!=null)
             {
                 fixedDateSiteList.add(site);
             }
+            */
             if(site.getVisitTime()!=null)
             {
                 Time time = site.getVisitTime().add(site.getSpendTime());
@@ -221,7 +252,7 @@ public class InputSiteFragment extends Fragment {
                 }
             }
         }//end of while iteration of list
-        ((CreatePlanActivity)getActivity()).setFixedDateSiteList(fixedDateSiteList);
+        //((CreatePlanActivity)getActivity()).setFixedDateSiteList(fixedDateSiteList);
         ((CreatePlanActivity)getActivity()).setFixedHourSiteList(fixedHourSiteList);
         ((CreatePlanActivity)getActivity()).setOverHourSiteList(overHourSiteList);
     }
@@ -347,8 +378,8 @@ public class InputSiteFragment extends Fragment {
         View dialogView;
         View titleView;
         Calendar visitTime = Calendar.getInstance();
-        Calendar visitDay = Calendar.getInstance();
-        TextView visitDayBtn;
+        //Calendar visitDay = Calendar.getInstance();
+        //TextView visitDayBtn;
         TextView visitTimeBtn;
 
         public InputInfoDialog(Context context)
@@ -359,13 +390,13 @@ public class InputSiteFragment extends Fragment {
             titleView = getLayoutInflater().inflate(R.layout.dialog_title,null);
             TextView title = (TextView)titleView.findViewById(R.id.dialog_title_view);
             title.setTypeface(fontType); title.setText(getString(R.string.title_input_site_dialog));
-            TextView textVistDay = (TextView)dialogView.findViewById(R.id.dialog_site_txt_visit_day);
+            //TextView textVistDay = (TextView)dialogView.findViewById(R.id.dialog_site_txt_visit_day);
             TextView textVisitTime = (TextView)dialogView.findViewById(R.id.dialog_site_txt_visit_time);
-            visitDayBtn = (TextView)dialogView.findViewById(R.id.dialog_site_selected_visit_day);
+           // visitDayBtn = (TextView)dialogView.findViewById(R.id.dialog_site_selected_visit_day);
             visitTimeBtn = (TextView)dialogView.findViewById(R.id.dialog_site_selected_visit_time);
-            textVistDay.setTypeface(fontType); textVisitTime.setTypeface(fontType);
-            visitDayBtn.setTypeface(fontType); visitTimeBtn.setTypeface(fontType);
-
+            //textVistDay.setTypeface(fontType); textVisitTime.setTypeface(fontType);
+            //visitDayBtn.setTypeface(fontType); visitTimeBtn.setTypeface(fontType);
+/*
             //set onClickListener in dialog
             visitDayBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -374,6 +405,7 @@ public class InputSiteFragment extends Fragment {
                             visitDay.get(Calendar.YEAR), visitDay.get(Calendar.MONTH),visitDay.get(Calendar.DAY_OF_MONTH)).show();
                 }
             });
+           */
             visitTimeBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -391,15 +423,16 @@ public class InputSiteFragment extends Fragment {
                 public void onClick(DialogInterface dialogInterface, int i) {
                     if(siteInfoDialog.isShowing())
                     {
+                        /*
                         if(isDateSet)
                         {
                             mAdapter.setVisitDay(idx, visitDay);
-                        }
+                        }*/
                         if(isTimeSet)
                         {
                             mAdapter.setVisitTime(idx, visitTime);
                         }
-                        isDateSet = false;
+                        //isDateSet = false;
                         isTimeSet = false;
                         siteInfoDialog.dismiss();
                     }
@@ -412,7 +445,7 @@ public class InputSiteFragment extends Fragment {
                     if(siteInfoDialog.isShowing())
                     {
                         siteInfoDialog.dismiss();
-                        isDateSet = false;
+                        //isDateSet = false;
                         isTimeSet= false;
                     }
                 }
@@ -439,24 +472,27 @@ public class InputSiteFragment extends Fragment {
             {
                 setVisitTimeBtn(site.getVisitTime().getCalendar());
             }
+            /*
             if(site.getVisitDay()!=null)
             {
                 setVisitDayBtn(site.getVisitDay());
-            }
+            }*/
         }
 
-        public void setVisitDayBtn(Calendar cal)
+        /*public void setVisitDayBtn(Calendar cal)
         {
             visitDayBtn.setSelected(true);
             ((CreatePlanActivity)getActivity()).setDateText(visitDayBtn,cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH));
             //visitDayBtn.setText(cal.get(Calendar.HOUR_OF_DAY)+"시 "+cal.get(Calendar.MINUTE)+"분");
         }
+        */
         public void setVisitTimeBtn(Calendar cal)
         {
             visitTimeBtn.setSelected(true);
             ((CreatePlanActivity)getActivity()).setTimeText(visitTimeBtn,cal.get(Calendar.HOUR_OF_DAY),cal.get(Calendar.MINUTE));
             //visitTimeBtn.setText(cal.get(Calendar.HOUR_OF_DAY)+"시 "+cal.get(Calendar.MINUTE)+"분");
         }
+        /*
         private class VisitDaySetListener implements DatePickerDialog.OnDateSetListener
         {
 
@@ -469,6 +505,7 @@ public class InputSiteFragment extends Fragment {
                 isDateSet = true;
             }
         }
+        */
 
         private class VisitTimeSetListener implements TimePickerDialog.OnTimeSetListener
         {

@@ -5,38 +5,6 @@
     android:padding="20dp"
     >
     <!--daily tour start-->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingLeft="23dp"
-        android:paddingRight="23dp"
-        android:layout_marginBottom="20dp"
-        >
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorFontDark"
-            android:textSize="17sp"
-            android:text="@string/txt_visit_day"
-            android:layout_marginRight="20dp"
-            android:id="@+id/dialog_site_txt_visit_day"
-            />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="41dp"
-            android:gravity="center"
-            android:background="@drawable/selectable_textview_background"
-            android:textColor="@color/selectable_textview_font"
-            android:textSize="17sp"
-            android:textStyle="bold"
-            android:text="@string/txt_select_traveling_time"
-            android:textIsSelectable="true"
-            android:focusableInTouchMode="false"
-            android:focusable="false"
-            android:id="@+id/dialog_site_selected_visit_day"
-            />
-    </LinearLayout>
     <!--daily tour end-->
     <LinearLayout
         android:layout_width="match_parent"

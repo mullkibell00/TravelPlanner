@@ -15,9 +15,9 @@ public class Site {
     private double lat;
     private double lng;
     private String locality;
-    private Time visitTime;//방문 시작 시간
-    private Calendar visitDay;//방문 종료 시간
-    private Time spendTime;//소요예정시간
+    private Time visitTime=null;//방문 시작 시간
+    private Calendar visitDay=null;//방문 종료 시간
+    private Time spendTime=null;//소요예정시간
 
     public Site()
     {

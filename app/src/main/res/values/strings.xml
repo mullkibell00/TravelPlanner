@@ -61,6 +61,8 @@
     <string name="txt_spend_time">희망 소요 시간</string>
     <string name="site_dialog_positive">설정</string>
     <string name="site_dialog_negative">취소</string>
+    <string name="input_check_num_of_site">최소 한 개 이상의 여행지를 입력해주세요.</string>
+    <string name="input_check_spend_time">번째 여행지의 희망 소요 시간을 입력해주세요.</string>
 
     <!--create plan - input site info-->
     <string name="txt_visit_day">방문 희망 날짜</string>
