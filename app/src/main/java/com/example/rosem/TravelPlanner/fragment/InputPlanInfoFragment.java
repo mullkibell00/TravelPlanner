@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.example.rosem.TravelPlanner.R;
 import com.example.rosem.TravelPlanner.Activity.CreatePlanActivity;
@@ -180,8 +181,11 @@ public class InputPlanInfoFragment extends Fragment {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveData();
-                ((CreatePlanActivity)getActivity()).moveNext();
+                if(checkInput())
+                {
+                    saveData();
+                    ((CreatePlanActivity)getActivity()).moveNext();
+                }
             }
         });
 
@@ -189,6 +193,35 @@ public class InputPlanInfoFragment extends Fragment {
         return view;
     }
 
+    public boolean checkInput()
+    {
+        //나라 입력은 했는지
+        if(texts[mSelectedCountry].getText().toString().equals(getString(R.string.txt_select_traveling_country)))
+        {
+            Toast.makeText(getContext(), getString(R.string.input_check_country), Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        //arrivalPlace와 departPlace가 입력되었는지
+        if(arrivalPlace==null)
+        {
+            Toast.makeText(getContext(), getString(R.string.input_check_arrival), Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if(departPlace==null)
+        {
+            Toast.makeText(getContext(), getString(R.string.input_check_departure), Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        //도착날과 출발날이 같지는 않은지
+        if(selectedArrival.get(Calendar.MONTH)==selectedDepart.get(Calendar.MONTH)
+                && selectedArrival.get(Calendar.DAY_OF_MONTH)==selectedDepart.get(Calendar.DAY_OF_MONTH))
+        {
+            Toast.makeText(getContext(), getString(R.string.input_check_date), Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
+    }
     public void saveData()
     {
         //setting arrivalPlace, departPlace
