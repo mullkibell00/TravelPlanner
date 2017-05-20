@@ -95,8 +95,6 @@ public class SchedulingFragment extends Fragment {
         siteList = ((CreatePlanActivity)getActivity()).getSite();
         tourStart = ((CreatePlanActivity)getActivity()).getTourStart();
         tourEnd = ((CreatePlanActivity)getActivity()).getTourEnd();
-        arrival = ((CreatePlanActivity)getActivity()).getFirstDayStart();
-        departure = ((CreatePlanActivity)getActivity()).getLastDayEnd();
         hotel = new LinkedList<Site>(((CreatePlanActivity)getActivity()).getHotel());
         hotel.addFirst(((CreatePlanActivity)getActivity()).getStartPoint());
         hotel.addLast(((CreatePlanActivity)getActivity()).getEndPoint());
@@ -196,6 +194,8 @@ public class SchedulingFragment extends Fragment {
 
         String [][] fareStringMat = ((CreatePlanActivity)getActivity()).getFareStringMat();
         int [][] costMat = ((CreatePlanActivity)getActivity()).getCostMat();
+        arrival = ((CreatePlanActivity)getActivity()).getFirstDayStart();
+        departure = ((CreatePlanActivity)getActivity()).getLastDayEnd();
 
         int totalDay = resultSchedule.size()-1;
         for(int dayIdx =0; dayIdx<=totalDay;dayIdx++)
@@ -217,6 +217,7 @@ public class SchedulingFragment extends Fragment {
                     {
                         //일정 시작시간보다 마지막날 출발 시간이 더 빠른경우
                         presentTime = departure.copyOf();
+                        presentTime = presentTime.sub(unitToTime(costMat[daySchedule.getLast()][daySchedule.getFirst()]));
                     }
                     else
                     {
@@ -270,7 +271,7 @@ public class SchedulingFragment extends Fragment {
                     {
                         startTime = site.getVisitTime();
                         freeStartTime = presentTime.add(costTime);
-                        freeEndTime = startTime.copyOf();
+                        freeEndTime = site.getVisitTime();
                         if(freeEndTime.compareTo(freeStartTime)==1)
                         {
                             freeTimeCourse = new Course();

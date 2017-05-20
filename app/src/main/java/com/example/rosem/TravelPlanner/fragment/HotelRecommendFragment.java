@@ -119,7 +119,7 @@ public class HotelRecommendFragment extends Fragment {
 
     private void saveData()
     {
-        int numOfDay=((CreatePlanActivity)getActivity()).getNumOfDay();
+        int numOfDay=((CreatePlanActivity)getActivity()).getNumOfDay()-1;
         Site hotel = mAdapter.getSelected();
         ArrayList<Site> hotelList = new ArrayList<>();
         for(int j = 0; j<numOfDay;j++)

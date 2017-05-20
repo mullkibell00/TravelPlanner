@@ -49,7 +49,7 @@ public class Time {
                 result.min = result.min- 60;
                 result.hour++;
             }
-            result.hour = (this.hour + t.hour)%25;
+            result.hour = (result.hour+this.hour + t.hour)%25;
             return result;
         }
 
@@ -159,7 +159,7 @@ public class Time {
         {
             return 0; //this == t
         }
-        else if(sub.hour>=0 || sub.min >0)
+        else if(sub.hour>=0 && sub.min >0)
         {
             return 1; //this > t (this - t >0)
         }
