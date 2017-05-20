@@ -85,7 +85,11 @@ public class InputTitleFragment extends Fragment {
             public void onClick(View view) {
                 String planName = inputPlanName.getText().toString();
 
-                if(((CreatePlanActivity)getActivity()).checkPlanName(planName))
+                if(planName.equals(""))
+                {
+                    Toast.makeText(getContext(), getString(R.string.txt_input_plan_name), Toast.LENGTH_SHORT).show();
+                }
+                else if(((CreatePlanActivity)getActivity()).checkPlanName(planName))
                 {
                     ((CreatePlanActivity)getActivity()).setPlanName(planName);
                     ((CreatePlanActivity)getActivity()).moveNext();
