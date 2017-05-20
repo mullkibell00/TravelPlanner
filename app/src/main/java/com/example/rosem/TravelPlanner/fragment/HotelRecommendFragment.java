@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.rosem.TravelPlanner.R;
 import com.example.rosem.TravelPlanner.Activity.CreatePlanActivity;
@@ -110,11 +111,24 @@ public class HotelRecommendFragment extends Fragment {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveData();
-                ((CreatePlanActivity)getActivity()).moveNext();
+                if(checkInput())
+                {
+                    saveData();
+                    ((CreatePlanActivity)getActivity()).moveNext();
+                }
             }
         });
         return view;
+    }
+
+    private boolean checkInput()
+    {
+        if(mAdapter.getSelected()==null)
+        {
+            Toast.makeText(getContext(), getString(R.string.input_check_select_hotel), Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return false;
     }
 
     private void saveData()
@@ -126,6 +140,7 @@ public class HotelRecommendFragment extends Fragment {
         {
             hotelList.add(hotel);
         }
+        ((CreatePlanActivity)getActivity()).setNumOfHotels(1);
         ((CreatePlanActivity)getActivity()).setHotel(hotelList);
     }
 

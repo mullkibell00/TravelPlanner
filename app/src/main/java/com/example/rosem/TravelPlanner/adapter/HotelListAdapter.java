@@ -71,9 +71,20 @@ public class HotelListAdapter extends  RecyclerView.Adapter<HotelListAdapter.Vie
         deleteAlert.setButton(DialogInterface.BUTTON_POSITIVE, context.getString(R.string.txt_yes), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                hotelList.remove(deleteAlert.pos);
-                checkInList.remove(deleteAlert.pos);
-                checkOutList.remove(deleteAlert.pos);
+                int size = hotelList.size();
+                if(size>0)
+                {
+                    if(size==checkInList.size())
+                    {
+                        checkInList.remove(deleteAlert.pos);
+                    }
+                    if(size==checkOutList.size())
+                    {
+                        checkOutList.remove(deleteAlert.pos);
+                    }
+                    hotelList.remove(deleteAlert.pos);
+                }
+
                 notifyDataSetChanged();
             }
         });

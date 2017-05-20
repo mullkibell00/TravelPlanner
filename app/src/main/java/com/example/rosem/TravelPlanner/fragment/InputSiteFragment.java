@@ -201,9 +201,15 @@ public class InputSiteFragment extends Fragment {
     public boolean checkInput()
     {
         ArrayList<Site> list = mAdapter.getSiteList();
-        if(list.size()==0)
+        int size = list.size();
+        if(size==0)
         {
             Toast.makeText(getContext(), getString(R.string.input_check_num_of_site), Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if(size>25)
+        {
+            Toast.makeText(getContext(), getString(R.string.input_check_num_of_site_limit), Toast.LENGTH_SHORT).show();
             return false;
         }
         Iterator<Site> it = list.iterator();
