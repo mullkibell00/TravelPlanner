@@ -1,5 +1,6 @@
 package com.example.rosem.TravelPlanner.Activity;
 
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -20,6 +21,8 @@ import com.example.rosem.TravelPlanner.Fragment.ManageFragment;
 import com.example.rosem.TravelPlanner.Fragment.SettingFragment;
 import com.example.rosem.TravelPlanner.Fragment.ShareFragment;
 import com.example.rosem.TravelPlanner.plan.Plan;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import org.json.JSONArray;
 
@@ -45,6 +48,14 @@ public class MainActivity extends AppCompatActivity {
 
         //for debugging
         createInitialFavorite();
+
+        //checking user
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user==null)
+        {
+            //signin activity로 넘어간다
+            startActivity(new Intent(this,SignInActivity.class));
+        }
 
         fontType = Typeface.createFromAsset(getAssets(),getString(R.string.font_name));
 
