@@ -59,6 +59,7 @@
     <string name="txt_lodging_add">예약한 숙박 시설 추가</string>
     <string name="input_check_checkin_checkout">호텔 체크인 및 체크아웃 날짜를 입력해주세요.</string>
     <string name="input_check_hotel_num">하나 이상의 호텔을 입력해주세요.</string>
+    <string name="alert_delete">삭제하시겠습니까?</string>
 
     <!--create plan - input site-->
     <string name="txt_add_site">방문지 추가</string>

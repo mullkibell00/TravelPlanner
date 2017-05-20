@@ -1,7 +1,11 @@
 package com.example.rosem.TravelPlanner.adapter;
 
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -26,8 +30,9 @@ public class HotelListAdapter extends  RecyclerView.Adapter<HotelListAdapter.Vie
     private ArrayList<Calendar> checkInList;
     private ArrayList<Calendar> checkOutList;
     private Context mContext;
+    private DeleteAlertDialog deleteAlert;
 
-    public HotelListAdapter(Context context, ArrayList<Site> list, ArrayList<Calendar>checkIn, ArrayList<Calendar>checkOut)
+    public HotelListAdapter(Context context, ArrayList<Site> list, final ArrayList<Calendar>checkIn, ArrayList<Calendar>checkOut)
     {
         super();
         mContext = context;
@@ -55,6 +60,23 @@ public class HotelListAdapter extends  RecyclerView.Adapter<HotelListAdapter.Vie
         {
             checkOutList = new ArrayList<Calendar>();
         }
+        deleteAlert  = new DeleteAlertDialog(context);
+        deleteAlert.setMessage(context.getString(R.string.alert_delete));
+        deleteAlert.setButton(DialogInterface.BUTTON_NEGATIVE, context.getString(R.string.txt_no), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        deleteAlert.setButton(DialogInterface.BUTTON_POSITIVE, context.getString(R.string.txt_yes), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                hotelList.remove(deleteAlert.pos);
+                checkInList.remove(deleteAlert.pos);
+                checkOutList.remove(deleteAlert.pos);
+                notifyDataSetChanged();
+            }
+        });
     }
 
     @Override
@@ -181,6 +203,13 @@ public class HotelListAdapter extends  RecyclerView.Adapter<HotelListAdapter.Vie
                             cal.get(Calendar.DAY_OF_MONTH)).show();
                 }
             });
+            hotelView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    deleteAlert.showDialog(hotelList.indexOf(hotelView.getHotel()));
+                    return false;
+                }
+            });
         }
 
         public class CheckInSetListener implements DatePickerDialog.OnDateSetListener {
@@ -233,6 +262,20 @@ public class HotelListAdapter extends  RecyclerView.Adapter<HotelListAdapter.Vie
 
                 }
             }
+        }
+    }
+
+    private class DeleteAlertDialog extends AlertDialog
+    {
+        int pos = 0;
+        protected DeleteAlertDialog(@NonNull Context context) {
+            super(context);
+        }
+
+        public void showDialog(int pos)
+        {
+            this.pos = pos;
+            show();
         }
     }
 }
