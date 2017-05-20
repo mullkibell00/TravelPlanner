@@ -77,6 +77,7 @@
 
     <!--create plan -hotel recommend-->
     <string name="recommend_dialog_message">추천 호텔 리스트를 가져오는 중입니다.</string>
+    <string name="input_check_select_hotel">호텔을 선택해주세요.</string>
 
     <!--create plan - scheduling-->
     <string name="schedule_progress_title">플랜 진행률</string>
