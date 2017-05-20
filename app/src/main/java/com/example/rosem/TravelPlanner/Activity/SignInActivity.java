@@ -2,6 +2,7 @@ package com.example.rosem.TravelPlanner.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -56,7 +57,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
                 startActivityForResult(intent,GOOGLE_SIGN_IN);
             }
         });
-
+        mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -64,10 +65,11 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
                 if(user!=null)
                 {
                     Toast.makeText(getApplicationContext(), getString(R.string.login_success),Toast.LENGTH_SHORT).show();
+                    finish();
                 }
                 else
                 {
-                    Toast.makeText(getApplicationContext(), getString(R.string.logout_success),Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), getString(R.string.logout_success),Toast.LENGTH_SHORT).show();
                 }
             }
         };
