@@ -37,6 +37,7 @@
         <activity android:name=".Activity.CreatePlanActivity">
         </activity>
         <activity android:name=".Activity.SignInActivity"></activity>
+        <activity android:name=".Activity.PlanDetailActivity"></activity>
     </application>
 
 </manifest>
