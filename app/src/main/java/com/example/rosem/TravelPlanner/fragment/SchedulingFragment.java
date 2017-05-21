@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.rosem.TravelPlanner.R;
 import com.example.rosem.TravelPlanner.Activity.CreatePlanActivity;
@@ -50,6 +51,10 @@ public class SchedulingFragment extends Fragment {
     private int STEP_NUM;
     String [] messages;
 
+    TextView planInfo;
+    TextView planInfoCountry;
+    TextView planInfoCostTime;
+
     Typeface fontType;
     ProgressDialog progressDialog;
     ProgressHandler handler;
@@ -78,8 +83,8 @@ public class SchedulingFragment extends Fragment {
     int totalNodeNum;
     int timeUnit;
     int hourTimeUnit;
-    long [][] timeMatrix;
-    long [][] fareMatrix;
+    //long [][] timeMatrix;
+    //long [][] fareMatrix;
 
     public static SchedulingFragment newInstance()
     {
@@ -117,8 +122,8 @@ public class SchedulingFragment extends Fragment {
         numOfHotel = hotel.size();
         totalNodeNum = numOfSite+numOfHotel;
 
-        timeMatrix = new long[totalNodeNum][totalNodeNum];
-        fareMatrix = new long[totalNodeNum][totalNodeNum];
+        //timeMatrix = new long[totalNodeNum][totalNodeNum];
+        //fareMatrix = new long[totalNodeNum][totalNodeNum];
 
     }
 
@@ -141,6 +146,13 @@ public class SchedulingFragment extends Fragment {
         pager.setAdapter(mAdapter);
 
         tabs.setupWithViewPager(pager);
+
+        planInfo = (TextView)view.findViewById(R.id.plan_info);
+        planInfoCountry = (TextView)view.findViewById(R.id.plan_info_country);
+        planInfoCostTime = (TextView)view.findViewById(R.id.plan_info_cost_time);
+        planInfo.setTypeface(fontType); planInfoCountry.setTypeface(fontType);
+        planInfoCostTime.setTypeface(fontType);
+        planInfoCountry.setText(getString(R.string.plan_info_country)+((CreatePlanActivity)getActivity()).getCountry());
 
 
         Button nextButton = (Button)getActivity().findViewById(R.id.create_plan_next);
@@ -198,6 +210,7 @@ public class SchedulingFragment extends Fragment {
         departure = ((CreatePlanActivity)getActivity()).getLastDayEnd();
 
         int totalDay = resultSchedule.size()-1;
+        int totalTransportTime = 0;
         for(int dayIdx =0; dayIdx<=totalDay;dayIdx++)
         {
             LinkedList<Integer> daySchedule = resultSchedule.get(dayIdx);
@@ -256,6 +269,7 @@ public class SchedulingFragment extends Fragment {
                 {
                     if(costMat!=null)
                     {
+                        totalTransportTime+=costMat[curSiteIdx][prevSiteIdx];
                         costTime = unitToTime(costMat[curSiteIdx][prevSiteIdx]);
                         //traveling time setting
                       //  travel = new Course();
@@ -271,14 +285,15 @@ public class SchedulingFragment extends Fragment {
                     if(site.getVisitTime()!=null)
                     {
                         startTime = site.getVisitTime();
-                        freeStartTime = presentTime.add(costTime);
-                        freeEndTime = site.getVisitTime();
+                        freeStartTime = presentTime.copyOf();
+                        freeEndTime = site.getVisitTime().sub(costTime);
                         if(freeEndTime.compareTo(freeStartTime)==1)
                         {
                             freeTimeCourse = new Course();
                             freeTimeCourse.setName(getString(R.string.free_time));
                             freeTimeCourse.setTime(freeStartTime.toString(), freeEndTime.toString());
                             freeTimeCourse.setSpendTime(freeEndTime.sub(freeStartTime).toStringInText());
+                            //freeTimeCourse.setCostTime(costTime.toStringInText());
                         }
                     }
                     else
@@ -301,12 +316,16 @@ public class SchedulingFragment extends Fragment {
                 if(courseIdx == 0 || courseIdx == (courseNum-1))
                 {
                     c.setTime(endTime.toString());
+                    if(courseIdx==(courseNum-1))
+                    {
+                        c.setCostTime(costTime.toStringInText());
+                    }
                 }
                 else
                 {
                     c.setTime(startTime.toString(), endTime.toString());
                     c.setSpendTime(site.getSpendTime().toStringInText());
-                    c.setCostTime(costTime.toString());
+                    c.setCostTime(costTime.toStringInText());
                 }
                 //c.setCostMoney(fare);
                 c.setAddr(site.getAddress());
@@ -325,11 +344,14 @@ public class SchedulingFragment extends Fragment {
 
         plan.setPlanName(((CreatePlanActivity)getActivity()).getPlanName());
         plan.setFavorite(false);
+        plan.setCountry(((CreatePlanActivity)getActivity()).getCountry());
+        plan.setTotalCostTime(unitToTime(totalTransportTime).toStringInText());
         plan.setPlanFromPlanArray();
         Log.v("Main:::","plan\n"+plan.toString());
 
         //update recylerView list
         mAdapter.setCourse(plan);
+        planInfoCostTime.setText(getString(R.string.total_cost_time)+plan.getTotalCostTime());
 
         handler.sendEmptyMessage(FINISH);
     }
@@ -359,7 +381,7 @@ public class SchedulingFragment extends Fragment {
     private Time unitToTime(int unit)
     {
         Time t = new Time();
-        while(unit > hourTimeUnit)
+        while(unit >= hourTimeUnit)
         {
             t.hour++;
             unit -= hourTimeUnit;

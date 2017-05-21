@@ -22,8 +22,27 @@ public class Plan extends RealmObject {
 
     int numOfDays=0;
     String plan;
+    String country;
+
+    String totalCostTime;
 
     boolean isFavorite;
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getTotalCostTime() {
+        return totalCostTime;
+    }
+
+    public void setTotalCostTime(String totalCostTime) {
+        this.totalCostTime = totalCostTime;
+    }
 
     public Plan()
     {

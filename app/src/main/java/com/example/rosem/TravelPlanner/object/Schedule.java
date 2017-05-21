@@ -484,6 +484,12 @@ public class Schedule{
                     course.clear();
                 }
             }
+
+            if(finalCourse.size()==0)
+            {
+                finalCourse.add(siteList.indexOf(startSite));
+                finalCourse.add(siteList.indexOf(endSite));
+            }
             return finalCourse;
         }
 

@@ -88,4 +88,7 @@
     <string name="schedule_step_3">이동 시간과 비용을 구하는 중입니다.</string>
     <string name="schedule_step_4">일정을 정돈하는 중입니다</string>
     <string name="free_time">자유 일정</string>
+    <string name="plan_info_title">여행 일정 정보</string>
+    <string name="total_cost_time">총 이동 시간 : </string>
+    <string name="plan_info_country">여행하는 나라 : </string>
 </resources>

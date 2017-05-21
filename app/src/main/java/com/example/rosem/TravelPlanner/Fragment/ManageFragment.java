@@ -72,7 +72,7 @@ public class ManageFragment extends android.support.v4.app.Fragment{
 
         list = (RecyclerView) view.findViewById(R.id.list_plans);
 
-        ManageListAdapter.PlanLongClickListener mLongClickListener = new ManageListAdapter.PlanLongClickListener() {
+        ManageListAdapter.PlanClickListener mLongClickListener = new ManageListAdapter.PlanClickListener() {
             @Override
             public boolean planLongClickListener() {
                 mAdapter.setVisible();
@@ -82,8 +82,14 @@ public class ManageFragment extends android.support.v4.app.Fragment{
                 editMode=true;
                 return false;
             }
+
+            @Override
+            public boolean planClickListener() {
+                //start activity
+                return false;
+            }
         };
-        mAdapter = new ManageListAdapter(getContext(),planList,mLongClickListener);
+        mAdapter = new ManageListAdapter(getContext(),planList,mLongClickListener,db);
         list.setAdapter(mAdapter);
 
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL,false);

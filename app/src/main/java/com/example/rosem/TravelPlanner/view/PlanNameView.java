@@ -19,9 +19,10 @@ import com.example.rosem.TravelPlanner.R;
 public class PlanNameView extends RelativeLayout {
 
     private TextView planName;
-    private ImageView upIcon;
-    private ImageView downIcon;
+    //private ImageView upIcon;
+    //private ImageView downIcon;
     private ImageView deleteIcon;
+    private ImageView okIcon;
     private Typeface fontType;
     private Context context;
     private int iconColor;
@@ -42,15 +43,19 @@ public class PlanNameView extends RelativeLayout {
         planName = (TextView)findViewById(R.id.plan_name);
         planName.setTypeface(fontType);
 
-        upIcon = (ImageView)findViewById(R.id.plan_name_list_up);
+        //upIcon = (ImageView)findViewById(R.id.plan_name_list_up);
 
-        downIcon = (ImageView)findViewById(R.id.plan_name_list_down);
+        //downIcon = (ImageView)findViewById(R.id.plan_name_list_down);
 
         deleteIcon = (ImageView)findViewById(R.id.plan_name_delete);
+        okIcon = (ImageView)findViewById(R.id.plan_name_ok);
 
-        upIcon.setVisibility(INVISIBLE);
-        downIcon.setVisibility(INVISIBLE);
+       // upIcon.setVisibility(INVISIBLE);
+        //downIcon.setVisibility(INVISIBLE);
         deleteIcon.setVisibility(INVISIBLE);
+
+        setDeleteIcon();
+        setOkIcon();
     }
 
     public void setTypeface(Typeface fontType)
@@ -58,12 +63,19 @@ public class PlanNameView extends RelativeLayout {
         planName.setTypeface(fontType);
     }
 
-    public void setDeleteIcon(int imgId) {
+    public void setDeleteIcon() {
 
-        Drawable img = ContextCompat.getDrawable(context,imgId);
+        Drawable img = ContextCompat.getDrawable(context,R.mipmap.trash_bin);
         img.setColorFilter(iconColor,iconMode);
 
         deleteIcon.setImageDrawable(img);
+    }
+
+    public void setOkIcon()
+    {
+        Drawable img = ContextCompat.getDrawable(context,R.mipmap.ok_pressed);
+        img.setColorFilter(iconColor,iconMode);
+        okIcon.setImageDrawable(img);
     }
 
     public void setDownIcon(int imgId) {
@@ -71,7 +83,7 @@ public class PlanNameView extends RelativeLayout {
         Drawable img = ContextCompat.getDrawable(context,imgId);
         img.setColorFilter(iconColor,iconMode);
 
-        downIcon.setImageDrawable(img);
+        //downIcon.setImageDrawable(img);
     }
 
     public void setUpIcon(int imgId) {
@@ -79,7 +91,7 @@ public class PlanNameView extends RelativeLayout {
         Drawable img = ContextCompat.getDrawable(context,imgId);
         img.setColorFilter(iconColor,iconMode);
 
-        upIcon.setImageDrawable(img);
+        //upIcon.setImageDrawable(img);
     }
 
     public void setDeleteIcon(Drawable img) {
@@ -89,12 +101,12 @@ public class PlanNameView extends RelativeLayout {
 
     public void setDownIcon(Drawable img) {
         img.setColorFilter(iconColor,iconMode);
-        downIcon.setImageDrawable(img);
+        //downIcon.setImageDrawable(img);
     }
 
     public void setUpIcon(Drawable img) {
         img.setColorFilter(iconColor,iconMode);
-        upIcon.setImageDrawable(img);
+        //upIcon.setImageDrawable(img);
     }
 
     public String getPlanName() {
@@ -107,30 +119,34 @@ public class PlanNameView extends RelativeLayout {
 
     public void toggleVisibility()
     {
-        if(upIcon.getVisibility()==VISIBLE)
+        if(deleteIcon.getVisibility()==VISIBLE)
         {
-            upIcon.setVisibility(INVISIBLE);
-            downIcon.setVisibility(INVISIBLE);
+           // upIcon.setVisibility(INVISIBLE);
+           // downIcon.setVisibility(INVISIBLE);
             deleteIcon.setVisibility(INVISIBLE);
+            okIcon.setVisibility(INVISIBLE);
         }
         else
         {
-            upIcon.setVisibility(VISIBLE);
-            downIcon.setVisibility(VISIBLE);
+          //  upIcon.setVisibility(VISIBLE);
+           // downIcon.setVisibility(VISIBLE);
             deleteIcon.setVisibility(VISIBLE);
+            okIcon.setVisibility(VISIBLE);
         }
     }
 
     public void setVisible()
     {
-        upIcon.setVisibility(VISIBLE);
-        downIcon.setVisibility(VISIBLE);
+       // upIcon.setVisibility(VISIBLE);
+       // downIcon.setVisibility(VISIBLE);
         deleteIcon.setVisibility(VISIBLE);
+        okIcon.setVisibility(VISIBLE);
     }
     public void setInvisible()
     {
-        upIcon.setVisibility(INVISIBLE);
-        downIcon.setVisibility(INVISIBLE);
+       // upIcon.setVisibility(INVISIBLE);
+       // downIcon.setVisibility(INVISIBLE);
         deleteIcon.setVisibility(INVISIBLE);
+        okIcon.setVisibility(INVISIBLE);
     }
 }

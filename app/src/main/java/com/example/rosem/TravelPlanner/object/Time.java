@@ -49,10 +49,14 @@ public class Time {
                 result.min = result.min- 60;
                 result.hour++;
             }
-            result.hour = (result.hour+this.hour + t.hour)%25;
+            result.hour = (result.hour+this.hour + t.hour);
             return result;
         }
+    }
 
+    public Time convertTimeOfDay()
+    {
+        return new Time((this.hour)%24, this.min);
     }
 
     public void setTime(int hour, int min)
@@ -135,15 +139,24 @@ public class Time {
     }
     public String toString()
     {
-        String str = Integer.toString(hour)+":"+Integer.toString(min);
+        Time t = convertTimeOfDay();
+        String str = Integer.toString(t.hour)+":"+Integer.toString(t.min);
         return str;
     }
     public String toStringInText()
     {
         String str = null;
-        if(hour==0)
+        if(hour==0 && min ==0)
+        {
+            return "";
+        }
+        else if(hour==0)
         {
             str = Integer.toString(min)+"min";
+        }
+        else if(min==0)
+        {
+            str = Integer.toString(hour)+"hour";
         }
         else
         {

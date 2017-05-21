@@ -13,4 +13,5 @@
     <color name="colorFontDark">#3d4c5b</color>
     <color name="colorDark">#3d4c5b</color>
     <color name="colorCourseTitle">#0df2e3</color>
+    <color name="colorBackgroundGrey">#f1f3f3</color>
 </resources>
