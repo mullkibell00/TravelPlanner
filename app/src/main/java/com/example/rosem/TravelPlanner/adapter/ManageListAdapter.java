@@ -7,11 +7,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.example.rosem.TravelPlanner.R;
+import com.example.rosem.TravelPlanner.plan.Plan;
 import com.example.rosem.TravelPlanner.view.PlanNameView;
 
 import java.util.ArrayList;
 
 import io.realm.Realm;
+import io.realm.RealmResults;
 
 /**
  * Created by rosem on 2017-02-25.
@@ -92,6 +94,12 @@ public class ManageListAdapter extends RecyclerView.Adapter<ManageListAdapter.Vi
                 @Override
                 public void onClick(View v) {
                     //transaction
+                    PlanNameView view = (PlanNameView)v;
+                    RealmResults<Plan> result = database.where(Plan.class).equalTo("planName",view.getPlanName()).findAll();
+
+                    database.beginTransaction();
+                    result.deleteAllFromRealm();
+                    database.commitTransaction();
                 }
             });
 
