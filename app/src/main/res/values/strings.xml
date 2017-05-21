@@ -4,6 +4,7 @@
     <string name="google_android_api_key">AIzaSyAVP_0vf3IB8IVH3G7Ga38eH8KIeWhhw1E</string>
     <string name="google_http_api_key">AIzaSyBrc43xV_1kSDrzfX-Nl8_Um3wnZpYjOow</string>
     <string name="google_wep_clinet_api_key">39263848410-0agn4mmm9r4msjf7dtfmkos6c6gec812.apps.googleusercontent.com</string>
+    <string name="server_base_addr">http://52.88.195.16:8080/travelPlanner/</string>
 
     <!--sign in releated-->
     <string name="login_failed">로그인에 실패했습니다. 앱 재실행 후 다시 시도해주십시오. 에러코드 </string>
@@ -99,4 +100,9 @@
     <string name="plan_info_title"> 일정 정보</string>
     <string name="total_cost_time">총 이동 시간 : </string>
     <string name="plan_info_country">여행하는 나라 : </string>
+    <string name="alert_save">플랜을 저장하시겠습니까?</string>
+    <string name="save_success">플랜을 저장했습니다.</string>
+
+    <!-- server related error message-->
+    <string name="error">에러가 발생했습니다. 에러코드 : -</string>
 </resources>

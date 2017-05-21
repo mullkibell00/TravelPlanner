@@ -188,7 +188,8 @@ public class CreatePlanActivity extends AppCompatActivity {
         }
         else if(currentStep==STEP_NUM)
         {
-            currentStep--;
+            finish();
+            return;
         }
         else if(currentStep==HOTEL_RECOMMEND)
         {

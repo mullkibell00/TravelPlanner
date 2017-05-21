@@ -1,7 +1,9 @@
 package com.example.rosem.TravelPlanner.Fragment;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -9,13 +11,16 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.rosem.TravelPlanner.Interface.SavePlanService;
 import com.example.rosem.TravelPlanner.R;
 import com.example.rosem.TravelPlanner.Activity.CreatePlanActivity;
 import com.example.rosem.TravelPlanner.course.Course;
@@ -23,6 +28,9 @@ import com.example.rosem.TravelPlanner.object.Site;
 import com.example.rosem.TravelPlanner.object.Time;
 import com.example.rosem.TravelPlanner.plan.Plan;
 import com.example.rosem.TravelPlanner.plan.PlanAdapter;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.crash.FirebaseCrash;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -36,11 +44,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.LinkedList;
 
 import io.realm.Realm;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
 
 /**
  * Created by rosem on 2017-03-07.
@@ -58,12 +69,15 @@ public class SchedulingFragment extends Fragment {
     Typeface fontType;
     ProgressDialog progressDialog;
     ProgressHandler handler;
+    ServerResponseHandler serverHandler;
 
     //about handler message
     private final int UPDATE_UI = 1231;
     private final int SCHEDULE_DONE = 1466;
     private final int FINISH = 6323;
     private final int START = 3256;
+    private final int SERVER_DONE = 1567;
+    private String errorMsg;
 
     //var
     LinkedList<Site> hotel = null;
@@ -86,6 +100,8 @@ public class SchedulingFragment extends Fragment {
     //long [][] timeMatrix;
     //long [][] fareMatrix;
 
+    AlertDialog saveDialog;
+
     public static SchedulingFragment newInstance()
     {
         SchedulingFragment fragment = new SchedulingFragment();
@@ -97,12 +113,6 @@ public class SchedulingFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         fontType = ((CreatePlanActivity)getActivity()).getFontType();
-        siteList = ((CreatePlanActivity)getActivity()).getSite();
-        tourStart = ((CreatePlanActivity)getActivity()).getTourStart();
-        tourEnd = ((CreatePlanActivity)getActivity()).getTourEnd();
-        hotel = new LinkedList<Site>(((CreatePlanActivity)getActivity()).getHotel());
-        hotel.addFirst(((CreatePlanActivity)getActivity()).getStartPoint());
-        hotel.addLast(((CreatePlanActivity)getActivity()).getEndPoint());
 
         STEP_NUM = getResources().getInteger(R.integer.scheduling_steps);
         messages = new String[STEP_NUM];
@@ -114,16 +124,31 @@ public class SchedulingFragment extends Fragment {
 
         progressDialog = new ProgressDialog(getContext());
         handler = new ProgressHandler();
+        serverHandler = new ServerResponseHandler();
 
         timeUnit = getResources().getInteger(R.integer.time_unit);
         hourTimeUnit = 60/timeUnit;
 
-        numOfSite = siteList.size();
-        numOfHotel = hotel.size();
-        totalNodeNum = numOfSite+numOfHotel;
-
         //timeMatrix = new long[totalNodeNum][totalNodeNum];
         //fareMatrix = new long[totalNodeNum][totalNodeNum];
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setMessage(getString(R.string.alert_save));
+        builder.setNegativeButton(getString(R.string.txt_no), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        builder.setPositiveButton(getString(R.string.txt_yes), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                saveData();
+            }
+        });
+        saveDialog = builder.create();
+
+        errorMsg = getString(R.string.error);
 
     }
 
@@ -131,6 +156,17 @@ public class SchedulingFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup view = (ViewGroup)inflater.inflate(R.layout.plan_schedule,container,false);
+
+        siteList = ((CreatePlanActivity)getActivity()).getSite();
+        tourStart = ((CreatePlanActivity)getActivity()).getTourStart();
+        tourEnd = ((CreatePlanActivity)getActivity()).getTourEnd();
+        hotel = new LinkedList<Site>(((CreatePlanActivity)getActivity()).getHotel());
+        hotel.addFirst(((CreatePlanActivity)getActivity()).getStartPoint());
+        hotel.addLast(((CreatePlanActivity)getActivity()).getEndPoint());
+
+        numOfSite = siteList.size();
+        numOfHotel = hotel.size();
+        totalNodeNum = numOfSite+numOfHotel;
 
       //  if(resultSchedule==null)
       //  {
@@ -161,7 +197,6 @@ public class SchedulingFragment extends Fragment {
         prevButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveData(-1);
                 ((CreatePlanActivity)getActivity()).movePrev();
             }
         });
@@ -169,33 +204,68 @@ public class SchedulingFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 //saveData();
-                saveData(1);
-                ((CreatePlanActivity)getActivity()).moveNext();
+                if(plan!=null && !saveDialog.isShowing())
+                {
+                    saveDialog.show();
+                }
             }
         });
         return view;
     }
 
-    private void saveData(int order)
+    private void saveData()
     {
+        //realm에 저장
+        //save plan
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        //만약 코드에서 생성한 객체를 집어넣으려면 copyTo를!
+        realm.copyToRealmOrUpdate(plan);
+        realm.commitTransaction();
+        if(realm!=null)
+        {
+            realm.close();
+        }
 
-        if(order==1 && plan!=null)
+        //서버에 전송
+        JSONObject body = new JSONObject();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user==null)
         {
-            //save plan
-            Realm realm = Realm.getDefaultInstance();
-            realm.beginTransaction();
-            //만약 코드에서 생성한 객체를 집어넣으려면 copyTo를!
-            realm.copyToRealmOrUpdate(plan);
-            realm.commitTransaction();
-            if(realm!=null)
+            return;
+        }
+
+        //creating body
+        try {
+            body.put("country",plan.getCountry());
+            body.put("planName",plan.getPlanName());
+            body.put("numOfDay",plan.getNumOfDays());
+            body.put("userId",user.getUid());
+            if(plan.setPlanArrayFromPlan())
             {
-                realm.close();
+                body.put("plan",plan.getPlan());
             }
+            else
+            {
+                Toast.makeText(getContext(),
+                        errorMsg+getResources().getInteger(R.integer.error_server_plan_to_json), Toast.LENGTH_SHORT).show();
+                return;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            FirebaseCrash.report(e);
+            Toast.makeText(getContext(), errorMsg+getResources().getInteger(R.integer.error_server_body_json), Toast.LENGTH_SHORT).show();
         }
-       else if(order==0)
-        {
-            //save plan temporarily
+        //send to server
+        try {
+            String strBody = URLEncoder.encode(body.toString(),"UTF-8");
+            new SaveToServer(strBody,serverHandler).execute();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            FirebaseCrash.report(e);
+            Toast.makeText(getContext(), errorMsg+getResources().getInteger(R.integer.error_server_encoding), Toast.LENGTH_SHORT).show();
         }
+
     }
 
     private void updateList()
@@ -511,12 +581,14 @@ public class SchedulingFragment extends Fragment {
                    JSONObject empty = new JSONObject();
                    results.put(empty);
                    e.printStackTrace();
+                   FirebaseCrash.report(e);
                    return false;
                }//end of parsing try/ catch
 
                //data 처리
            } catch (IOException e) {
                e.printStackTrace();
+               FirebaseCrash.report(e);
                Log.v("Schedule::Request", "sending failed");
                return false;
            }
@@ -555,6 +627,66 @@ public class SchedulingFragment extends Fragment {
                     progressDialog.dismiss();
                     break;
             }
+        }
+    }
+
+    private class ServerResponseHandler extends Handler
+    {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+
+            switch (msg.what)
+            {
+                case SERVER_DONE:
+                    ((CreatePlanActivity)getActivity()).moveNext();
+                    Toast.makeText(getContext(), getString(R.string.save_success), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private class SaveToServer extends AsyncTask<Call<ResponseBody>,Void,String>
+    {
+        String body;
+        ServerResponseHandler handler;
+        public SaveToServer(String body, ServerResponseHandler handler) {
+            super();
+            this.body = body;
+            this.handler = handler;
+        }
+
+        @Override
+        protected String doInBackground(Call<ResponseBody>... params) {
+            SavePlanService saveService = SavePlanService.retrofit.create(SavePlanService.class);
+            Call<ResponseBody>  call = saveService.savePlan(body);
+            ResponseBody response = null;
+            try {
+                 response = call.execute().body();
+            } catch (IOException e) {
+                e.printStackTrace();
+                FirebaseCrash.report(e);
+                Toast.makeText(getContext(), errorMsg+getResources().getInteger(R.integer.error_server_netowrk), Toast.LENGTH_SHORT).show();
+            }
+            if(response!=null)
+            {
+                try {
+                    return response.string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            //super.onPostExecute(s);
+            if(s!=null)
+            {
+                Log.v("SERVER_SAVE::",s);
+                Toast.makeText(getContext(), s, Toast.LENGTH_SHORT).show();
+            }
+            handler.sendEmptyMessage(SERVER_DONE);
         }
     }
 }

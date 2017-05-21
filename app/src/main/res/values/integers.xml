@@ -5,4 +5,10 @@
     <integer name="zoom_level">16</integer>
     <integer name="scheduling_steps">3</integer>
     <integer name="time_unit">10</integer>
+
+    <!--error code-->
+    <integer name="error_server_body_json">3000</integer>
+    <integer name="error_server_plan_to_json">3001</integer>
+    <integer name="error_server_netowrk">3002</integer>
+    <integer name="error_server_encoding">3003</integer>
 </resources>
