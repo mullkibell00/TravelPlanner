@@ -234,11 +234,12 @@ public class SchedulingFragment extends Fragment {
             for(int courseIdx = 0; courseIdx<courseNum;courseIdx++)
             {
                 Course c = new Course();
-                Course travel = null;
+               // Course travel = null;
                 int curSiteIdx = daySchedule.get(courseIdx);
                 Site site = sites.get(curSiteIdx);
                 Time startTime = new Time();
                 Time costTime = new Time();
+                String costMoney = null;
                 Time endTime = null;
                 Time freeStartTime = null;
                 Time freeEndTime = null;
@@ -257,15 +258,15 @@ public class SchedulingFragment extends Fragment {
                     {
                         costTime = unitToTime(costMat[curSiteIdx][prevSiteIdx]);
                         //traveling time setting
-                        travel = new Course();
-                        travel.setName("Travel Time");
-                        travel.setTime(presentTime.toString(), presentTime.add(costTime).toString());
-                        travel.setSpendTime(costTime.toStringInText());
+                      //  travel = new Course();
+                     //   travel.setName("Travel Time");
+                     //   travel.setTime(presentTime.toString(), presentTime.add(costTime).toString());
+                     //   travel.setSpendTime(costTime.toStringInText());
                     }
                     if(fareStringMat!=null)
                     {
                         fare = fareStringMat[curSiteIdx][prevSiteIdx];
-                        travel.setCostMoney(fare);
+                      //  travel.setCostMoney(fare);
                     }
                     if(site.getVisitTime()!=null)
                     {
@@ -275,7 +276,7 @@ public class SchedulingFragment extends Fragment {
                         if(freeEndTime.compareTo(freeStartTime)==1)
                         {
                             freeTimeCourse = new Course();
-                            freeTimeCourse.setName("Free Time");
+                            freeTimeCourse.setName(getString(R.string.free_time));
                             freeTimeCourse.setTime(freeStartTime.toString(), freeEndTime.toString());
                             freeTimeCourse.setSpendTime(freeEndTime.sub(freeStartTime).toStringInText());
                         }
@@ -286,11 +287,12 @@ public class SchedulingFragment extends Fragment {
                     }
                 }
                 endTime = startTime.add(site.getSpendTime());
-
+/*
                 if(travel!=null)
                 {
                     day.put(travel);
                 }
+               */
                 if(freeTimeCourse!=null)
                 {
                     day.put(freeTimeCourse);
@@ -304,6 +306,7 @@ public class SchedulingFragment extends Fragment {
                 {
                     c.setTime(startTime.toString(), endTime.toString());
                     c.setSpendTime(site.getSpendTime().toStringInText());
+                    c.setCostTime(costTime.toString());
                 }
                 //c.setCostMoney(fare);
                 c.setAddr(site.getAddress());

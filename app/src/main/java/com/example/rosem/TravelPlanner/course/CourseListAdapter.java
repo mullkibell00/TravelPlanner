@@ -39,6 +39,11 @@ public class CourseListAdapter extends RecyclerView.Adapter<CourseListAdapter.Vi
     public void onBindViewHolder(CourseListAdapter.ViewHolder holder, int position) {
         holder.course.setCourse(mItems.get(position));
         holder.course.setTypeface(fontType);
+        holder.course.setIndex(position);
+        if(position==0)
+        {
+            holder.course.setCostTimeVisibility(View.INVISIBLE);
+        }
     }
 
     @Override

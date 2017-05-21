@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
         c.setName("London Eye");
         c.setTime("10:00~10:15");
         c.setSpendTime("15min");
-        c.setCostMoney("10pounds");
+        c.setCostTime("10min");
         c.setAddr("London");
 
         day1.put(c);
@@ -165,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
         c2.setName("London Bridge");
         c2.setTime("10:35~11:00");
         c2.setSpendTime("20min");
-        c2.setCostMoney("5pounds");
+        c2.setCostTime("5min");
         c2.setAddr("London");
 
         day1.put(c2);
@@ -179,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
         c3.setName("London Tower");
         c3.setTime("10:10~10:15");
         c3.setSpendTime("10min");
-        c3.setCostMoney("15pounds");
+        c3.setCostTime("15min");
         c3.setAddr("London");
 
         day2.put(c3);
@@ -189,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
         c4.setName("Great Britain Museum");
         c4.setTime("10:45~13:00");
         c4.setSpendTime("30min");
-        c4.setCostMoney("20pounds");
+        c4.setCostTime("20min");
         c4.setAddr("London");
 
         day2.put(c4);

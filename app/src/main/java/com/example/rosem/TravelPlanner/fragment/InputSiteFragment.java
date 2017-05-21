@@ -400,8 +400,8 @@ public class InputSiteFragment extends Fragment {
             TextView textVisitTime = (TextView)dialogView.findViewById(R.id.dialog_site_txt_visit_time);
            // visitDayBtn = (TextView)dialogView.findViewById(R.id.dialog_site_selected_visit_day);
             visitTimeBtn = (TextView)dialogView.findViewById(R.id.dialog_site_selected_visit_time);
-            //textVistDay.setTypeface(fontType); textVisitTime.setTypeface(fontType);
-            //visitDayBtn.setTypeface(fontType); visitTimeBtn.setTypeface(fontType);
+            //textVistDay.setTypeface(fontType);visitDayBtn.setTypeface(fontType);
+            textVisitTime.setTypeface(fontType); visitTimeBtn.setTypeface(fontType);
 /*
             //set onClickListener in dialog
             visitDayBtn.setOnClickListener(new View.OnClickListener() {

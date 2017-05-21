@@ -16,6 +16,7 @@ public class Course {
     private String mTime;
     private String mSpendTime;
     private String mCostMoney;
+    private String mCostTime;
     public static final int START=0;
     public static final int END = 1;
 
@@ -44,6 +45,7 @@ public class Course {
     {
         return mCostMoney;
     }
+    public String getCostTime() {return mCostTime;}
 
     public void setName(String name)
     {
@@ -57,6 +59,7 @@ public class Course {
     {
         mTime = time;
     }
+    public void setCostTime(String time) { mCostTime = time ;}
     public void setTime(String start, String end){ mTime = start+"~"+end; }
     public void setSpendTime(String time)
     {
@@ -97,6 +100,10 @@ public class Course {
             if(courseJson.has("mTime"))
             {
                 c.setTime(courseJson.getString("mTime"));
+            }
+            if(courseJson.has("mCostTime"))
+            {
+                c.setCostTime(courseJson.getString("mCostTime"));
             }
 
             return c;

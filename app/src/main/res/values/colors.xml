@@ -12,4 +12,5 @@
     <color name="colorLightButton">#8fd3e0</color>
     <color name="colorFontDark">#3d4c5b</color>
     <color name="colorDark">#3d4c5b</color>
+    <color name="colorCourseTitle">#0df2e3</color>
 </resources>

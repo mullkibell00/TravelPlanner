@@ -3,6 +3,7 @@ package com.example.rosem.TravelPlanner.course;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -17,7 +18,9 @@ public class CourseView extends RelativeLayout {
     private TextView mAddr;
     private TextView mTime;
     private TextView mSpendTime;
-    private TextView mCostMoney;
+    private TextView mCostTime;
+    private TextView mIndex;
+    private View mDivider;
 
     public CourseView(Context context, Course course)
     {
@@ -34,12 +37,15 @@ public class CourseView extends RelativeLayout {
         mTime = (TextView)findViewById(R.id.time);
         mTime.setText(course.getTime());
 
-        mSpendTime = (TextView)findViewById(R.id.cost_time);
+        mSpendTime = (TextView)findViewById(R.id.spend_time);
         mSpendTime.setText(course.getSpendTime());
 
-        mCostMoney = (TextView)findViewById(R.id.cost_money);
-        mCostMoney.setText(course.getCostMoney());
+        mCostTime = (TextView)findViewById(R.id.cost_time);
+        mCostTime.setText(course.getCostMoney());
 
+        mIndex = (TextView)findViewById(R.id.index);
+
+        mDivider = (View)findViewById(R.id.cost_time_underline);
     }
 
     public CourseView(Context context)
@@ -54,9 +60,13 @@ public class CourseView extends RelativeLayout {
 
         mTime = (TextView)findViewById(R.id.time);
 
-        mSpendTime = (TextView)findViewById(R.id.cost_time);
+        mSpendTime = (TextView)findViewById(R.id.spend_time);
 
-        mCostMoney = (TextView)findViewById(R.id.cost_money);
+        mCostTime = (TextView)findViewById(R.id.cost_time);
+
+        mIndex = (TextView)findViewById(R.id.index);
+
+        mDivider = (View)findViewById(R.id.cost_time_underline);
 
     }
 
@@ -81,8 +91,19 @@ public class CourseView extends RelativeLayout {
         }
         else
         {
-            mCostMoney.setText(data);
+            mCostTime.setText(data);
         }
+    }
+
+    public void setCostTimeVisibility(int visibility)
+    {
+        mCostTime.setVisibility(visibility);
+        mDivider.setVisibility(visibility);
+    }
+
+    public void setIndex(int position)
+    {
+        mIndex.setText(Integer.toString(position));
     }
 
     public void setCourse(Course c)
@@ -91,7 +112,7 @@ public class CourseView extends RelativeLayout {
         mAddr.setText(c.getAddr());
         mTime.setText(c.getTime());
         mSpendTime.setText(c.getSpendTime());
-        mCostMoney.setText(c.getCostMoney());
+        mCostTime.setText(c.getCostTime());
     }
 
     public void setTypeface(Typeface fontType)
@@ -99,7 +120,8 @@ public class CourseView extends RelativeLayout {
         mName.setTypeface(fontType);
         mAddr.setTypeface(fontType);
         mTime.setTypeface(fontType);
-        mCostMoney.setTypeface(fontType);
+        mCostTime.setTypeface(fontType);
         mSpendTime.setTypeface(fontType);
+        mIndex.setTypeface(fontType);
     }
 }

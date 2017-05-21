@@ -5,18 +5,59 @@
     android:layout_marginBottom="10dp"
     >
     <TextView
+        android:layout_marginLeft="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp"
+        android:id="@+id/cost_time" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/list_line_divider"
+        android:backgroundTint="@color/colorFontLightGrey"
+        android:layout_below="@+id/cost_time"
+        android:id="@+id/cost_time_underline"
+        ></View>
+    <LinearLayout
+        android:layout_width="61dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_below="@+id/cost_time_underline"
+        android:gravity="center"
+        android:id="@+id/index_layout"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="41sp"
+            android:textColor="@color/colorCourseTitle"
+            android:textAlignment="center"
+            android:id="@+id/index"
+            />
+    </LinearLayout>
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="30dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
+        android:textSize="20sp"
+        android:textColor="@color/colorCourseTitle"
+        android:layout_below="@+id/cost_time_underline"
+        android:layout_toRightOf="@+id/index_layout"
         android:id="@+id/name"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/time"
+        android:id="@+id/addr"
+        android:textSize="15sp"
+        android:textColor="@color/colorFontLightGrey"
         android:layout_alignBaseline="@+id/name"
         android:layout_alignBottom="@+id/name"
         android:layout_toRightOf="@+id/name"
@@ -28,9 +69,11 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/name"
         android:layout_marginTop="5dp"
+        android:textSize="15sp"
+        android:textColor="@color/colorFontGrey"
         android:layout_marginLeft="30dp"
-        android:layout_alignParentLeft="true"
-        android:id="@+id/addr"/>
+        android:layout_toRightOf="@+id/index_layout"
+        android:id="@+id/time"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -44,11 +87,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/cost_time"/>
-        <TextView
-            android:layout_marginLeft="30dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/cost_money" />
+            android:textColor="@color/colorFontLightGrey"
+            android:textSize="15sp"
+            android:id="@+id/spend_time"/>
     </LinearLayout>
 </RelativeLayout>

@@ -128,7 +128,7 @@ public class HotelRecommendFragment extends Fragment {
             Toast.makeText(getContext(), getString(R.string.input_check_select_hotel), Toast.LENGTH_SHORT).show();
             return false;
         }
-        return false;
+        return true;
     }
 
     private void saveData()
