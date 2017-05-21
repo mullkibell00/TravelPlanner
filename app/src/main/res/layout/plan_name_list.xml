@@ -34,6 +34,13 @@
     <ImageView
         android:layout_width="30dp"
         android:layout_height="30dp"
+        android:id="@+id/plan_name_favorite"
+        android:layout_toLeftOf="@+id/plan_name_delete"
+        android:layout_marginLeft="10dp"
+        />
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:id="@+id/plan_name_delete"
         android:layout_toLeftOf="@+id/plan_name_ok"
         android:layout_marginLeft="10dp"

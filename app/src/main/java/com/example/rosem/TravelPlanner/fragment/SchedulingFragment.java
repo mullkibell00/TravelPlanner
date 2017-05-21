@@ -148,6 +148,7 @@ public class SchedulingFragment extends Fragment {
         tabs.setupWithViewPager(pager);
 
         planInfo = (TextView)view.findViewById(R.id.plan_info);
+        planInfo.setText(((CreatePlanActivity)getActivity()).getPlanName()+getString(R.string.plan_info_title));
         planInfoCountry = (TextView)view.findViewById(R.id.plan_info_country);
         planInfoCostTime = (TextView)view.findViewById(R.id.plan_info_cost_time);
         planInfo.setTypeface(fontType); planInfoCountry.setTypeface(fontType);

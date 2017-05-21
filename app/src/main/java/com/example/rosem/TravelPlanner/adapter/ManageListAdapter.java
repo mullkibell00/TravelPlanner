@@ -1,11 +1,16 @@
 package com.example.rosem.TravelPlanner.adapter;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.example.rosem.TravelPlanner.Fragment.FavoriteFragment;
 import com.example.rosem.TravelPlanner.R;
 import com.example.rosem.TravelPlanner.plan.Plan;
 import com.example.rosem.TravelPlanner.view.PlanNameView;
@@ -25,14 +30,68 @@ public class ManageListAdapter extends RecyclerView.Adapter<ManageListAdapter.Vi
     private Context mContext;
     private boolean visible;
     private PlanClickListener mListener;
+    private DeleteAlertDialog deleteAlert;
+    private FavoriteAlertDialog favoriteAlert;
     Realm database;
 
-    public ManageListAdapter(Context context, ArrayList<String>planList, PlanClickListener listener, Realm db) {
+    public ManageListAdapter(final Context context, final ArrayList<String>planList, PlanClickListener listener, Realm db) {
         super();
         mContext = context;
         this.planList = planList;
         mListener = listener;
         database = db;
+
+        deleteAlert  = new DeleteAlertDialog(context);
+        deleteAlert.setMessage(context.getString(R.string.alert_delete));
+        deleteAlert.setButton(DialogInterface.BUTTON_NEGATIVE, context.getString(R.string.txt_no), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        deleteAlert.setButton(DialogInterface.BUTTON_POSITIVE, context.getString(R.string.txt_yes), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //transaction
+                RealmResults<Plan> result = database.where(Plan.class).equalTo("planName", deleteAlert.planName).findAll();
+
+                database.beginTransaction();
+                result.deleteAllFromRealm();
+                database.commitTransaction();
+                Toast.makeText(context, context.getString(R.string.delete_success), Toast.LENGTH_SHORT).show();
+                planList.remove(deleteAlert.planName);
+                notifyDataSetChanged();
+            }
+        });
+
+        favoriteAlert = new FavoriteAlertDialog(context);
+        favoriteAlert.setMessage(context.getString(R.string.alert_favorite));
+        favoriteAlert.setButton(DialogInterface.BUTTON_NEGATIVE, context.getString(R.string.txt_no), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        favoriteAlert.setButton(DialogInterface.BUTTON_POSITIVE, context.getString(R.string.txt_yes), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Plan prevPlan = database.where(Plan.class).equalTo("isFavorite",true).findFirst();
+                Plan curPlan = database.where(Plan.class).equalTo("planName",favoriteAlert.planName).findFirst();
+                if(prevPlan!=null)
+                {
+                    database.beginTransaction();
+                    prevPlan.setFavorite(false);
+                    database.copyToRealmOrUpdate(prevPlan);
+                    database.commitTransaction();
+                }
+                database.beginTransaction();
+                curPlan.setFavorite(true);
+                database.copyToRealmOrUpdate(curPlan);
+                database.commitTransaction();
+                Toast.makeText(context, context.getString(R.string.alert_favorite_success), Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     @Override
@@ -69,12 +128,16 @@ public class ManageListAdapter extends RecyclerView.Adapter<ManageListAdapter.Vi
     {
         public PlanNameView nameView;
         public ImageView deleteIcon;
+        public ImageView favoriteIcon;
+        public ImageView okIcon;
 
         public ViewHolder(View itemView) {
             super(itemView);
             //textView = (CheckedTextView)itemView.findViewById(R.id.country_list_item);
             nameView = (PlanNameView)itemView;
             deleteIcon = (ImageView)nameView.findViewById(R.id.plan_name_delete);
+            okIcon = (ImageView)nameView.findViewById(R.id.plan_name_ok);
+            favoriteIcon = (ImageView)nameView.findViewById(R.id.plan_name_favorite);
 
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
@@ -86,24 +149,30 @@ public class ManageListAdapter extends RecyclerView.Adapter<ManageListAdapter.Vi
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mListener.planClickListener();
+                    mListener.planClickListener(nameView.getPlanName());
                 }
             });
 
             deleteIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //transaction
-                    PlanNameView view = (PlanNameView)v;
-                    RealmResults<Plan> result = database.where(Plan.class).equalTo("planName",view.getPlanName()).findAll();
-
-                    database.beginTransaction();
-                    result.deleteAllFromRealm();
-                    database.commitTransaction();
+                    deleteAlert.showDialog(nameView.getPlanName());
                 }
             });
 
+            okIcon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    setInvisible();
+                }
+            });
 
+            favoriteIcon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    favoriteAlert.showDialog(nameView.getPlanName());
+                }
+            });
         }
 
 
@@ -135,7 +204,36 @@ public class ManageListAdapter extends RecyclerView.Adapter<ManageListAdapter.Vi
     public interface PlanClickListener
     {
         public boolean planLongClickListener();
-        public boolean planClickListener();
+        public boolean planClickListener(String planName);
+    }
+
+    private class DeleteAlertDialog extends AlertDialog
+    {
+        String planName;
+        protected DeleteAlertDialog(@NonNull Context context) {
+            super(context);
+        }
+
+        public void showDialog(String planName)
+        {
+            this.planName = planName;
+            show();
+        }
+    }
+
+    private class FavoriteAlertDialog extends AlertDialog
+    {
+        String planName;
+
+        protected FavoriteAlertDialog(@NonNull Context context) {
+            super(context);
+        }
+
+        public void showDialog(String planName)
+        {
+            this.planName = planName;
+            show();
+        }
     }
 
 }

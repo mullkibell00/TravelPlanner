@@ -18,6 +18,13 @@
     <string name="google_http_searching_loc">https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=</string>
     <string name="google_http_matrix_head">https://maps.googleapis.com/maps/api/distancematrix/json?</string>
 
+    <!--activity-->
+    <string name="plan_detail_title">플랜 조회</string>
+
+    <!--alert-->
+    <string name="alert_favorite">즐겨찾기로 등록하겠습니까?</string>
+    <string name="alert_favorite_success">즐겨찾기로 등록되었습니다.</string>
+
     <!--about views-->
     <string name="view_hotel_checkin">체크인</string>
     <string name="view_hotel_checkout">체크아웃</string>
@@ -60,6 +67,7 @@
     <string name="input_check_checkin_checkout">호텔 체크인 및 체크아웃 날짜를 입력해주세요.</string>
     <string name="input_check_hotel_num">하나 이상의 호텔을 입력해주세요.</string>
     <string name="alert_delete">삭제하시겠습니까?</string>
+    <string name="delete_success">삭제되었습니다.</string>
 
     <!--create plan - input site-->
     <string name="txt_add_site">방문지 추가</string>

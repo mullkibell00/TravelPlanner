@@ -23,6 +23,7 @@ public class PlanNameView extends RelativeLayout {
     //private ImageView downIcon;
     private ImageView deleteIcon;
     private ImageView okIcon;
+    private ImageView favoriteIcon;
     private Typeface fontType;
     private Context context;
     private int iconColor;
@@ -49,6 +50,7 @@ public class PlanNameView extends RelativeLayout {
 
         deleteIcon = (ImageView)findViewById(R.id.plan_name_delete);
         okIcon = (ImageView)findViewById(R.id.plan_name_ok);
+        favoriteIcon = (ImageView)findViewById(R.id.plan_name_favorite);
 
        // upIcon.setVisibility(INVISIBLE);
         //downIcon.setVisibility(INVISIBLE);
@@ -56,6 +58,7 @@ public class PlanNameView extends RelativeLayout {
 
         setDeleteIcon();
         setOkIcon();
+        setFavoriteIcon();
     }
 
     public void setTypeface(Typeface fontType)
@@ -69,6 +72,14 @@ public class PlanNameView extends RelativeLayout {
         img.setColorFilter(iconColor,iconMode);
 
         deleteIcon.setImageDrawable(img);
+    }
+
+    public void setFavoriteIcon()
+    {
+        Drawable img = ContextCompat.getDrawable(context,R.mipmap.favorite);
+        img.setColorFilter(iconColor,iconMode);
+
+        favoriteIcon.setImageDrawable(img);
     }
 
     public void setOkIcon()
@@ -125,6 +136,7 @@ public class PlanNameView extends RelativeLayout {
            // downIcon.setVisibility(INVISIBLE);
             deleteIcon.setVisibility(INVISIBLE);
             okIcon.setVisibility(INVISIBLE);
+            favoriteIcon.setVisibility(INVISIBLE);
         }
         else
         {
@@ -132,6 +144,7 @@ public class PlanNameView extends RelativeLayout {
            // downIcon.setVisibility(VISIBLE);
             deleteIcon.setVisibility(VISIBLE);
             okIcon.setVisibility(VISIBLE);
+            favoriteIcon.setVisibility(VISIBLE);
         }
     }
 
@@ -141,6 +154,7 @@ public class PlanNameView extends RelativeLayout {
        // downIcon.setVisibility(VISIBLE);
         deleteIcon.setVisibility(VISIBLE);
         okIcon.setVisibility(VISIBLE);
+        favoriteIcon.setVisibility(VISIBLE);
     }
     public void setInvisible()
     {
@@ -148,5 +162,6 @@ public class PlanNameView extends RelativeLayout {
        // downIcon.setVisibility(INVISIBLE);
         deleteIcon.setVisibility(INVISIBLE);
         okIcon.setVisibility(INVISIBLE);
+        favoriteIcon.setVisibility(INVISIBLE);
     }
 }

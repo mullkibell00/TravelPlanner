@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.example.rosem.TravelPlanner.Activity.PlanDetailActivity;
 import com.example.rosem.TravelPlanner.R;
 import com.example.rosem.TravelPlanner.Activity.CreatePlanActivity;
 import com.example.rosem.TravelPlanner.adapter.ManageListAdapter;
@@ -84,8 +85,11 @@ public class ManageFragment extends android.support.v4.app.Fragment{
             }
 
             @Override
-            public boolean planClickListener() {
+            public boolean planClickListener(String planName) {
                 //start activity
+                Intent intent = new Intent(getContext(), PlanDetailActivity.class);
+                intent.putExtra("planName",planName);
+                startActivity(intent);
                 return false;
             }
         };
