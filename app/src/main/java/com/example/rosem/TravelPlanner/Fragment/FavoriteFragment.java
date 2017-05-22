@@ -55,10 +55,12 @@ public class FavoriteFragment extends Fragment {
         db = Realm.getDefaultInstance();
         RealmResults <Plan> results = db.where(Plan.class).equalTo("isFavorite",true).findAll();
         Log.v("FavoriteFrag:::","resultSize="+results.size());
-        plan = results.first();
-        if(plan.setPlanArrayFromPlan())
+        if(results.size()>0)
         {
-            Log.v("FavoriteFrag:::","plan\n"+plan.toString());
+            plan = results.first();
+            if (plan.setPlanArrayFromPlan()) {
+                Log.v("FavoriteFrag:::", "plan\n" + plan.toString());
+            }
         }
 
     }
@@ -72,9 +74,11 @@ public class FavoriteFragment extends Fragment {
         tabs=(TabLayout)view.findViewById(R.id.tabs);
         pager = (ViewPager)view.findViewById(R.id.pager);
         mAdapter = new PlanAdapter(getChildFragmentManager());
-        mAdapter.setCourse(plan);
+        if(plan!=null)
+        {
+            mAdapter.setCourse(plan);
+        }
         pager.setAdapter(mAdapter);
-
         tabs.setupWithViewPager(pager);
 
         //end

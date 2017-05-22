@@ -53,14 +53,21 @@ public class ManageListAdapter extends RecyclerView.Adapter<ManageListAdapter.Vi
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //transaction
-                RealmResults<Plan> result = database.where(Plan.class).equalTo("planName", deleteAlert.planName).findAll();
+                Plan result = database.where(Plan.class).equalTo("planName", deleteAlert.planName).findFirst();
 
-                database.beginTransaction();
-                result.deleteAllFromRealm();
-                database.commitTransaction();
-                Toast.makeText(context, context.getString(R.string.delete_success), Toast.LENGTH_SHORT).show();
-                planList.remove(deleteAlert.planName);
-                notifyDataSetChanged();
+                if(result.isFavorite())
+                {
+                    Toast.makeText(context,context.getString(R.string.cannot_delete_favorite), Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    database.beginTransaction();
+                    result.deleteFromRealm();
+                    database.commitTransaction();
+                    Toast.makeText(context, context.getString(R.string.delete_success), Toast.LENGTH_SHORT).show();
+                    planList.remove(deleteAlert.planName);
+                    notifyDataSetChanged();
+                }
             }
         });
 
