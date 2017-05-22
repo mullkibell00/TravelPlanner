@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
     FavoriteFragment favorite;
     ManageFragment manage;
-    RecommendFragment share;
+    RecommendFragment recommend;
     //SettingFragment setting;
     //for debugging
     TestFragment test;
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         //fragment 객체를 만들기
         favorite = FavoriteFragment.newInstance(getSupportFragmentManager());
         manage = new ManageFragment();
-        share = new RecommendFragment();
+        recommend = RecommendFragment.newInstance(fontType);
         //setting = new SettingFragment();
         //for debugging
         test = new TestFragment();
@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else if(position==2)//세번째 탭(공유)
                 {
-                    selected = share;
+                    selected = recommend;
                 }
                 else if(position==3)//네번째탭(세팅)
                 {

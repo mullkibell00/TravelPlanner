@@ -1,5 +1,7 @@
 package com.example.rosem.TravelPlanner.plan;
 
+import com.google.gson.annotations.SerializedName;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -16,14 +18,19 @@ public class Plan extends RealmObject {
     @Ignore
     JSONArray planArray;
 
+    @SerializedName("planName")
     @Required
     @PrimaryKey
     String planName;
 
+    @SerializedName("numOfDay")
     int numOfDays=0;
+    @SerializedName("plan")
     String plan;
+    @SerializedName("country")
     String country;
 
+    @SerializedName("totalCostTime")
     String totalCostTime;
 
     boolean isFavorite;

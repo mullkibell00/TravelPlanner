@@ -38,6 +38,7 @@
         </activity>
         <activity android:name=".Activity.SignInActivity"></activity>
         <activity android:name=".Activity.PlanDetailActivity"></activity>
+        <activity android:name=".Activity.RecommendPlanDetailActivity"></activity>
     </application>
 
 </manifest>

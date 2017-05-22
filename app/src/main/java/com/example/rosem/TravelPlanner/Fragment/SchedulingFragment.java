@@ -241,6 +241,7 @@ public class SchedulingFragment extends Fragment {
             body.put("planName",plan.getPlanName());
             body.put("numOfDay",plan.getNumOfDays());
             body.put("userId",user.getUid());
+            body.put("totalCostTime",plan.getTotalCostTime());
             if(plan.setPlanArrayFromPlan())
             {
                 body.put("plan",plan.getPlan());
