@@ -13,7 +13,7 @@ import retrofit2.http.Query;
  * Created by bianca on 2017-05-22.
  */
 
-public interface GetPlanDetail {
+public interface GetPlanDetailService {
     @Headers( "Content-Type: application/json; charset=utf-8")
     @GET("getPlanDetail/{key}")
     Call<ResponseBody> getPlanDetail(@Path("key") long key);
