@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import com.example.rosem.TravelPlanner.Fragment.FavoriteFragment;
 import com.example.rosem.TravelPlanner.Fragment.ManageFragment;
-import com.example.rosem.TravelPlanner.Fragment.ShareFragment;
+import com.example.rosem.TravelPlanner.Fragment.RecommendFragment;
 import com.example.rosem.TravelPlanner.Fragment.TestFragment;
 import com.example.rosem.TravelPlanner.R;
 import com.example.rosem.TravelPlanner.course.Course;
@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
     FavoriteFragment favorite;
     ManageFragment manage;
-    ShareFragment share;
+    RecommendFragment share;
     //SettingFragment setting;
     //for debugging
     TestFragment test;
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         //fragment 객체를 만들기
         favorite = FavoriteFragment.newInstance(getSupportFragmentManager());
         manage = new ManageFragment();
-        share = new ShareFragment();
+        share = new RecommendFragment();
         //setting = new SettingFragment();
         //for debugging
         test = new TestFragment();
