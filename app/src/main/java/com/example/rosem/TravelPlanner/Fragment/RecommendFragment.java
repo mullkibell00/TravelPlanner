@@ -12,14 +12,18 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.rosem.TravelPlanner.Activity.RecommendPlanDetailActivity;
+import com.example.rosem.TravelPlanner.Interface.GetRecentPlanService;
 import com.example.rosem.TravelPlanner.Interface.GetRecommendService;
 import com.example.rosem.TravelPlanner.R;
 import com.example.rosem.TravelPlanner.adapter.PlanCardListAdapter;
 import com.example.rosem.TravelPlanner.object.BriefPlan;
 import com.example.rosem.TravelPlanner.plan.Plan;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 import io.realm.Realm;
 import okhttp3.ResponseBody;
@@ -33,11 +37,10 @@ public class RecommendFragment extends android.support.v4.app.Fragment {
     RecyclerView planList;
     PlanCardListAdapter mAdapter;
     int page = 0;
-    int loadNum = 0;
+    int loadNum = 2;
+    String country;
     Typeface fontType;
     Realm db;
-    Plan p;
-    BriefPlan pp;
 
     public RecommendFragment()
     {
@@ -62,16 +65,17 @@ public class RecommendFragment extends android.support.v4.app.Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         db = Realm.getDefaultInstance();
-        p = db.where(Plan.class).findFirst();
-        if(p!=null)
+        Plan favorite = db.where(Plan.class).equalTo("isFavorite",true).findFirst();
+        if(favorite!=null)
         {
-            pp = new BriefPlan();
-            pp.setNumOfDay(2);
-            pp.setCountry("United Kingdom");
-            pp.setPlanName(p.getPlanName());
-            pp.setId(9);
+            GetRecommendAsync getRecommend = new GetRecommendAsync(favorite.getCountry());
+            getRecommend.execute();
         }
-
+        else
+        {
+            GetRecentAsync getRecent = new GetRecentAsync();
+            getRecent.execute();
+        }
     }
 
     @Nullable
@@ -90,7 +94,6 @@ public class RecommendFragment extends android.support.v4.app.Fragment {
             }
         });
         planList.setAdapter(mAdapter);
-        mAdapter.addPlan(pp);
 
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL,false);
         planList.setLayoutManager(manager);
@@ -104,6 +107,37 @@ public class RecommendFragment extends android.support.v4.app.Fragment {
         if(db!=null)
         {
             db.close();
+        }
+    }
+
+    private class GetRecentAsync extends AsyncTask<Call<ResponseBody>, Void, String>
+    {
+        @Override
+        protected String doInBackground(Call<ResponseBody>... calls) {
+            GetRecentPlanService service  = GetRecentPlanService.retrofit.create(GetRecentPlanService.class);
+            Call<ResponseBody> call = service.getRecentPlans(page, loadNum);
+            ResponseBody response = null;
+            String result = null;
+            try
+            {
+                response = call.execute().body();
+                result = response.string();
+            }catch(Exception e)
+            {
+                e.printStackTrace();
+                return null;
+            }
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            //super.onPostExecute(s);
+            Gson gson = new Gson();
+            Type type = new TypeToken<ArrayList<BriefPlan>>(){}.getType();
+            ArrayList<BriefPlan> list = gson.fromJson(s,type);
+            mAdapter.addPlanList(list);
+            //Toast.makeText(getContext(), "finish", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -135,14 +169,10 @@ public class RecommendFragment extends android.support.v4.app.Fragment {
             //super.onPostExecute(s);
 
             Gson gson = new Gson();
-            try
-            {
-
-            }
-            catch(Exception e)
-            {
-                e.printStackTrace();
-            }
+            Type type = new TypeToken<ArrayList<BriefPlan>>(){}.getType();
+            ArrayList<BriefPlan> list = gson.fromJson(s,type);
+            mAdapter.addPlanList(list);
+            //Toast.makeText(getContext(), "finish", Toast.LENGTH_SHORT).show();
         }
     }
 }
