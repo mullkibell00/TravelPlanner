@@ -22,7 +22,9 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 import io.realm.Realm;
@@ -38,7 +40,6 @@ public class RecommendFragment extends android.support.v4.app.Fragment {
     PlanCardListAdapter mAdapter;
     int page = 0;
     int loadNum = 2;
-    String country;
     Typeface fontType;
     Realm db;
 
@@ -66,10 +67,16 @@ public class RecommendFragment extends android.support.v4.app.Fragment {
         super.onCreate(savedInstanceState);
         db = Realm.getDefaultInstance();
         Plan favorite = db.where(Plan.class).equalTo("isFavorite",true).findFirst();
-        if(favorite!=null)
+        if(favorite!=null && favorite.getCountry()!=null)
         {
-            GetRecommendAsync getRecommend = new GetRecommendAsync(favorite.getCountry());
-            getRecommend.execute();
+            String country = null;
+            try {
+                country = URLEncoder.encode(favorite.getCountry(),"UTF-8");
+                GetRecommendAsync getRecommend = new GetRecommendAsync(country);
+                getRecommend.execute();
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
         }
         else
         {

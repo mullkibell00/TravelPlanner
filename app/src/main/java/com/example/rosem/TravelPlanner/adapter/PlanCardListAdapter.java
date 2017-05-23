@@ -1,6 +1,7 @@
 package com.example.rosem.TravelPlanner.adapter;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +15,7 @@ import com.example.rosem.TravelPlanner.R;
 import com.example.rosem.TravelPlanner.object.BriefPlan;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by bianca on 2017-05-22.
@@ -92,6 +94,15 @@ public class PlanCardListAdapter extends RecyclerView.Adapter<PlanCardListAdapte
             background = (ImageView)itemView.findViewById(R.id.card_background_img);
 
             planName.setTypeface(fontType); country.setTypeface(fontType); numOfDay.setTypeface(fontType);
+
+            TypedArray imgArray = context.getResources().obtainTypedArray(R.array.random_card_img);
+            Random random = new Random();
+            int imgNum = random.nextInt(19-1)+1;
+
+            background.setImageResource(imgArray.getResourceId(imgNum,R.drawable.i1));
+
+            imgArray.recycle();
+
         }
     }
 
