@@ -183,12 +183,27 @@ public class RecommendFragment extends android.support.v4.app.Fragment {
             ArrayList<BriefPlan> list = gson.fromJson(s,type);
             if(!isLoading)
             {
-                mAdapter.addPlanList(list);
+                for(int i = 0; i<list.size();i++)
+                {
+                    BriefPlan plan = list.get(i);
+                    if(plan.getPlanName()!=null)
+                    {
+                        mAdapter.addPlan(plan);
+                    }
+                }
+
             }
             else
             {
                 mAdapter.hideLoading();
-                mAdapter.addPlanList(list);
+                for(int i = 0; i<list.size();i++)
+                {
+                    BriefPlan plan = list.get(i);
+                    if(plan.getPlanName()!=null)
+                    {
+                        mAdapter.addPlan(plan);
+                    }
+                }
                 isLoading = false;
             }
 
@@ -228,12 +243,26 @@ public class RecommendFragment extends android.support.v4.app.Fragment {
             ArrayList<BriefPlan> list = gson.fromJson(s,type);
             if(!isLoading)
             {
-                mAdapter.addPlanList(list);
+                for(int i = 0; i<list.size();i++)
+                {
+                    BriefPlan plan = list.get(i);
+                    if(plan.getPlanName()!=null)
+                    {
+                        mAdapter.addPlan(plan);
+                    }
+                }
             }
             else
             {
                 mAdapter.hideLoading();
-                mAdapter.addPlanList(list);
+                for(int i = 0; i<list.size();i++)
+                {
+                    BriefPlan plan = list.get(i);
+                    if(plan.getPlanName()!=null)
+                    {
+                        mAdapter.addPlan(plan);
+                    }
+                }
                 isLoading = false;
             }
             //Toast.makeText(getContext(), "finish", Toast.LENGTH_SHORT).show();
