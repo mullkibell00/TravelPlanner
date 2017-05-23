@@ -1,7 +1,6 @@
 package com.example.rosem.TravelPlanner.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -13,7 +12,6 @@ import android.widget.TextView;
 
 import com.example.rosem.TravelPlanner.R;
 import com.example.rosem.TravelPlanner.object.BriefPlan;
-import com.example.rosem.TravelPlanner.plan.Plan;
 
 import java.util.ArrayList;
 
@@ -28,10 +26,9 @@ public class PlanCardListAdapter extends RecyclerView.Adapter<PlanCardListAdapte
     Typeface fontType;
     OnCardClickListener listener;
 
-    public PlanCardListAdapter(Context context, ArrayList<BriefPlan> initList, Typeface fontType, OnCardClickListener listener)
+    public PlanCardListAdapter(Context context, Typeface fontType, OnCardClickListener listener)
     {
         this.context = context;
-        planList.addAll(initList);
         this.fontType = fontType;
         this.listener = listener;
     }
@@ -47,7 +44,7 @@ public class PlanCardListAdapter extends RecyclerView.Adapter<PlanCardListAdapte
         final BriefPlan plan = planList.get(position);
         holder.planName.setText(plan.getPlanName());
         holder.country.setText(plan.getCountry());
-        holder.numOfDay.setText(Integer.toString(plan.getNumOfDay()));
+        holder.numOfDay.setText("Day "+Integer.toString(plan.getNumOfDay()));
         holder.item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,11 +66,13 @@ public class PlanCardListAdapter extends RecyclerView.Adapter<PlanCardListAdapte
     public void addPlan(BriefPlan plan)
     {
         planList.add(plan);
+        notifyDataSetChanged();
     }
 
     public void addPlanList(ArrayList<BriefPlan> list)
     {
         planList.addAll(list);
+        notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder

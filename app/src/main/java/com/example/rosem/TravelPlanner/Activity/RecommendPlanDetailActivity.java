@@ -18,9 +18,7 @@ import com.example.rosem.TravelPlanner.plan.PlanAdapter;
 import com.google.gson.Gson;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
-import io.realm.Realm;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 
@@ -97,6 +95,7 @@ public class RecommendPlanDetailActivity extends AppCompatActivity {
             try
             {
                 plan = gson.fromJson(s,Plan.class);
+                plan.setPlanArrayFromPlan();
                 mAdapter.setCourse(plan);
                 pager.setAdapter(mAdapter);
 

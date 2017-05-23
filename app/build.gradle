@@ -3,8 +3,8 @@ apply plugin: 'com.android.application'
 android {
     signingConfigs {
         debug {
-            keyAlias 'debug'
-            keyPassword 'android'
+            keyAlias 'planner'
+            keyPassword 'sdj01213'
             storePassword 'android'
         }
     }
