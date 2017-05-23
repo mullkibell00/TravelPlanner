@@ -172,7 +172,7 @@ public class Time {
         {
             return 0; //this == t
         }
-        else if(sub.hour>=0 && sub.min >0)
+        else if((sub.hour>=0 && sub.min >0)||(sub.hour>0 && sub.min>=0))
         {
             return 1; //this > t (this - t >0)
         }

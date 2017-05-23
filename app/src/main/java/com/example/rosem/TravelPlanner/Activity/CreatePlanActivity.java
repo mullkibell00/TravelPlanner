@@ -1,5 +1,6 @@
 package com.example.rosem.TravelPlanner.Activity;
 
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -16,14 +17,14 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.example.rosem.TravelPlanner.Fragment.InputDailyInfoFragment;
-import com.example.rosem.TravelPlanner.R;
 import com.example.rosem.TravelPlanner.Fragment.HotelRecommendFragment;
+import com.example.rosem.TravelPlanner.Fragment.InputDailyInfoFragment;
 import com.example.rosem.TravelPlanner.Fragment.InputHotelInfoFragment;
 import com.example.rosem.TravelPlanner.Fragment.InputPlanInfoFragment;
 import com.example.rosem.TravelPlanner.Fragment.InputSiteFragment;
 import com.example.rosem.TravelPlanner.Fragment.InputTitleFragment;
 import com.example.rosem.TravelPlanner.Fragment.SchedulingFragment;
+import com.example.rosem.TravelPlanner.R;
 import com.example.rosem.TravelPlanner.object.Schedule;
 import com.example.rosem.TravelPlanner.object.Site;
 import com.example.rosem.TravelPlanner.object.Time;
@@ -36,7 +37,6 @@ import com.google.android.gms.location.places.Places;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.LinkedList;
 
 import io.realm.Realm;
@@ -188,6 +188,9 @@ public class CreatePlanActivity extends AppCompatActivity {
         }
         else if(currentStep==STEP_NUM)
         {
+            Intent intent = new Intent();
+            intent.putExtra("planName",getPlanName());
+            setResult(RESULT_OK,intent);
             finish();
             return;
         }

@@ -99,6 +99,12 @@ public class ManageListAdapter extends RecyclerView.Adapter<ManageListAdapter.Vi
 
     }
 
+    public void addItem(String name)
+    {
+        planList.add(name);
+        notifyDataSetChanged();
+    }
+
     @Override
     public ManageListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 

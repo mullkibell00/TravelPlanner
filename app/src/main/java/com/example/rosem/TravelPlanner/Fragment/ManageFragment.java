@@ -154,8 +154,13 @@ public class ManageFragment extends android.support.v4.app.Fragment{
         //super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==CREATE_PLAN)
         {
-            mAdapter.notifyDataSetChanged();
-            list.invalidate();
+            String name = data.getStringExtra("planName");
+            if(name!=null)
+            {
+                mAdapter.addItem(name);
+            }
+            //mAdapter.notifyDataSetChanged();
+            //list.invalidate();
         }
     }
 
