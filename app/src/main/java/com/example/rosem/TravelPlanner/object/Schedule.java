@@ -5,7 +5,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -247,6 +246,7 @@ public class Schedule{
         costMat = new int[totalNum][totalNum];
         unitMat = new int[totalNum][totalNum];
         fareMat = new int[totalNum][totalNum];
+        fareStringMat = new String[totalNum][totalNum];
         TIMEUNIT = tu;
         HOUR_IN_TIMEUNIT = 60/tu;
         isSelected = new boolean[numOfSites];

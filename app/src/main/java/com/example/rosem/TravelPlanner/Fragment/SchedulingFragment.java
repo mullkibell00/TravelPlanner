@@ -610,7 +610,7 @@ public class SchedulingFragment extends Fragment {
             switch (msg.what)
             {
                 case START:
-                    progressDialog.setMessage(messages[step]);
+                    //progressDialog.setMessage(messages[step]);
                     progressDialog.show();
                     break;
                 case UPDATE_UI:
@@ -619,13 +619,13 @@ public class SchedulingFragment extends Fragment {
                     {
                         step--;
                     }
-                    progressDialog.setMessage(messages[step]);
-                    progressDialog.invalidateOptionsMenu();
+                   // progressDialog.setMessage(messages[step]);
+                    //progressDialog.invalidateOptionsMenu();
                     break;
                 case SCHEDULE_DONE:
+                    progressDialog.dismiss();
                     updateList();
                 case FINISH:
-                    progressDialog.dismiss();
                     break;
             }
         }
@@ -685,7 +685,7 @@ public class SchedulingFragment extends Fragment {
             if(s!=null)
             {
                 Log.v("SERVER_SAVE::",s);
-                Toast.makeText(getContext(), s, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getContext(), s, Toast.LENGTH_SHORT).show();
             }
             handler.sendEmptyMessage(SERVER_DONE);
         }

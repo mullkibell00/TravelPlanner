@@ -150,6 +150,16 @@ public class ManageFragment extends android.support.v4.app.Fragment{
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==CREATE_PLAN)
+        {
+            mAdapter.notifyDataSetChanged();
+            list.invalidate();
+        }
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         if(db!=null)

@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.example.rosem.TravelPlanner.Fragment.FavoriteFragment;
 import com.example.rosem.TravelPlanner.R;
 import com.example.rosem.TravelPlanner.plan.Plan;
 import com.example.rosem.TravelPlanner.view.PlanNameView;
@@ -18,7 +17,6 @@ import com.example.rosem.TravelPlanner.view.PlanNameView;
 import java.util.ArrayList;
 
 import io.realm.Realm;
-import io.realm.RealmResults;
 
 /**
  * Created by rosem on 2017-02-25.

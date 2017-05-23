@@ -59,15 +59,18 @@ public class PlanCardListAdapter extends RecyclerView.Adapter{
         if(holder instanceof ViewHolder)
         {
             final BriefPlan plan = planList.get(position);
-            ((ViewHolder)holder).planName.setText(plan.getPlanName());
-            ((ViewHolder)holder).country.setText(plan.getCountry());
-            ((ViewHolder)holder).numOfDay.setText("Day "+Integer.toString(plan.getNumOfDay()));
-            ((ViewHolder)holder).item.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    listener.onCardClick(plan.getId());
-                }
-            });
+            if(plan!=null)
+            {
+                ((ViewHolder)holder).planName.setText(plan.getPlanName());
+                ((ViewHolder)holder).country.setText(plan.getCountry());
+                ((ViewHolder)holder).numOfDay.setText("Day "+Integer.toString(plan.getNumOfDay()));
+                ((ViewHolder)holder).item.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        listener.onCardClick(plan.getId());
+                    }
+                });
+            }
         }
         else
         {
