@@ -11,22 +11,36 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark"
         android:gravity = "center_vertical"
         android:elevation="1dp"
-        android:id="@+id/create_plan_toolbar"
+        android:id="@+id/plan_detail_toolbar"
         android:layout_alignParentTop="true"
-        >
-        <TextView
-            android:layout_width="wrap_content"
+        android:weightSum="1">
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
-            android:id="@+id/create_plan_title"
             android:layout_marginLeft="23dp"
-            android:layout_centerVertical="true"
-            android:textSize="22sp"
-            android:textColor="@color/colorWhite"
-            android:text="@string/plan_detail_title"
-            android:textStyle="bold"
-            />
+            android:layout_marginRight="15dp"
+            >
 
+            <TextView
+                android:id="@+id/plan_detail_title"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:text="@string/plan_detail_title"
+                android:textColor="@color/colorWhite"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:layout_width="41dp"
+                android:layout_height="41dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@mipmap/save"
+                android:id="@+id/save"
+                />
+        </RelativeLayout>
     </android.support.v7.widget.Toolbar>
     <LinearLayout
         android:layout_width="match_parent"

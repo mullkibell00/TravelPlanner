@@ -8,6 +8,8 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.rosem.TravelPlanner.R;
@@ -15,7 +17,6 @@ import com.example.rosem.TravelPlanner.plan.Plan;
 import com.example.rosem.TravelPlanner.plan.PlanAdapter;
 
 import io.realm.Realm;
-import io.realm.RealmResults;
 
 /**
  * Created by bianca on 2017-05-21.
@@ -31,8 +32,10 @@ public class PlanDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_plan_detail);
 
         Typeface fontType = Typeface.createFromAsset(getAssets(),getString(R.string.font_name));
-        Toolbar titleBar = (Toolbar)findViewById(R.id.create_plan_toolbar);
-        TextView title = (TextView)titleBar.findViewById(R.id.create_plan_title);
+        Toolbar titleBar = (Toolbar)findViewById(R.id.plan_detail_toolbar);
+        TextView title = (TextView)titleBar.findViewById(R.id.plan_detail_title);
+        ImageView saveButton = (ImageView)titleBar.findViewById(R.id.save);
+        saveButton.setVisibility(View.INVISIBLE);
         TextView planInfo = (TextView)findViewById(R.id.plan_info);
         TextView planInfoCostTime = (TextView)findViewById(R.id.plan_info_cost_time);
         TextView planInfoCountry = (TextView)findViewById(R.id.plan_info_country);

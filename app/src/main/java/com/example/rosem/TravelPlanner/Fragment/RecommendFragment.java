@@ -39,9 +39,15 @@ public class RecommendFragment extends android.support.v4.app.Fragment {
     RecyclerView planList;
     PlanCardListAdapter mAdapter;
     int page = 0;
-    int loadNum = 2;
+    int loadNum = 5;
     Typeface fontType;
     Realm db;
+    String country = null;
+    boolean isLoading = false;
+    boolean loadWhat =LOAD_RECENT;
+    LinearLayoutManager manager;
+    final static boolean LOAD_RECENT = true;
+    final static boolean LOAD_RECOMMEND = true;
 
     public RecommendFragment()
     {
@@ -65,12 +71,13 @@ public class RecommendFragment extends android.support.v4.app.Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        loadNum = getResources().getInteger(R.integer.load_num);
         db = Realm.getDefaultInstance();
         Plan favorite = db.where(Plan.class).equalTo("isFavorite",true).findFirst();
         if(favorite!=null && favorite.getCountry()!=null)
         {
-            String country = null;
             try {
+                loadWhat = LOAD_RECOMMEND;
                 country = URLEncoder.encode(favorite.getCountry(),"UTF-8");
                 GetRecommendAsync getRecommend = new GetRecommendAsync(country);
                 getRecommend.execute();
@@ -80,6 +87,7 @@ public class RecommendFragment extends android.support.v4.app.Fragment {
         }
         else
         {
+            loadWhat = LOAD_RECENT;
             GetRecentAsync getRecent = new GetRecentAsync();
             getRecent.execute();
         }
@@ -102,8 +110,38 @@ public class RecommendFragment extends android.support.v4.app.Fragment {
         });
         planList.setAdapter(mAdapter);
 
-        RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL,false);
+        manager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL,false);
         planList.setLayoutManager(manager);
+
+        planList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int visibleItemCount = manager.getChildCount();
+                int totalItemCount = manager.getItemCount();
+                int firstVisibleItem = manager.findFirstVisibleItemPosition();
+                    if(!isLoading)
+                    {
+                        //at end
+                        if(firstVisibleItem+visibleItemCount>=totalItemCount)
+                        {
+                            isLoading = true;
+                            mAdapter.showLoading();
+                            page++;
+                            if(loadWhat == LOAD_RECENT)
+                            {
+                                GetRecentAsync getRecent = new GetRecentAsync();
+                                getRecent.execute();
+                            }
+                            else
+                            {
+                                GetRecommendAsync getRecommend = new GetRecommendAsync(country);
+                                getRecommend.execute();
+                            }
+                        }
+                    }
+            }
+        });
 
         return view;
     }
@@ -143,7 +181,17 @@ public class RecommendFragment extends android.support.v4.app.Fragment {
             Gson gson = new Gson();
             Type type = new TypeToken<ArrayList<BriefPlan>>(){}.getType();
             ArrayList<BriefPlan> list = gson.fromJson(s,type);
-            mAdapter.addPlanList(list);
+            if(!isLoading)
+            {
+                mAdapter.addPlanList(list);
+            }
+            else
+            {
+                mAdapter.hideLoading();
+                mAdapter.addPlanList(list);
+                isLoading = false;
+            }
+
             //Toast.makeText(getContext(), "finish", Toast.LENGTH_SHORT).show();
         }
     }
@@ -178,7 +226,16 @@ public class RecommendFragment extends android.support.v4.app.Fragment {
             Gson gson = new Gson();
             Type type = new TypeToken<ArrayList<BriefPlan>>(){}.getType();
             ArrayList<BriefPlan> list = gson.fromJson(s,type);
-            mAdapter.addPlanList(list);
+            if(!isLoading)
+            {
+                mAdapter.addPlanList(list);
+            }
+            else
+            {
+                mAdapter.hideLoading();
+                mAdapter.addPlanList(list);
+                isLoading = false;
+            }
             //Toast.makeText(getContext(), "finish", Toast.LENGTH_SHORT).show();
         }
     }

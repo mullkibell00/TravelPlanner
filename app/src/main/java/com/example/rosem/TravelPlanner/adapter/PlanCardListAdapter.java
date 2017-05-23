@@ -9,10 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.rosem.TravelPlanner.R;
 import com.example.rosem.TravelPlanner.object.BriefPlan;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -21,12 +23,14 @@ import java.util.Random;
  * Created by bianca on 2017-05-22.
  */
 
-public class PlanCardListAdapter extends RecyclerView.Adapter<PlanCardListAdapter.ViewHolder> {
+public class PlanCardListAdapter extends RecyclerView.Adapter{
 
     ArrayList<BriefPlan> planList = new ArrayList<>();
     Context context;
     Typeface fontType;
     OnCardClickListener listener;
+    private int PROGRESS = 1;
+    private int PLAN = 0;
 
     public PlanCardListAdapter(Context context, Typeface fontType, OnCardClickListener listener)
     {
@@ -36,23 +40,40 @@ public class PlanCardListAdapter extends RecyclerView.Adapter<PlanCardListAdapte
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View cardview = LayoutInflater.from(parent.getContext()).inflate(R.layout.plan_card_item,null);
-        return new ViewHolder(cardview);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if(viewType==PLAN)
+        {
+            View cardview = LayoutInflater.from(parent.getContext()).inflate(R.layout.plan_card_item,null);
+            return new ViewHolder(cardview);
+        }
+        else
+        {
+            View cardview = LayoutInflater.from(parent.getContext()).inflate(R.layout.footer_progress,null);
+            return new ProgressViewHolder(cardview);
+        }
+
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        final BriefPlan plan = planList.get(position);
-        holder.planName.setText(plan.getPlanName());
-        holder.country.setText(plan.getCountry());
-        holder.numOfDay.setText("Day "+Integer.toString(plan.getNumOfDay()));
-        holder.item.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listener.onCardClick(plan.getId());
-            }
-        });
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        if(holder instanceof ViewHolder)
+        {
+            final BriefPlan plan = planList.get(position);
+            ((ViewHolder)holder).planName.setText(plan.getPlanName());
+            ((ViewHolder)holder).country.setText(plan.getCountry());
+            ((ViewHolder)holder).numOfDay.setText("Day "+Integer.toString(plan.getNumOfDay()));
+            ((ViewHolder)holder).item.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onCardClick(plan.getId());
+                }
+            });
+        }
+        else
+        {
+            ((ProgressViewHolder)holder).progressBar.setIndeterminate(true);
+        }
+
     }
 
     @Override
@@ -69,6 +90,18 @@ public class PlanCardListAdapter extends RecyclerView.Adapter<PlanCardListAdapte
     {
         planList.add(plan);
         notifyDataSetChanged();
+    }
+
+    public void showLoading()
+    {
+        planList.add(null);
+        notifyItemInserted(planList.size()-1);
+    }
+
+    public void hideLoading()
+    {
+        planList.remove(planList.size()-1);
+        notifyItemRemoved(planList.size());
     }
 
     public void addPlanList(ArrayList<BriefPlan> list)
@@ -98,11 +131,20 @@ public class PlanCardListAdapter extends RecyclerView.Adapter<PlanCardListAdapte
             TypedArray imgArray = context.getResources().obtainTypedArray(R.array.random_card_img);
             Random random = new Random();
             int imgNum = random.nextInt(19-1)+1;
-
-            background.setImageResource(imgArray.getResourceId(imgNum,R.drawable.i1));
-
+            String url = context.getString(imgArray.getResourceId(imgNum,R.string.i1));
+            Picasso.with(context).load(url).
+                    resize(350, 160).centerCrop().into(background);
             imgArray.recycle();
 
+        }
+    }
+
+    public class ProgressViewHolder extends RecyclerView.ViewHolder
+    {
+        public ProgressBar progressBar;
+        public ProgressViewHolder(View itemView) {
+            super(itemView);
+            progressBar = (ProgressBar)itemView.findViewById(R.id.list_progress);
         }
     }
 

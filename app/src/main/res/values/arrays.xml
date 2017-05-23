@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer-array name = "random_card_img">
-        <item>@drawable/i1</item>
-        <item>@drawable/i2</item>
-        <item>@drawable/i3</item>
-        <item>@drawable/i4</item>
-        <item>@drawable/i5</item>
-        <item>@drawable/i6</item>
-        <item>@drawable/i7</item>
-        <item>@drawable/i8</item>
-        <item>@drawable/i9</item>
-        <item>@drawable/i10</item>
-        <item>@drawable/i11</item>
-        <item>@drawable/i12</item>
-        <item>@drawable/i13</item>
-        <item>@drawable/i14</item>
-        <item>@drawable/i15</item>
-        <item>@drawable/i16</item>
-        <item>@drawable/i17</item>
-        <item>@drawable/i18</item>
+        <item>@string/i1</item>
+        <item>@string/i2</item>
+        <item>@string/i3</item>
+        <item>@string/i4</item>
+        <item>@string/i5</item>
+        <item>@string/i6</item>
+        <item>@string/i7</item>
+        <item>@string/i8</item>
+        <item>@string/i9</item>
+        <item>@string/i10</item>
+        <item>@string/i11</item>
+        <item>@string/i12</item>
+        <item>@string/i13</item>
+        <item>@string/i14</item>
+        <item>@string/i15</item>
+        <item>@string/i16</item>
+        <item>@string/i17</item>
+        <item>@string/i18</item>
     </integer-array>
 </resources>

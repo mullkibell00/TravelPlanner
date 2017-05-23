@@ -9,6 +9,8 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.rosem.TravelPlanner.Interface.GetPlanDetailService;
@@ -19,6 +21,7 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 
+import io.realm.Realm;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 
@@ -35,6 +38,7 @@ public class RecommendPlanDetailActivity extends AppCompatActivity {
     TextView planInfo;
     TextView planInfoCostTime;
     TextView planInfoCountry;
+    Realm db;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,8 +46,9 @@ public class RecommendPlanDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_plan_detail);
 
         Typeface fontType = Typeface.createFromAsset(getAssets(),getString(R.string.font_name));
-        Toolbar titleBar = (Toolbar)findViewById(R.id.create_plan_toolbar);
-        TextView title = (TextView)titleBar.findViewById(R.id.create_plan_title);
+        Toolbar titleBar = (Toolbar)findViewById(R.id.plan_detail_toolbar);
+        TextView title = (TextView)titleBar.findViewById(R.id.plan_detail_title);
+        ImageView saveButton = (ImageView)titleBar.findViewById(R.id.save);
         planInfo = (TextView)findViewById(R.id.plan_info);
         planInfoCostTime = (TextView)findViewById(R.id.plan_info_cost_time);
         planInfoCountry = (TextView)findViewById(R.id.plan_info_country);
@@ -56,12 +61,36 @@ public class RecommendPlanDetailActivity extends AppCompatActivity {
         title.setTypeface(fontType); planInfo.setTypeface(fontType);
         planInfoCountry.setTypeface(fontType); planInfoCostTime.setTypeface(fontType);
 
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(plan!=null)
+                {
+                    db.beginTransaction();
+                    //만약 코드에서 생성한 객체를 집어넣으려면 copyTo를!
+                    db.copyToRealmOrUpdate(plan);
+                    db.commitTransaction();
+                }
+            }
+        });
+
+        db = Realm.getDefaultInstance();
+
         Intent intent = getIntent();
         long id = intent.getLongExtra("id", 0);
 
         GetPlanDetailAsync getDetail = new GetPlanDetailAsync(id);
         getDetail.execute();
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(db!=null)
+        {
+            db.close();;
+        }
     }
 
     private class GetPlanDetailAsync extends AsyncTask<Call<ResponseBody>, Void, String>
