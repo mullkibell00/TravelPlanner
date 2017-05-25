@@ -18,7 +18,7 @@ import android.widget.TextView;
 import com.example.rosem.TravelPlanner.Fragment.FavoriteFragment;
 import com.example.rosem.TravelPlanner.Fragment.ManageFragment;
 import com.example.rosem.TravelPlanner.Fragment.RecommendFragment;
-import com.example.rosem.TravelPlanner.Fragment.TestFragment;
+import com.example.rosem.TravelPlanner.Fragment.SettingFragment;
 import com.example.rosem.TravelPlanner.R;
 import com.example.rosem.TravelPlanner.course.Course;
 import com.example.rosem.TravelPlanner.plan.Plan;
@@ -40,9 +40,9 @@ public class MainActivity extends AppCompatActivity {
     FavoriteFragment favorite;
     ManageFragment manage;
     RecommendFragment recommend;
-    //SettingFragment setting;
+    SettingFragment setting;
     //for debugging
-    TestFragment test;
+    //TestFragment test;
     Typeface fontType;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +51,9 @@ public class MainActivity extends AppCompatActivity {
 
         //for debugging
         //createInitialFavorite();
+
+        Intent intent = new Intent(this,SplashActivity.class);
+        startActivity(intent);
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
@@ -78,9 +81,9 @@ public class MainActivity extends AppCompatActivity {
         favorite = FavoriteFragment.newInstance(getSupportFragmentManager());
         manage = new ManageFragment();
         recommend = RecommendFragment.newInstance(fontType);
-        //setting = new SettingFragment();
+        setting = new SettingFragment();
         //for debugging
-        test = new TestFragment();
+        //test = new TestFragment();
 
         //즐겨찾기가 메인이 되도록 하기
         getSupportFragmentManager().beginTransaction().replace(R.id.container,favorite).commit();//main tap
@@ -126,9 +129,9 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else if(position==3)//네번째탭(세팅)
                 {
-                    //selected = setting;
+                    selected = setting;
                     //for debugging
-                    selected = test;
+                   // selected = test;
                 }
 
                 //현재 보여주는 탭을 selected로 변경

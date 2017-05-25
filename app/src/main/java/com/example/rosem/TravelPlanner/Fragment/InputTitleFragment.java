@@ -101,6 +101,14 @@ public class InputTitleFragment extends Fragment {
             }
         });
 
+        Button prevButton = (Button)getActivity().findViewById(R.id.create_plan_prev);
+        prevButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((CreatePlanActivity)getActivity()).movePrev();
+            }
+        });
+
         return view;
     }
 }

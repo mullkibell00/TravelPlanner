@@ -76,11 +76,9 @@ public class RecommendFragment extends android.support.v4.app.Fragment {
         Plan favorite = db.where(Plan.class).equalTo("isFavorite",true).findFirst();
         if(favorite!=null && favorite.getCountry()!=null)
         {
+            loadWhat = LOAD_RECOMMEND;
             try {
-                loadWhat = LOAD_RECOMMEND;
                 country = URLEncoder.encode(favorite.getCountry(),"UTF-8");
-                GetRecommendAsync getRecommend = new GetRecommendAsync(country);
-                getRecommend.execute();
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
@@ -88,8 +86,6 @@ public class RecommendFragment extends android.support.v4.app.Fragment {
         else
         {
             loadWhat = LOAD_RECENT;
-            GetRecentAsync getRecent = new GetRecentAsync();
-            getRecent.execute();
         }
     }
 
@@ -143,6 +139,17 @@ public class RecommendFragment extends android.support.v4.app.Fragment {
             }
         });
 
+        if(loadWhat==LOAD_RECENT)
+        {
+            GetRecentAsync getRecent = new GetRecentAsync();
+            getRecent.execute();
+        }
+        else
+        {
+            GetRecommendAsync getRecommend = new GetRecommendAsync(country);
+            getRecommend.execute();
+        }
+
         return view;
     }
 
@@ -181,34 +188,33 @@ public class RecommendFragment extends android.support.v4.app.Fragment {
             Gson gson = new Gson();
             Type type = new TypeToken<ArrayList<BriefPlan>>(){}.getType();
             ArrayList<BriefPlan> list = gson.fromJson(s,type);
-            if(!isLoading)
+            int listSize = list.size();
+            if(listSize==0)
             {
-                for(int i = 0; i<list.size();i++)
-                {
-                    BriefPlan plan = list.get(i);
-                    if(plan.getPlanName()!=null)
-                    {
-                        mAdapter.addPlan(plan);
-                    }
-                }
-
+                loadWhat = LOAD_RECENT;
             }
-            else
+            if(isLoading)
             {
                 mAdapter.hideLoading();
-                for(int i = 0; i<list.size();i++)
-                {
-                    BriefPlan plan = list.get(i);
-                    if(plan.getPlanName()!=null)
-                    {
-                        mAdapter.addPlan(plan);
-                    }
-                }
                 isLoading = false;
+            }
+            for(int i = 0; i<listSize;i++)
+            {
+                BriefPlan plan = list.get(i);
+                if(plan.getPlanName()!=null)
+                {
+                    mAdapter.addPlan(plan);
+                }
             }
 
             //Toast.makeText(getContext(), "finish", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        page = 0;//init page
     }
 
     private class GetRecommendAsync extends AsyncTask<Call<ResponseBody>, Void, String>

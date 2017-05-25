@@ -12,7 +12,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -61,7 +60,7 @@ public class CreatePlanActivity extends AppCompatActivity {
 
     private int STEP_NUM;
     Fragment [] stepFragments;
-    private int currentStep = 0;
+    private int currentStep = -1;
     private static final int NEXT_STEP = 112;
     private static final int PREV_STEP = 113;
     private int HOTEL_RECOMMEND;
@@ -122,7 +121,8 @@ public class CreatePlanActivity extends AppCompatActivity {
         stepFragments[5] = HotelRecommendFragment.newInstance();
         stepFragments[6] = SchedulingFragment.newInstance();
 
-        changeStep(getSupportFragmentManager(),currentStep);
+        //changeStep(getSupportFragmentManager(),currentStep);
+        changeStep(getSupportFragmentManager(),NEXT_STEP);
     }
 
     @Override
@@ -160,6 +160,7 @@ public class CreatePlanActivity extends AppCompatActivity {
         }
     }
 
+    /*
     public void changeStep(FragmentManager fm, int order)
     {
         Fragment selected = null;
@@ -185,6 +186,13 @@ public class CreatePlanActivity extends AppCompatActivity {
         if(currentStep==0)
         {
             prevButton.setVisibility(View.INVISIBLE);
+        }
+        else if(currentStep<0)
+        {
+            //debug
+            Toast.makeText(this, "currentSTep<0", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
         }
         else if(currentStep==STEP_NUM)
         {
@@ -213,8 +221,91 @@ public class CreatePlanActivity extends AppCompatActivity {
         {
             prevButton.setVisibility(View.VISIBLE);
         }
+        if(order==PREV_STEP)
+        {
+            if(getFragmentManager().getBackStackEntryCount()>0)
+            {
+                Toast.makeText(this, "changeStep_prev_step="+currentStep, Toast.LENGTH_SHORT).show();
+                getFragmentManager().popBackStack();
+            }
+            else
+            {
 
-        fm.beginTransaction().replace(R.id.container,stepFragments[currentStep]).commit();
+                if(getFragmentManager().getBackStackEntryCount()>0)
+                {
+
+                    getFragmentManager().popBackStack();
+                }
+
+                Toast.makeText(this, "changeStep_prev_step_count<1="+currentStep, Toast.LENGTH_SHORT).show();
+                finish();
+                return;
+            }
+        }
+        else
+        {
+            Toast.makeText(this, "changeStep_next_step="+currentStep, Toast.LENGTH_SHORT).show();
+            fm.beginTransaction().replace(R.id.container,stepFragments[currentStep]).addToBackStack("frag").commit();
+        }
+
+    }
+    */
+    public void changeStep(FragmentManager fm, int order)
+    {
+        if(order==NEXT_STEP)
+        {
+            currentStep++;
+            if(currentStep==STEP_NUM)
+            {
+                Intent intent = new Intent();
+                intent.putExtra("planName",getPlanName());
+                setResult(RESULT_OK,intent);
+                finish();
+                return;
+            }
+            if(schedule.isHotelReserved() && currentStep== HOTEL_RECOMMEND)
+            {
+                currentStep++;
+            }
+            fm.beginTransaction().replace(R.id.container,stepFragments[currentStep]).addToBackStack("frag").commit();
+            //Toast.makeText(this, "nextStep="+fm.getBackStackEntryCount(), Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            //currentStep--;
+            //onBackPressed();
+            currentStep--;
+            if(schedule.isHotelReserved()&&currentStep==HOTEL_RECOMMEND)
+            {
+                currentStep--;
+            }
+            if(fm.getBackStackEntryCount()>1)
+            {
+                //Toast.makeText(this, "back ", Toast.LENGTH_SHORT).show();
+                fm.popBackStack();
+            }
+            else
+            {
+                finish();
+            }
+        }
+    }
+    @Override
+    public void onBackPressed() {
+        //Toast.makeText(this, getSupportFragmentManager().getBackStackEntryCount(), Toast.LENGTH_SHORT).show();
+        if(getSupportFragmentManager().getBackStackEntryCount()>1)
+        {
+           // currentStep--;
+           // getFragmentManager().popBackStack();
+           // Toast.makeText(this, "onBackPressed"+getFragmentManager().getBackStackEntryCount(), Toast.LENGTH_SHORT).show();
+            movePrev();
+        }
+        else
+        {
+            //Toast.makeText(this, "onBackPressend Super", Toast.LENGTH_SHORT).show();
+            finish();
+            //super.onBackPressed();
+        }
     }
 
     public void moveNext()

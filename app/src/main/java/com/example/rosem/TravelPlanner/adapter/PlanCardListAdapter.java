@@ -12,9 +12,10 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.rosem.TravelPlanner.R;
 import com.example.rosem.TravelPlanner.object.BriefPlan;
-import com.squareup.picasso.Picasso;
+import com.google.firebase.crash.FirebaseCrash;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -135,10 +136,16 @@ public class PlanCardListAdapter extends RecyclerView.Adapter{
             Random random = new Random();
             int imgNum = random.nextInt(19-1)+1;
             String url = context.getString(imgArray.getResourceId(imgNum,R.string.i1));
-            Picasso.with(context).load(url).
-                    resize(350, 160).centerCrop().into(background);
+            try {
+                Glide.with(context).load(url).override(350,160).error(R.mipmap.loading_fail)
+                        .placeholder(R.mipmap.loading).thumbnail(0.1f).into(background);
+            }catch (Exception e)
+            {
+                FirebaseCrash.report(e);
+            }
+            Glide.with(context).load(url).override(350,160).centerCrop().error(R.mipmap.loading_fail)
+                    .placeholder(R.mipmap.loading).thumbnail(0.1f).into(background);
             imgArray.recycle();
-
         }
     }
 

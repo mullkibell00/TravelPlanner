@@ -482,6 +482,8 @@ public class SchedulingFragment extends Fragment {
         return str;
     }
 
+
+
    private class Scheduling extends Thread
    {
        boolean [] isSelected;
@@ -546,6 +548,8 @@ public class SchedulingFragment extends Fragment {
                e.printStackTrace();
            }
        }
+
+
 
        public boolean request(String data)
        {
