@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.rosem.TravelPlanner.Interface.GoogleMapService;
 import com.example.rosem.TravelPlanner.R;
 import com.example.rosem.TravelPlanner.Activity.CreatePlanActivity;
 import com.example.rosem.TravelPlanner.object.Schedule;
@@ -27,6 +28,7 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.firebase.crash.FirebaseCrash;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -41,6 +43,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Calendar;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
 
 /**
  * Created by rosem on 2017-02-26.
@@ -424,7 +429,7 @@ public class InputPlanInfoFragment extends Fragment {
             {
                 Place selectedPlace = PlacePicker.getPlace(getContext(),data);
                 SendRequest request = new SendRequest(selectedPlace.getId());
-                request.postData(null);
+                request.execute();
             }
         }
         else if(requestCode==ARRIVAL_PICK_REQUEST)
@@ -447,65 +452,64 @@ public class InputPlanInfoFragment extends Fragment {
         }
     }
 
-    private class SendRequest extends AsyncTask<String,String,String>
+    private class SendRequest extends AsyncTask<Call<ResponseBody>,Void,String>
     {
-        String urlString = getString(R.string.google_geocoding_base);
-
+        String placeId = null;
+        String key = getString(R.string.google_http_api_key);
+        String lang = getString(R.string.google_api_language);
         public SendRequest(String placeId)
         {
-            urlString +=placeId;
-            urlString+="&language=ko&key=";
-            urlString+=getString(R.string.google_http_api_key);
+            this.placeId = placeId;
         }
         @Override
-        protected String doInBackground(String... strings) {
-            postData(urlString);
+        protected String doInBackground(Call<ResponseBody>... params) {
+            GoogleMapService service = GoogleMapService.retrofit.create(GoogleMapService.class);
+            Call<ResponseBody>  call = service.getSiteInfo(placeId,lang,key);
+            ResponseBody response = null;
+            try {
+                response = call.execute().body();
+            } catch (IOException e) {
+                e.printStackTrace();
+                FirebaseCrash.report(e);
+            }
+            if(response!=null)
+            {
+                try {
+                    return response.string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    FirebaseCrash.report(e);
+                    return null;
+                }
+            }
             return null;
         }
 
         @Override
         protected void onPostExecute(String s) {
-            //super.onPostExecute(s);
-            Log.v("Main::","start send");
-        }
-
-        public void postData(String str)
-        {
-            InputStream inputStream = null;
-            BufferedReader rd = null;
-            StringBuilder response = new StringBuilder();
-
-            HttpClient httpClient = new DefaultHttpClient();
-
-            HttpPost httpPost = new HttpPost(urlString);
-
-            try {
-                //서버로 전송 & 받아오기
-                HttpResponse httpResponse = httpClient.execute(httpPost);
-                Log.v("******server", "send msg successed");
-
-                inputStream = httpResponse.getEntity().getContent();
-                rd = new BufferedReader(new InputStreamReader(inputStream));
-                String line;
-                while((line=rd.readLine())!=null)
-                {
-                    response.append(line);
-                }
-                Log.v("PlanInfo::bring success","result:"+response.toString());
-                String country=null;
+            String country=null;
+            if(s!=null)
+            {
                 //parsing
                 try {
-                    JSONObject responseObj = new JSONObject(response.toString());
-                    JSONArray result = responseObj.getJSONArray("results");
-                    JSONObject firstObj = result.getJSONObject(0);
-                    JSONArray addrComponent = firstObj.getJSONArray("address_components");
-                    for(int i=0; i< addrComponent.length();i++)
+                    JSONObject responseObj = new JSONObject(s);
+                    JSONArray result = null;
+                    if(responseObj.has("results"))
                     {
-                        JSONObject addr = addrComponent.getJSONObject(i);
-                        JSONArray types = addr.getJSONArray("types");
-                        if(types.getString(0).equals("country"))
+                        result = responseObj.getJSONArray("results");
+                        JSONObject firstObj = result.getJSONObject(0);
+                        JSONArray addrComponent = firstObj.getJSONArray("address_components");
+                        for(int i=0; i< addrComponent.length();i++)
                         {
-                            country = addr.getString("long_name");
+                            JSONObject addr = addrComponent.getJSONObject(i);
+                            if(addr.has("types"))
+                            {
+                                JSONArray types = addr.getJSONArray("types");
+                                if(types.getString(0).equals("country"))
+                                {
+                                    country = addr.getString("long_name");
+                                }
+                            }
                         }
                     }
                 } catch (JSONException e) {
@@ -522,10 +526,6 @@ public class InputPlanInfoFragment extends Fragment {
                     //texts[mSelectedCountry].setBackgroundColor(Color.TRANSPARENT);
                     //texts[mSelectedCountry].setTextColor(ContextCompat.getColor(getContext(),R.color.colorAccent));
                 }
-
-            } catch (IOException e) {
-                e.printStackTrace();
-                Log.v("******server", "send msg failed");
             }
         }
     }
