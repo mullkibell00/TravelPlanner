@@ -19,6 +19,9 @@
     <string name="google_geocoding_base">https://maps.googleapis.com/maps/api/geocode/json?place_id=</string>
     <string name="google_http_searching_loc">https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=</string>
     <string name="google_http_matrix_head">https://maps.googleapis.com/maps/api/distancematrix/json?</string>
+    <string name="google_api_language">ko</string>
+    <string name="google_api_mode">transit</string>
+    <string name="google_api_type">lodging</string>
 
     <!--activity-->
     <string name="plan_detail_title">플랜 조회</string>

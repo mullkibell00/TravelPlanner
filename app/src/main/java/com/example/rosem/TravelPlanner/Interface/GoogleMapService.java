@@ -20,7 +20,8 @@ public interface GoogleMapService {
     Call<ResponseBody> getRecommendHotelInfo(@Query("location")String location, @Query("radius")int radius,
                                              @Query("language")String lang, @Query("types")String type,@Query("key")String key );
     @GET("/maps/api/distancematrix/json")
-    Call<ResponseBody> getDistanceMatrix(@Query("mode")String mode, @Query("language")String lang, @Query("key")String key);
+    Call<ResponseBody> getDistanceMatrix(@Query("origins")String origins, @Query("destinations")String dest,
+                                         @Query("mode")String mode, @Query("language")String lang, @Query("key")String key);
 
     public static final Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("https://maps.googleapis.com")
