@@ -7,6 +7,7 @@
     <integer name="time_unit">10</integer>
     <integer name="load_num">5</integer>
     <integer name="google_api_radius">5000</integer>
+    <integer name="google_api_limit">25</integer>
 
     <!--error code-->
     <integer name="error_server_body_json">3000</integer>

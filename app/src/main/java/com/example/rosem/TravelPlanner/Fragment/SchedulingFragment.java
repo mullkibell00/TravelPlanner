@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.rosem.TravelPlanner.Interface.GoogleMapService;
 import com.example.rosem.TravelPlanner.Interface.SavePlanService;
 import com.example.rosem.TravelPlanner.R;
 import com.example.rosem.TravelPlanner.Activity.CreatePlanActivity;
@@ -173,9 +174,9 @@ public class SchedulingFragment extends Fragment {
 
       //  if(resultSchedule==null)
       //  {
-            Scheduling getPlan = new Scheduling();
+            GetSchedule getSchedule = new GetSchedule();
             handler.sendEmptyMessage(START);
-            getPlan.run();
+            getSchedule.execute();
       //  }
 
         TabLayout tabs=(TabLayout)view.findViewById(R.id.plan_tabs);
@@ -274,7 +275,7 @@ public class SchedulingFragment extends Fragment {
 
     private void updateList()
     {
-        handler.sendEmptyMessage(UPDATE_UI);
+        //handler.sendEmptyMessage(UPDATE_UI);
        //
         plan = new Plan();
         ArrayList<Site> sites = schedule.getSiteList();
@@ -485,127 +486,136 @@ public class SchedulingFragment extends Fragment {
         return str;
     }
 
+    private class GetSchedule extends AsyncTask<Call<ResponseBody>,Void, Void>
+    {
+        //boolean [] isSelected;
+        int limit = getResources().getInteger(R.integer.google_api_limit);
+        String lang = getString(R.string.google_api_language);
+        String mode = getString(R.string.google_api_mode);
+        String key = getString(R.string.google_http_api_key);
+        JSONArray results = new JSONArray();
 
+        @Override
+        protected void onPreExecute() {
+            //super.onPreExecute();
+            if(!progressDialog.isShowing())
+            {
+                progressDialog.setMessage(messages[0]);
+                progressDialog.show();
+            }
+        }
 
-   private class Scheduling extends Thread
-   {
-       boolean [] isSelected;
-       String headStr = getString(R.string.google_http_matrix_head);
-       String tailStr = "&mode=transit&language=ko&key="+getString(R.string.google_http_api_key);
-       String requestUrl;
-       JSONArray results = new JSONArray();
-       @Override
-       public void run() {
-           //super.run();
-           //get fare and duration matrix from google
-           int limit = 25;
-           String separator="%7C";
-           String originData="origins=";
-           String destData="&destinations=";
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            //super.onPostExecute(aVoid);
+            if(progressDialog.isShowing())
+            {
+                progressDialog.dismiss();
+            }
+        }
 
-           String originBody =siteList.get(0).getLatLngStr();
-           for(int i= 1; i< numOfSite ; i++)
-           {
-               originBody+=separator;
-               originBody=originBody+siteList.get(i).getLatLngStr();
-           }
-           for(int i =0; i< numOfHotel;)
-           {
-               Site s = hotel.get(i);
-               originBody+=separator;
-               originBody=originBody+s.getLatLngStr();
-               i = hotel.lastIndexOf(s)+1;
-           }
+        @Override
+        protected Void doInBackground(Call<ResponseBody>... params) {
+            String origin = null;
+            String dest = null;
+            String separator="|";
 
-           for(int i =0; i<numOfSite; i++)
-           {
-               String destBody = siteList.get(i).getLatLngStr();
-               requestUrl = headStr+originData+originBody+destData+destBody+tailStr;
-               if(!request(requestUrl))
-               {
-                   //show toast failed
-                   return;
-               }
-           }
-           for(int i =0; i<numOfHotel;)
-           {
-               Site s = hotel.get(i);
-               String destBody = s.getLatLngStr();
-               requestUrl = headStr+originData+originBody+destData+destBody+tailStr;
-               if(!request(requestUrl))
-               {
-                   //show toast failed
-                   return;
-               }
-               i = hotel.lastIndexOf(s)+1;
-           }
+            //creating param of request
+            origin =siteList.get(0).getLatLngStr();
+            for(int i= 1; i< numOfSite ; i++)
+            {
+                origin+=separator;
+                origin=origin+siteList.get(i).getLatLngStr();
+            }
+            for(int i =0; i< numOfHotel;)
+            {
+                Site s = hotel.get(i);
+                origin+=separator;
+                origin=origin+s.getLatLngStr();
+                i = hotel.lastIndexOf(s)+1;
+            }
 
-           handler.sendEmptyMessage(UPDATE_UI);
+            for(int i =0; i<numOfSite; i++)
+            {
+                dest = siteList.get(i).getLatLngStr();
+                if(!request(origin,dest))
+                {
+                    //fail
+                    return null;
+                }
+            }
+            for(int i =0; i<numOfHotel;)
+            {
+                Site s = hotel.get(i);
+                dest = s.getLatLngStr();
+                if(!request(origin,dest))
+                {
+                    //fail
+                    return null;
+                }
+                i = hotel.lastIndexOf(s)+1;
+            }
+            JSONObject inputData = new JSONObject();
+            try {
+                handler.sendEmptyMessage(UPDATE_UI);
+                inputData.put("results",results);
+                resultSchedule = schedule.getSchedule(timeUnit,inputData);
+                handler.sendEmptyMessage(SCHEDULE_DONE);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
 
-           JSONObject inputData = new JSONObject();
-           try {
-               inputData.put("results",results);
-               resultSchedule = schedule.getSchedule(timeUnit,inputData);
-               handler.sendEmptyMessage(SCHEDULE_DONE);
-           } catch (JSONException e) {
-               e.printStackTrace();
-           }
-       }
-
-
-
-       public boolean request(String data)
-       {
-           InputStream inputStream = null;
-           BufferedReader rd = null;
-           StringBuilder response = new StringBuilder();
-
-           HttpClient httpClient = new DefaultHttpClient();
-
-           try {
-               HttpPost httpPost = new HttpPost(data);
-               //서버로 전송 & 받아오기
-               HttpResponse httpResponse = httpClient.execute(httpPost);
-               Log.v("Schedule::Request", "sending success");
-
-               inputStream = httpResponse.getEntity().getContent();
-               rd = new BufferedReader(new InputStreamReader(inputStream));
-               String line;
-               while((line=rd.readLine())!=null)
-               {
-                   response.append(line);
-               }
-               Log.v("Schedule::Request","result:"+response.toString());
-
-               //parsing
-               JSONObject responseObj = null;
-               try
-               {
-                   responseObj = new JSONObject(response.toString());
-                   results.put(responseObj);
-               }
-               catch (JSONException e)
-               {
-                   JSONObject empty = new JSONObject();
-                   results.put(empty);
-                   e.printStackTrace();
-                   FirebaseCrash.report(e);
-                   return false;
-               }//end of parsing try/ catch
-
-               //data 처리
-           } catch (IOException e) {
-               e.printStackTrace();
-               FirebaseCrash.report(e);
-               Log.v("Schedule::Request", "sending failed");
-               return false;
-           }
-
-           return true;
-
-       }
-
-   }
+        public boolean request(String origin, String dest)
+        {
+            String contents = null;
+            GoogleMapService service = GoogleMapService.retrofit.create(GoogleMapService.class);
+            Call<ResponseBody>  call = service.getDistanceMatrix(origin,dest,mode,lang,key);
+            ResponseBody response = null;
+            try {
+                response = call.execute().body();
+            } catch (IOException e)
+            {
+                e.printStackTrace();
+                FirebaseCrash.report(e);
+                //Toast.makeText(getContext(), errorMsg+getResources().getInteger(R.integer.error_server_netowrk), Toast.LENGTH_SHORT).show();
+                return false;
+            }
+            if(response!=null)
+            {
+                try {
+                    contents = response.string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            else
+            {
+                return false;
+            }
+            if(contents!=null)
+            {
+                //parsing
+                JSONObject responseObj = null;
+                try
+                {
+                    responseObj = new JSONObject(contents);
+                    results.put(responseObj);
+                    return true;
+                }
+                catch (JSONException e)
+                {
+                    JSONObject empty = new JSONObject();
+                    results.put(empty);
+                    e.printStackTrace();
+                    FirebaseCrash.report(e);
+                    return false;
+                }//end of parsing try/ catch
+            }
+            return false;
+        }
+    }
 
     private class ProgressHandler extends Handler
     {
@@ -617,8 +627,7 @@ public class SchedulingFragment extends Fragment {
             switch (msg.what)
             {
                 case START:
-                    //progressDialog.setMessage(messages[step]);
-                    progressDialog.show();
+                    step=0;
                     break;
                 case UPDATE_UI:
                     step++;
@@ -626,12 +635,11 @@ public class SchedulingFragment extends Fragment {
                     {
                         step--;
                     }
-                   // progressDialog.setMessage(messages[step]);
-                    //progressDialog.invalidateOptionsMenu();
+                    progressDialog.setMessage(messages[step]);
                     break;
                 case SCHEDULE_DONE:
-                    progressDialog.dismiss();
                     updateList();
+                    break;
                 case FINISH:
                     break;
             }
