@@ -16,12 +16,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.rosem.TravelPlanner.Interface.GoogleMapService;
 import com.example.rosem.TravelPlanner.R;
 import com.example.rosem.TravelPlanner.Activity.CreatePlanActivity;
 import com.example.rosem.TravelPlanner.adapter.RecommendListAdapter;
 import com.example.rosem.TravelPlanner.object.Schedule;
 import com.example.rosem.TravelPlanner.object.Site;
 import com.google.android.gms.location.places.Place;
+import com.google.firebase.crash.FirebaseCrash;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -38,6 +40,9 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
 
 /**
  * Created by rosem on 2017-03-07.
@@ -162,11 +167,16 @@ public class HotelRecommendFragment extends Fragment {
 
     private class HotelRecommend extends AsyncTask<LatLng,LatLng,LatLng>
     {
+        int radius = getResources().getInteger(R.integer.google_api_radius);
+        String lang = getString(R.string.google_api_language);
+        String type = getString(R.string.google_api_type);
+        String key = getString(R.string.google_http_api_key);
         String urlString = getString(R.string.google_http_searching_loc);
+        String location = null;
 
         public HotelRecommend(LatLng latLng)
         {
-            urlString+=latLng.toString()+"&radius=5000&language=ko&types=lodging&key="+getString(R.string.google_http_api_key);
+            location =latLng.toString();
         }
 
         @Override
@@ -195,95 +205,88 @@ public class HotelRecommendFragment extends Fragment {
         {
             ArrayList<Site> hotelList = new ArrayList<Site>();
 
-            InputStream inputStream = null;
-            BufferedReader rd = null;
-            StringBuilder response = new StringBuilder();
-
-            HttpClient httpClient = new DefaultHttpClient();
-
-            HttpPost httpPost = new HttpPost(urlString);
-
+            GoogleMapService service = GoogleMapService.retrofit.create(GoogleMapService.class);
+            Call<ResponseBody> call = service.getRecommendHotelInfo(location,radius,lang,type,key);
+            ResponseBody response = null;
             try {
-                //서버로 전송 & 받아오기
-                HttpResponse httpResponse = httpClient.execute(httpPost);
-                Log.v("HotelRecommend", "HotelRecommend=Sending Success");
-
-                inputStream = httpResponse.getEntity().getContent();
-                rd = new BufferedReader(new InputStreamReader(inputStream));
-                String line;
-                while((line=rd.readLine())!=null)
-                {
-                    response.append(line);
-                }
-                Log.v("HotelRecommend","result:"+response.toString());
-                String country=null;
-                //parsing
-                try {
-                    //bring result array
-                    JSONObject responseObj = new JSONObject(response.toString());
-                    JSONArray result = responseObj.getJSONArray("results");
-                    //get member of array
-                    for(int i=0; i< result.length();i++)
-                    {
-                        try
-                        {
-                            Site hotel = new Site();
-                            JSONObject hotelObj = result.getJSONObject(i);
-                            JSONObject geometry = null;
-                            JSONObject location = null;
-                            //bring location of lodging
-                            if(hotelObj.has("geometry"))
-                            {
-                                geometry = hotelObj.getJSONObject("geometry");
-                                if(geometry.has("location"))
-                                {
-                                    location = geometry.getJSONObject("location");
-                                    if(location.has("lat"))
-                                    {
-                                        hotel.setLat(location.getDouble("lat"));
-                                    }
-                                    if(location.has("lng"))
-                                    {
-                                        hotel.setLng(location.getDouble("lng"));
-                                    }
-                                }
-                            }
-                            //bring name
-                            if(hotelObj.has("name"))
-                            {
-                                hotel.setPlaceName(hotelObj.getString("name"));
-                            }
-                            //bring place id
-                            if(hotelObj.has("place_id"))
-                            {
-                                hotel.setPlaceId(hotelObj.getString("place_id"));
-                            }
-                            //get temp addr
-                            if(hotelObj.has("vicinity"))
-                            {
-                                hotel.setAddress(hotelObj.getString("vicinity"));
-                            }
-                            //set type
-                            List<Integer> type = new ArrayList<>();
-                            type.add(Place.TYPE_LODGING);
-                            hotel.setPlaceType(type);
-
-                            //add to hotelList
-                            hotelList.add(hotel);
-                        }
-                        catch (JSONException e)
-                        {
-                            e.printStackTrace();
-                        }
-                    }//end of for( result )
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }//end of parsing
-
+                response = call.execute().body();
             } catch (IOException e) {
                 e.printStackTrace();
-                Log.v("HotelRecommend", "HotelRecommend=Sending Fail");
-            }//end of try/catch of sending & receiving data
+                FirebaseCrash.report(e);
+            }
+            if(response!=null)
+            {
+                try {
+                    String contents = response.string();
+                    String country=null;
+                    //parsing
+                    try {
+                        //bring result array
+                        JSONObject responseObj = new JSONObject(contents);
+                        JSONArray result = responseObj.getJSONArray("results");
+                        //get member of array
+                        for(int i=0; i< result.length();i++)
+                        {
+                            try
+                            {
+                                Site hotel = new Site();
+                                JSONObject hotelObj = result.getJSONObject(i);
+                                JSONObject geometry = null;
+                                JSONObject location = null;
+                                //bring location of lodging
+                                if(hotelObj.has("geometry"))
+                                {
+                                    geometry = hotelObj.getJSONObject("geometry");
+                                    if(geometry.has("location"))
+                                    {
+                                        location = geometry.getJSONObject("location");
+                                        if(location.has("lat"))
+                                        {
+                                            hotel.setLat(location.getDouble("lat"));
+                                        }
+                                        if(location.has("lng"))
+                                        {
+                                            hotel.setLng(location.getDouble("lng"));
+                                        }
+                                    }
+                                }
+                                //bring name
+                                if(hotelObj.has("name"))
+                                {
+                                    hotel.setPlaceName(hotelObj.getString("name"));
+                                }
+                                //bring place id
+                                if(hotelObj.has("place_id"))
+                                {
+                                    hotel.setPlaceId(hotelObj.getString("place_id"));
+                                }
+                                //get temp addr
+                                if(hotelObj.has("vicinity"))
+                                {
+                                    hotel.setAddress(hotelObj.getString("vicinity"));
+                                }
+                                //set type
+                                List<Integer> type = new ArrayList<>();
+                                type.add(Place.TYPE_LODGING);
+                                hotel.setPlaceType(type);
+
+                                //add to hotelList
+                                hotelList.add(hotel);
+                            }
+                            catch (JSONException e)
+                            {
+                                e.printStackTrace();
+                            }
+                        }//end of for( result )
+                    } catch (JSONException e)
+                    {
+                        e.printStackTrace();
+                    }//end of parsing
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
             return hotelList;
         }
     }
