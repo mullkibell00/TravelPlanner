@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.rosem.TravelPlanner.Interface.GoogleMapService;
 import com.example.rosem.TravelPlanner.R;
 import com.example.rosem.TravelPlanner.Activity.CreatePlanActivity;
 import com.example.rosem.TravelPlanner.adapter.SiteListAdapter;
@@ -36,6 +37,7 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.firebase.crash.FirebaseCrash;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -53,6 +55,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.LinkedList;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
 
 /**
  * Created by rosem on 2017-03-06.
@@ -190,7 +195,7 @@ public class InputSiteFragment extends Fragment {
                 Site site = ((CreatePlanActivity)getActivity()).setSiteFromPlace(selectedPlace);
 
                 SendRequest getLocality = new SendRequest(site.getPlaceId());
-                String local = getLocality.postData(null);
+                String local = getLocality.getLocality();
                 site.setLocality(local);
 
                 mAdapter.addSite(site);
@@ -266,119 +271,96 @@ public class InputSiteFragment extends Fragment {
         schedule.setOverHourSiteList(overHourSiteList);
     }
 
-    private class SendRequest extends AsyncTask<String,String,String>
+    private class SendRequest extends AsyncTask<Void,Void,String>
     {
-        String urlString = getString(R.string.google_geocoding_base);
-
+        String placeId = null;
+        String lang = getString(R.string.google_api_language);
+        String key = getString(R.string.google_http_api_key);
         public SendRequest(String placeId)
         {
-            urlString +=placeId;
-            urlString+="&language=ko&key=";
-            urlString+=getString(R.string.google_http_api_key);
+            this.placeId = placeId;
         }
+
         @Override
-        protected String doInBackground(String... strings) {
-            postData(urlString);
+        protected String doInBackground(Void... params) {
+
             return null;
         }
 
-        @Override
-        protected void onPostExecute(String s) {
-            //super.onPostExecute(s);
-            Log.v("Main::","start send");
-        }
-
-        public String postData(String str)
+        public String getLocality()
         {
-            InputStream inputStream = null;
-            BufferedReader rd = null;
-            StringBuilder response = new StringBuilder();
-
-            HttpClient httpClient = new DefaultHttpClient();
-
-            HttpPost httpPost = new HttpPost(urlString);
-
+            GoogleMapService service = GoogleMapService.retrofit.create(GoogleMapService.class);
+            Call<ResponseBody>  call = service.getSiteInfo(placeId,lang,key);
+            ResponseBody response = null;
             try {
-                //서버로 전송 & 받아오기
-                HttpResponse httpResponse = httpClient.execute(httpPost);
-                Log.v("******server", "send msg successed");
-
-                inputStream = httpResponse.getEntity().getContent();
-                rd = new BufferedReader(new InputStreamReader(inputStream));
-                String line;
-                while((line=rd.readLine())!=null)
-                {
-                    response.append(line);
-                }
-                Log.v("InputSite::bringSuccess","result:"+response.toString());
-                String locality=null;
-                //parsing
-                try {
-                    JSONObject responseObj = new JSONObject(response.toString());
-                    JSONArray result = responseObj.getJSONArray("results");
-                    JSONObject firstObj = result.getJSONObject(0);
-                    JSONArray addrComponent = firstObj.getJSONArray("address_components");
-                    for(int i=0; i< addrComponent.length();i++)
-                    {
-                        JSONObject addr = addrComponent.getJSONObject(i);
-                        JSONArray types = addr.getJSONArray("types");
-                        if(types.getString(0).equals("locality") && locality==null)
-                        {
-                            locality = addr.getString("short_name");
-                        }
-                    }
-                    /*
-                    if(locality==null)
-                    {
-                        for(int i=0; i< addrComponent.length();i++)
-                        {
-                            JSONObject addr = addrComponent.getJSONObject(i);
-                            JSONArray types = addr.getJSONArray("types");
-                            if(types.getString(0).equals("sublocality"))
-                            {
-                                locality = addr.getString("short_name");
-                            }
-                        }
-                    }
-                    */
-                    if(locality==null)
-                    {
-                        for(int i=0; i< addrComponent.length();i++)
-                        {
-                            JSONObject addr = addrComponent.getJSONObject(i);
-                            JSONArray types = addr.getJSONArray("types");
-                            if(types.getString(0).equals("administrative_area_level_2")&& locality==null)
-                            {
-                                locality = addr.getString("short_name");
-                            }
-                        }
-                    }
-                    if(locality==null)
-                    {
-                        for(int i=0; i< addrComponent.length();i++)
-                        {
-                            JSONObject addr = addrComponent.getJSONObject(i);
-                            JSONArray types = addr.getJSONArray("types");
-                            if(types.getString(0).equals("administrative_area_level_1")&& locality==null)
-                            {
-                                locality = addr.getString("short_name");
-                            }
-                        }
-                    }
-
-                    return locality;
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                //data 처리
-
+                response = call.execute().body();
             } catch (IOException e) {
                 e.printStackTrace();
-                Log.v("******server", "send msg failed");
+                FirebaseCrash.report(e);
+            }
+            if(response!=null)
+            {
+                try {
+                    String contents = response.string();
+                    if(contents!=null)
+                    {
+                        String locality=null;
+                        //parsing
+                        try {
+                            JSONObject responseObj = new JSONObject(contents);
+                            JSONArray result = null;
+                            if(responseObj.has("results"))
+                            {
+                                result = responseObj.getJSONArray("results");
+                                JSONObject firstObj = result.getJSONObject(0);
+                                JSONArray addrComponent = firstObj.getJSONArray("address_components");
+                                for(int i=0; i< addrComponent.length();i++)
+                                {
+                                    JSONObject addr = addrComponent.getJSONObject(i);
+                                    JSONArray types = addr.getJSONArray("types");
+                                    if(types.getString(0).equals("locality") && locality==null)
+                                    {
+                                        locality = addr.getString("short_name");
+                                    }
+                                }
+                                if(locality==null)
+                                {
+                                    for(int i=0; i< addrComponent.length();i++)
+                                    {
+                                        JSONObject addr = addrComponent.getJSONObject(i);
+                                        JSONArray types = addr.getJSONArray("types");
+                                        if(types.getString(0).equals("administrative_area_level_2")&& locality==null)
+                                        {
+                                            locality = addr.getString("short_name");
+                                        }
+                                    }
+                                }
+                                if(locality==null)
+                                {
+                                    for(int i=0; i< addrComponent.length();i++)
+                                    {
+                                        JSONObject addr = addrComponent.getJSONObject(i);
+                                        JSONArray types = addr.getJSONArray("types");
+                                        if(types.getString(0).equals("administrative_area_level_1")&& locality==null)
+                                        {
+                                            locality = addr.getString("short_name");
+                                        }
+                                    }
+                                }
+
+                            }
+                            return locality;
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
             return null;
         }
+
     }
 
     public class InputInfoDialog extends AlertDialog
