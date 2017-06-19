@@ -56,7 +56,7 @@ public class CreatePlanActivity extends AppCompatActivity {
     PorterDuff.Mode iconMode;
     Realm db;
 
-    private Schedule schedule = new Schedule();
+    private Schedule schedule = null;
 
     private int STEP_NUM;
     Fragment [] stepFragments;
@@ -74,6 +74,9 @@ public class CreatePlanActivity extends AppCompatActivity {
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
+
+        Schedule.clear();
+        schedule = Schedule.getInstance();
 
         fontType = Typeface.createFromAsset(getAssets(),getString(R.string.font_name));
         Toolbar titleBar = (Toolbar)findViewById(R.id.create_plan_toolbar);
@@ -258,7 +261,7 @@ public class CreatePlanActivity extends AppCompatActivity {
             if(currentStep==STEP_NUM)
             {
                 Intent intent = new Intent();
-                intent.putExtra("planName",getPlanName());
+                intent.putExtra("planName",schedule.getPlanName());
                 setResult(RESULT_OK,intent);
                 finish();
                 return;
@@ -343,153 +346,6 @@ public class CreatePlanActivity extends AppCompatActivity {
     public void setDateText(TextView view, int year, int month, int day)
     {
         view.setText(year+"년 "+(month+1)+"월 "+day+"일");
-    }
-
-    //about schedule class
-    public Time getFirstDayStart() {
-        return schedule.getFirstDayStart();
-    }
-
-    public void setFirstDayStart(Time arrived) {
-        schedule.setFirstDayStart(arrived);
-    }
-
-    public String getCountry() {
-        return schedule.getCountry();
-    }
-
-    public void setCountry(String country) {
-        schedule.setCountry(country);
-    }
-
-    public Time getLastDayEnd() {
-        return schedule.getLastDayEnd();
-    }
-
-    public void setLastDayEnd(Time departure) {
-        schedule.setLastDayEnd(departure);
-    }
-
-    public ArrayList<Site> getHotel() {
-        return schedule.getHotel();
-    }
-
-    public void setHotel(ArrayList<Site> hotel) {
-        schedule.setHotel(hotel);
-    }
-
-    public boolean isHotelReserved() {
-        return schedule.isHotelReserved();
-    }
-
-    public void setHotelReserved(boolean hotelReserved) {
-        schedule.setHotelReserved(hotelReserved);
-    }
-
-    public void setNumOfDays(int numOfDays) {
-        schedule.setNumOfDays(numOfDays);
-    }
-
-    public ArrayList<Site> getSite() {
-        return schedule.getSite();
-    }
-
-    public void setSite(ArrayList<Site> siteList) {
-        schedule.setSite(siteList);
-    }
-
-    public ArrayList<Site> getSiteList() {
-        return schedule.getSiteList();
-    }
-    public String getPlanName() {
-        return schedule.getPlanName();
-    }
-
-    public void setPlanName(String planName) {
-        schedule.setPlanName(planName);
-    }
-
-    public Time getTourEnd() {
-        return schedule.getTourEnd();
-    }
-
-    public void setTourEnd(Time tourEnd) {
-        schedule.setTourEnd(tourEnd);
-    }
-
-    public Time getTourStart() {
-        return schedule.getTourStart();
-    }
-
-    public void setTourStart(Time tourStart) {
-        schedule.setTourStart(tourStart);
-    }
-
-    public void addSite(Site p)
-    {
-        schedule.addSite(p);
-    }
-
-    public int getNumOfDay()
-    {
-        return schedule.getNumOfDays();
-    }
-
-    public int getScheduleSize()
-    {
-        return schedule.getScheduleSize();
-    }
-
-    public void setNumOfHotels(int num)
-    {
-        schedule.setNumOfHotels(num);
-    }
-
-    public Site getStartPoint()
-    {
-        return schedule.getStartPoint();
-    }
-
-    public Site getEndPoint()
-    {
-        return schedule.getEndPoint();
-    }
-
-    public void setStartPoint(Site sp)
-    {
-        schedule.setStartPoint(sp);
-    }
-
-    public void setEndPoint(Site ep)
-    {
-        schedule.setEndPoint(ep);
-    }
-
-    public void setFixedDateSiteList(LinkedList<Site> fixedDateSiteList) {
-        schedule.setFixedDateSiteList(fixedDateSiteList);
-    }
-
-    public void setFixedHourSiteList(LinkedList<Site> fixedHourSiteList) {
-        schedule.setFixedHourSiteList(fixedHourSiteList);
-    }
-
-    public void setOverHourSiteList(LinkedList<Site> overHourSiteList) {
-        schedule.setOverHourSiteList(overHourSiteList);
-    }
-
-    public LinkedList<LinkedList<Integer>> getSchedule(int tu, JSONObject json)
-    {
-        return schedule.getSchedule(tu, json);
-    }
-
-    public int[][] getCostMat()
-    {
-        return schedule.getCostMat();
-    }
-
-    public String[][] getFareStringMat()
-    {
-        return schedule.getFareStringMat();
     }
 
     public Site setSiteFromPlace(Place place)

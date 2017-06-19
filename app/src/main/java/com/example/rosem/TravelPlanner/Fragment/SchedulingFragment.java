@@ -24,6 +24,7 @@ import com.example.rosem.TravelPlanner.Interface.SavePlanService;
 import com.example.rosem.TravelPlanner.R;
 import com.example.rosem.TravelPlanner.Activity.CreatePlanActivity;
 import com.example.rosem.TravelPlanner.course.Course;
+import com.example.rosem.TravelPlanner.object.Schedule;
 import com.example.rosem.TravelPlanner.object.Site;
 import com.example.rosem.TravelPlanner.object.Time;
 import com.example.rosem.TravelPlanner.plan.Plan;
@@ -102,6 +103,8 @@ public class SchedulingFragment extends Fragment {
 
     AlertDialog saveDialog;
 
+    private Schedule schedule = Schedule.getInstance();
+
     public static SchedulingFragment newInstance()
     {
         SchedulingFragment fragment = new SchedulingFragment();
@@ -157,12 +160,12 @@ public class SchedulingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup view = (ViewGroup)inflater.inflate(R.layout.plan_schedule,container,false);
 
-        siteList = ((CreatePlanActivity)getActivity()).getSite();
-        tourStart = ((CreatePlanActivity)getActivity()).getTourStart();
-        tourEnd = ((CreatePlanActivity)getActivity()).getTourEnd();
-        hotel = new LinkedList<Site>(((CreatePlanActivity)getActivity()).getHotel());
-        hotel.addFirst(((CreatePlanActivity)getActivity()).getStartPoint());
-        hotel.addLast(((CreatePlanActivity)getActivity()).getEndPoint());
+        siteList = schedule.getSite();
+        tourStart = schedule.getTourStart();
+        tourEnd = schedule.getTourEnd();
+        hotel = new LinkedList<Site>(schedule.getHotel());
+        hotel.addFirst(schedule.getStartPoint());
+        hotel.addLast(schedule.getEndPoint());
 
         numOfSite = siteList.size();
         numOfHotel = hotel.size();
@@ -184,12 +187,12 @@ public class SchedulingFragment extends Fragment {
         tabs.setupWithViewPager(pager);
 
         planInfo = (TextView)view.findViewById(R.id.plan_info);
-        planInfo.setText(((CreatePlanActivity)getActivity()).getPlanName()+getString(R.string.plan_info_title));
+        planInfo.setText(schedule.getPlanName()+getString(R.string.plan_info_title));
         planInfoCountry = (TextView)view.findViewById(R.id.plan_info_country);
         planInfoCostTime = (TextView)view.findViewById(R.id.plan_info_cost_time);
         planInfo.setTypeface(fontType); planInfoCountry.setTypeface(fontType);
         planInfoCostTime.setTypeface(fontType);
-        planInfoCountry.setText(getString(R.string.plan_info_country)+((CreatePlanActivity)getActivity()).getCountry());
+        planInfoCountry.setText(getString(R.string.plan_info_country)+schedule.getCountry());
 
 
         Button nextButton = (Button)getActivity().findViewById(R.id.create_plan_next);
@@ -274,12 +277,12 @@ public class SchedulingFragment extends Fragment {
         handler.sendEmptyMessage(UPDATE_UI);
        //
         plan = new Plan();
-        ArrayList<Site> sites = ((CreatePlanActivity)getActivity()).getSiteList();
+        ArrayList<Site> sites = schedule.getSiteList();
 
-        String [][] fareStringMat = ((CreatePlanActivity)getActivity()).getFareStringMat();
-        int [][] costMat = ((CreatePlanActivity)getActivity()).getCostMat();
-        arrival = ((CreatePlanActivity)getActivity()).getFirstDayStart();
-        departure = ((CreatePlanActivity)getActivity()).getLastDayEnd();
+        String [][] fareStringMat = schedule.getFareStringMat();
+        int [][] costMat = schedule.getCostMat();
+        arrival = schedule.getFirstDayStart();
+        departure = schedule.getLastDayEnd();
 
         int totalDay = resultSchedule.size()-1;
         int totalTransportTime = 0;
@@ -414,9 +417,9 @@ public class SchedulingFragment extends Fragment {
             }
         }
 
-        plan.setPlanName(((CreatePlanActivity)getActivity()).getPlanName());
+        plan.setPlanName(schedule.getPlanName());
         plan.setFavorite(false);
-        plan.setCountry(((CreatePlanActivity)getActivity()).getCountry());
+        plan.setCountry(schedule.getCountry());
         plan.setTotalCostTime(unitToTime(totalTransportTime).toStringInText());
         plan.setPlanFromPlanArray();
         Log.v("Main:::","plan\n"+plan.toString());
@@ -542,7 +545,7 @@ public class SchedulingFragment extends Fragment {
            JSONObject inputData = new JSONObject();
            try {
                inputData.put("results",results);
-               resultSchedule = ((CreatePlanActivity)getActivity()).getSchedule(timeUnit,inputData);
+               resultSchedule = schedule.getSchedule(timeUnit,inputData);
                handler.sendEmptyMessage(SCHEDULE_DONE);
            } catch (JSONException e) {
                e.printStackTrace();
@@ -646,6 +649,7 @@ public class SchedulingFragment extends Fragment {
                 case SERVER_DONE:
                     ((CreatePlanActivity)getActivity()).moveNext();
                     Toast.makeText(getContext(), getString(R.string.save_success), Toast.LENGTH_SHORT).show();
+                    Schedule.clear();
             }
         }
     }

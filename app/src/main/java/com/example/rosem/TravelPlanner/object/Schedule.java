@@ -16,6 +16,8 @@ import java.util.LinkedList;
 
 public class Schedule{
 
+    private static Schedule instance = null;
+
     private String planName;
     private int numOfDays = 0;
     private Time lastDayEnd = null;
@@ -47,6 +49,28 @@ public class Schedule{
     private boolean [] isSelected= null;
     private int totalTravelingTimeUnit = 0;
     private int totalSpendTimeUnit = 0;
+
+    private Schedule()
+    {
+
+    }
+
+    public static Schedule getInstance()
+    {
+        if(instance==null)
+        {
+            instance = new Schedule();
+        }
+        return instance;
+    }
+
+    public static void clear()
+    {
+        if(instance!=null)
+        {
+            instance = null;
+        }
+    }
 
     private Comparator<Site> sortByVisitTimeLate = new Comparator<Site>()
     {

@@ -29,6 +29,7 @@ import android.widget.Toast;
 import com.example.rosem.TravelPlanner.R;
 import com.example.rosem.TravelPlanner.Activity.CreatePlanActivity;
 import com.example.rosem.TravelPlanner.adapter.SiteListAdapter;
+import com.example.rosem.TravelPlanner.object.Schedule;
 import com.example.rosem.TravelPlanner.object.Site;
 import com.example.rosem.TravelPlanner.object.Time;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -74,6 +75,8 @@ public class InputSiteFragment extends Fragment {
     private final int PLACE_PICK_REQUEST = 1213;
     private final int SET_PLACE_INFO =1215;
 
+    private Schedule schedule = Schedule.getInstance();
+
     static public InputSiteFragment newInstance()
     {
         InputSiteFragment fragment = new InputSiteFragment();
@@ -98,7 +101,7 @@ public class InputSiteFragment extends Fragment {
         addSiteButton = (TextView)view.findViewById(R.id.plan_site_add);
         addSiteButton.setTypeface(fontType);
 
-        siteList = ((CreatePlanActivity)getActivity()).getSite();
+        siteList = schedule.getSite();
         SiteListAdapter.ShowDialog showEditDialog = new SiteListAdapter.ShowDialog()
         {
             @Override
@@ -230,7 +233,7 @@ public class InputSiteFragment extends Fragment {
     public void saveData()
     {
 
-        ((CreatePlanActivity)getActivity()).setSite(mAdapter.getSiteList());
+        schedule.setSite(mAdapter.getSiteList());
         ArrayList<Site> list = mAdapter.getSiteList();
         LinkedList<Site> fixedHourSiteList = new LinkedList<>();
         LinkedList<Site> overHourSiteList = new LinkedList<>();
@@ -247,7 +250,7 @@ public class InputSiteFragment extends Fragment {
             if(site.getVisitTime()!=null)
             {
                 Time time = site.getVisitTime().add(site.getSpendTime());
-                Time endTime = ((CreatePlanActivity)getActivity()).getTourEnd();
+                Time endTime = schedule.getTourEnd();
                 if(time.compareTo(endTime)<=0)
                 {
                     fixedHourSiteList.add(site);
@@ -259,8 +262,8 @@ public class InputSiteFragment extends Fragment {
             }
         }//end of while iteration of list
         //((CreatePlanActivity)getActivity()).setFixedDateSiteList(fixedDateSiteList);
-        ((CreatePlanActivity)getActivity()).setFixedHourSiteList(fixedHourSiteList);
-        ((CreatePlanActivity)getActivity()).setOverHourSiteList(overHourSiteList);
+        schedule.setFixedHourSiteList(fixedHourSiteList);
+        schedule.setOverHourSiteList(overHourSiteList);
     }
 
     private class SendRequest extends AsyncTask<String,String,String>

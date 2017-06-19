@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.example.rosem.TravelPlanner.R;
 import com.example.rosem.TravelPlanner.Activity.CreatePlanActivity;
 import com.example.rosem.TravelPlanner.adapter.HotelListAdapter;
+import com.example.rosem.TravelPlanner.object.Schedule;
 import com.example.rosem.TravelPlanner.object.Site;
 import com.example.rosem.TravelPlanner.object.Time;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -75,6 +76,8 @@ public class InputHotelInfoFragment extends Fragment {
     ArrayList<Calendar> checkOutList;
 
     private final int PLACE_PICK_REQUEST = 1213;
+
+    private Schedule schedule = Schedule.getInstance();
 
     public static InputHotelInfoFragment newInstance()
     {
@@ -151,7 +154,7 @@ public class InputHotelInfoFragment extends Fragment {
 
         //set recyclerView
         selectedHotelView = (RecyclerView)view.findViewById(R.id.hotel_info_selected_hotels);
-        mSelectedHotels = ((CreatePlanActivity)getActivity()).getHotel();
+        mSelectedHotels = schedule.getHotel();
         if(mSelectedHotels==null)
         {
             mSelectedHotels = new ArrayList<Site>();
@@ -295,10 +298,10 @@ public class InputHotelInfoFragment extends Fragment {
             }
             checkInList = mAdapter.getCheckInList();
             checkOutList = mAdapter.getCheckOutList();
-            ((CreatePlanActivity)getActivity()).setNumOfHotels(selectedHotels.size());
-            ((CreatePlanActivity)getActivity()).setHotel(hotels);
+            schedule.setNumOfHotels(selectedHotels.size());
+            schedule.setHotel(hotels);
         }
-        ((CreatePlanActivity)getActivity()).setHotelReserved(isHotelReserved);
+        schedule.setHotelReserved(isHotelReserved);
     }
 
     public int calendarToNumOfDay(Calendar start, Calendar end)

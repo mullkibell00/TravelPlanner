@@ -16,6 +16,7 @@ import android.widget.TimePicker;
 
 import com.example.rosem.TravelPlanner.Activity.CreatePlanActivity;
 import com.example.rosem.TravelPlanner.R;
+import com.example.rosem.TravelPlanner.object.Schedule;
 import com.example.rosem.TravelPlanner.object.Time;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -35,9 +36,6 @@ public class InputDailyInfoFragment extends Fragment {
     private final int mTxtTourEnd = 2;
     private final int mSelectedTourStart=3;
     private final int mSelectedTourEnd = 4;
-
-
-
     private final int planInfoTextNum=5;
     Typeface fontType;
 
@@ -50,6 +48,8 @@ public class InputDailyInfoFragment extends Fragment {
     //data
     Calendar tourStartTime;
     Calendar tourEndTime;
+
+    private Schedule schedule = Schedule.getInstance();
 
     static public InputDailyInfoFragment newInstance()
     {
@@ -99,8 +99,8 @@ public class InputDailyInfoFragment extends Fragment {
 
         settingTextView(view);
 
-        Time tourS = ((CreatePlanActivity)getActivity()).getTourStart();
-        Time tourE = ((CreatePlanActivity)getActivity()).getTourEnd();
+        Time tourS = schedule.getTourStart();
+        Time tourE = schedule.getTourEnd();
 
         if(tourS!=null)
         {
@@ -137,9 +137,9 @@ public class InputDailyInfoFragment extends Fragment {
     public void saveData()
     {
         Time startTime = new Time(tourStartTime.get(Calendar.HOUR_OF_DAY),tourStartTime.get(Calendar.MINUTE));
-        ((CreatePlanActivity)getActivity()).setTourStart(startTime);
+        schedule.setTourStart(startTime);
         Time endTime = new Time(tourEndTime.get(Calendar.HOUR_OF_DAY),tourEndTime.get(Calendar.MINUTE));
-        ((CreatePlanActivity)getActivity()).setTourEnd(endTime);
+        schedule.setTourEnd(endTime);
     }
 
     public void settingTextView(ViewGroup view)
@@ -170,7 +170,7 @@ public class InputDailyInfoFragment extends Fragment {
         });
 
         Time tourS = null;
-        if((tourS=((CreatePlanActivity)getActivity()).getTourStart())!=null)
+        if((tourS=schedule.getTourStart())!=null)
         {
             Calendar tourSCal = Calendar.getInstance();
             tourSCal.set(Calendar.HOUR_OF_DAY,tourS.hour);
@@ -183,7 +183,7 @@ public class InputDailyInfoFragment extends Fragment {
                     ,tourSCal.get(Calendar.HOUR_OF_DAY),tourSCal.get(Calendar.MINUTE));
         }
         Time tourE = null;
-        if((tourE=((CreatePlanActivity)getActivity()).getTourEnd())!=null)
+        if((tourE=schedule.getTourEnd())!=null)
         {
             Calendar tourECal = Calendar.getInstance();
             tourECal.set(Calendar.HOUR_OF_DAY,tourS.hour);

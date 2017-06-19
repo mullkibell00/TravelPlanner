@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.example.rosem.TravelPlanner.R;
 import com.example.rosem.TravelPlanner.Activity.CreatePlanActivity;
+import com.example.rosem.TravelPlanner.object.Schedule;
 
 /**
  * Created by rosem on 2017-02-26.
@@ -26,6 +27,7 @@ public class InputTitleFragment extends Fragment {
 
     Typeface fonType;
     EditText inputPlanName;
+    private Schedule schedule = Schedule.getInstance();
 
 
     public static InputTitleFragment newInstance()
@@ -53,7 +55,7 @@ public class InputTitleFragment extends Fragment {
         TextView inputNameEx = (TextView)view.findViewById(R.id.plan_txt_plan_name_explain);
         planNameView.setTypeface(fonType); inputNameEx.setTypeface(fonType); inputPlanName.setTypeface(fonType);
 
-        String prevPlanName = ((CreatePlanActivity)getActivity()).getPlanName();
+        String prevPlanName = schedule.getPlanName();
         if(prevPlanName!=null)
         {
             inputPlanName.setText(prevPlanName);
@@ -91,7 +93,7 @@ public class InputTitleFragment extends Fragment {
                 }
                 else if(((CreatePlanActivity)getActivity()).checkPlanName(planName))
                 {
-                    ((CreatePlanActivity)getActivity()).setPlanName(planName);
+                    schedule.setPlanName(planName);
                     ((CreatePlanActivity)getActivity()).moveNext();
                 }
                 else

@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.example.rosem.TravelPlanner.R;
 import com.example.rosem.TravelPlanner.Activity.CreatePlanActivity;
+import com.example.rosem.TravelPlanner.object.Schedule;
 import com.example.rosem.TravelPlanner.object.Site;
 import com.example.rosem.TravelPlanner.object.Time;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -84,6 +85,8 @@ public class InputPlanInfoFragment extends Fragment {
     int travelingPeriod;
     Site arrivalPlace = null;
     Site departPlace = null;
+
+    private Schedule schedule = Schedule.getInstance();
 
     public static InputPlanInfoFragment newInstance()
     {
@@ -158,13 +161,13 @@ public class InputPlanInfoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup view = (ViewGroup)inflater.inflate(R.layout.plan_input_plan_info,container,false);
 
-        if(((CreatePlanActivity)getActivity()).getStartPoint()!=null)
+        if(schedule.getStartPoint()!=null)
         {
-            arrivalPlace = ((CreatePlanActivity)getActivity()).getStartPoint();
+            arrivalPlace = schedule.getStartPoint();
         }
-        if(((CreatePlanActivity)getActivity()).getEndPoint()!=null)
+        if(schedule.getEndPoint()!=null)
         {
-            departPlace = ((CreatePlanActivity)getActivity()).getEndPoint();
+            departPlace = schedule.getEndPoint();
         }
 
         settingTextView(view);
@@ -226,11 +229,11 @@ public class InputPlanInfoFragment extends Fragment {
     {
         //setting arrivalPlace, departPlace
         //numofDays, arrival,departure,country
-        ((CreatePlanActivity)getActivity()).setFirstDayStart(new Time(selectedArrival.get(Calendar.HOUR_OF_DAY),selectedArrival.get(Calendar.MINUTE)));
-        ((CreatePlanActivity)getActivity()).setLastDayEnd(new Time(selectedDepart.get(Calendar.HOUR_OF_DAY),selectedDepart.get(Calendar.MINUTE)));
-        ((CreatePlanActivity)getActivity()).setCountry(texts[mSelectedCountry].getText().toString());
-        ((CreatePlanActivity)getActivity()).setStartPoint(arrivalPlace);
-        ((CreatePlanActivity)getActivity()).setEndPoint(departPlace);
+        schedule.setFirstDayStart(new Time(selectedArrival.get(Calendar.HOUR_OF_DAY),selectedArrival.get(Calendar.MINUTE)));
+        schedule.setLastDayEnd(new Time(selectedDepart.get(Calendar.HOUR_OF_DAY),selectedDepart.get(Calendar.MINUTE)));
+        schedule.setCountry(texts[mSelectedCountry].getText().toString());
+        schedule.setStartPoint(arrivalPlace);
+        schedule.setEndPoint(departPlace);
 
         travelingPeriod = 0;
         if(selectedArrival.get(Calendar.MONTH)==selectedDepart.get(Calendar.MONTH))
@@ -249,8 +252,8 @@ public class InputPlanInfoFragment extends Fragment {
             travelingPeriod+=selectedDepart.get(Calendar.DAY_OF_MONTH);
         }
         Log.v("PlanInfo:::","travelingPeriod : "+travelingPeriod);
-        ((CreatePlanActivity)getActivity()).setNumOfDays(travelingPeriod);
-        Log.v("PlanInfo:::","check saved data\nselectedCountry="+((CreatePlanActivity)getActivity()).getCountry());
+        schedule.setNumOfDays(travelingPeriod);
+        Log.v("PlanInfo:::","check saved data\nselectedCountry="+schedule.getCountry());
     }
 
     public void settingTextView(ViewGroup view)
@@ -366,7 +369,7 @@ public class InputPlanInfoFragment extends Fragment {
 
         //load if there is
         String country = null;
-        if((country = ((CreatePlanActivity)getActivity()).getCountry())!=null)
+        if((country = schedule.getCountry())!=null)
         {
             for(int i = mSelectedCountry;i<mSelectedCountryShowDepart;i++)
             {

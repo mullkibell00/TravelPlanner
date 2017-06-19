@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.example.rosem.TravelPlanner.R;
 import com.example.rosem.TravelPlanner.Activity.CreatePlanActivity;
 import com.example.rosem.TravelPlanner.adapter.RecommendListAdapter;
+import com.example.rosem.TravelPlanner.object.Schedule;
 import com.example.rosem.TravelPlanner.object.Site;
 import com.google.android.gms.location.places.Place;
 
@@ -49,6 +50,7 @@ public class HotelRecommendFragment extends Fragment {
     RecyclerView hotelListView;
     LatLng midpoint;
     RecommendListAdapter mAdapter;
+    private Schedule schedule = Schedule.getInstance();
 
     public static HotelRecommendFragment newInstance()
     {
@@ -67,7 +69,7 @@ public class HotelRecommendFragment extends Fragment {
 
         if(recommendedList==null)
         {
-            ArrayList<Site> sites = ((CreatePlanActivity)getActivity()).getSite();
+            ArrayList<Site> sites = schedule.getSite();
             for(int i = 0; i < sites.size();i++)
             {
                 midpoint.lat += sites.get(i).getLat();
@@ -133,15 +135,15 @@ public class HotelRecommendFragment extends Fragment {
 
     private void saveData()
     {
-        int numOfDay=((CreatePlanActivity)getActivity()).getNumOfDay()-1;
+        int numOfDay=schedule.getNumOfDays()-1;
         Site hotel = mAdapter.getSelected();
         ArrayList<Site> hotelList = new ArrayList<>();
         for(int j = 0; j<numOfDay;j++)
         {
             hotelList.add(hotel);
         }
-        ((CreatePlanActivity)getActivity()).setNumOfHotels(1);
-        ((CreatePlanActivity)getActivity()).setHotel(hotelList);
+        schedule.setNumOfHotels(1);
+        schedule.setHotel(hotelList);
     }
 
     public int calendarToNumOfDay(Calendar start, Calendar end)
